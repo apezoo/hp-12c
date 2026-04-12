@@ -18,6 +18,413 @@
   
   window.HP12C_KEY_METADATA = {
     // ============================================
+    // FINANCIAL KEYS (5 keys) - All Planned
+    // ============================================
+    
+    "n": {
+      id: "n",
+      dataKey: "n",
+      label: "n",
+      displayName: "Number of Periods",
+      category: "financial",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Number of Compounding Periods",
+        description: "In Time Value of Money (TVM) calculations, the n key stores or solves for the number of compounding periods. This could be months for a loan, years for an investment, or any other time period. When you have four of the five TVM values (n, i, PV, PMT, FV), you can solve for the fifth.",
+        examples: [
+          "Store periods: '360 n' stores 360 months (30-year mortgage)",
+          "Solve for periods: After entering i, PV, PMT, FV, press 'n' to calculate",
+          "Check stored value: 'RCL .1' displays currently stored n value"
+        ],
+        keystrokes: "n"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "AMORT",
+            title: "Amortization",
+            description: "Calculates amortization for a range of loan payment periods. Shows how much goes to principal vs. interest, and remaining balance.",
+            implementationStatus: "planned",
+            examples: [
+              "Amortize first year: '1 ENTER 12 f AMORT' shows payments 1-12",
+              "Press 'x↔y' to see interest paid",
+              "Press 'RCL PV' to see remaining balance"
+            ],
+            keystrokes: "f n"
+          }
+        ],
+        blue: [
+          {
+            label: "12×",
+            title: "Multiply by 12",
+            description: "Multiplies the number in X register by 12. Commonly used to convert annual periods to monthly periods.",
+            implementationStatus: "planned",
+            examples: [
+              "Convert years to months: '5 g n' → displays 60",
+              "Convert annual rate: for use with monthly i"
+            ],
+            keystrokes: "g n"
+          }
+        ]
+      },
+      
+      shortDescription: "Stores or solves for number of compounding periods in TVM calculations",
+      longDescription: "The n key is one of the five Time Value of Money registers (n, i, PV, PMT, FV) that form the core of the HP-12C's financial capabilities. The n register stores the number of compounding or payment periods in a financial calculation. For loans and mortgages, this is typically the number of monthly payments. For investments, it might be years or any other period.\n\nWhen solving TVM problems, you typically: 1) Enter known values into four of the five TVM keys, 2) Press the unknown key to solve for it, 3) The HP-12C iteratively calculates the unknown value.\n\nThe n value must match the compounding frequency of the interest rate (i). If i is monthly, n should be in months.",
+      
+      implementation: {
+        status: "planned",
+        note: "Financial engine is not implemented yet. TVM solver requires iterative Newton-Raphson algorithm for solving n, i, or FV. This is a complex implementation scheduled for Phase 5 of the project.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "On the original HP-12C, pressing 'n' without a preceding number displays the currently stored n value. Pressing a number then 'n' stores that number in the n register. When four TVM variables are known, pressing 'n' solves for the number of periods using iterative calculation, which can take 1-3 seconds.",
+      
+      simulatorBehavior: "Currently not implemented. The key is displayed as part of the authentic visual interface, but pressing it has no effect. The web simulator will need to implement the full TVM calculation engine before this key becomes functional.",
+      
+      relatedTopics: [
+        "Time Value of Money (TVM)",
+        "Loan Calculations",
+        "Mortgage Amortization",
+        "Investment Returns",
+        "Compound Interest"
+      ],
+      
+      relatedKeys: ["i", "pv", "pmt", "fv"],
+      
+      commonMistakes: [
+        "Mismatching n and i periods (e.g., annual n with monthly i)",
+        "Forgetting to convert years to months for monthly payment calculations",
+        "Not understanding that n must be positive",
+        "Confusing n with number of years (n is number of periods)"
+      ],
+      
+      expertTips: [
+        "Always ensure n and i use the same time period (both monthly or both annual)",
+        "Use 'g n' (12×) to quickly convert years to months",
+        "For a 30-year mortgage with monthly payments, n = 360 (30 × 12)",
+        "When solving for n, the result may include fractional periods (e.g., 48.7 payments)"
+      ]
+    },
+    
+    "i": {
+      id: "i",
+      dataKey: "i",
+      label: "i",
+      displayName: "Interest Rate",
+      category: "financial",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Interest Rate per Period",
+        description: "Stores or solves for the periodic interest rate in TVM calculations. Must be expressed as a percentage per period (not decimal). For monthly calculations, this is the monthly rate, not annual.",
+        examples: [
+          "Store monthly rate: '0.5 i' stores 0.5% per month (6% annual)",
+          "Solve for rate: After entering n, PV, PMT, FV, press 'i' to calculate",
+          "Annual to monthly: '6 ENTER 12 ÷ i' stores monthly rate"
+        ],
+        keystrokes: "i"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "INT",
+            title: "Interest Amount",
+            description: "After AMORT calculation, displays the total interest paid during the amortized period.",
+            implementationStatus: "planned",
+            examples: [
+              "After 'f AMORT', press 'f i' to see interest"
+            ],
+            keystrokes: "f i"
+          }
+        ],
+        blue: [
+          {
+            label: "12÷",
+            title: "Divide by 12",
+            description: "Divides the number in X register by 12. Commonly used to convert annual rates to monthly rates.",
+            implementationStatus: "planned",
+            examples: [
+              "Convert 6% annual to monthly: '6 g i' → displays 0.5"
+            ],
+            keystrokes: "g i"
+          }
+        ]
+      },
+      
+      shortDescription: "Stores or solves for periodic interest rate as percentage",
+      longDescription: "The i key manages the periodic interest rate in TVM calculations. On the HP-12C, interest rates are always entered and displayed as percentages (not decimals), and they must be per period. For monthly payments, enter the monthly rate. The 'g i' (12÷) function helps convert annual rates to monthly rates.\n\nSolving for i is one of the most computationally intensive operations on the HP-12C because there's no closed-form solution - it requires iterative numerical methods.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires full TVM engine with Newton-Raphson solver. Interest rate calculation is particularly complex due to lack of closed-form solution.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Stores or retrieves periodic interest rate as percentage. Solving for i can take 2-10 seconds depending on initial guess accuracy. Displays 'Error 3' if no solution converges.",
+      
+      simulatorBehavior: "Currently not implemented. Key press has no effect.",
+      
+      relatedTopics: [
+        "Time Value of Money (TVM)",
+        "Interest Rates",
+        "APR (Annual Percentage Rate)",
+        "Effective Rate vs Nominal Rate"
+      ],
+      
+      relatedKeys: ["n", "pv", "pmt", "fv"],
+      
+      commonMistakes: [
+        "Entering interest as decimal instead of percentage (use 5, not 0.05)",
+        "Using annual rate when n is in months",
+        "Forgetting that i is per period, not per year"
+      ],
+      
+      expertTips: [
+        "Always enter interest as percentage: 5% is '5 i', not '0.05 i'",
+        "Use 'g i' to convert annual to monthly: '6 g i' gives 0.5% monthly",
+        "Solving for i is slow - be patient, it may take several seconds"
+      ]
+    },
+    
+    "pv": {
+      id: "pv",
+      dataKey: "pv",
+      label: "PV",
+      displayName: "Present Value",
+      category: "financial",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Present Value",
+        description: "Stores or solves for the present value in TVM calculations. Represents the current lump sum amount - the principal of a loan or the current value of an investment.",
+        examples: [
+          "Store loan amount: '250000 CHS PV' (negative = cash out)",
+          "Solve for PV: After entering n, i, PMT, FV, press 'PV'",
+          "Investment value: 'RCL PV' shows stored present value"
+        ],
+        keystrokes: "PV"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "NPV",
+            title: "Net Present Value",
+            description: "Calculates net present value of uneven cash flows stored in registers. Essential for investment analysis.",
+            implementationStatus: "planned",
+            examples: [
+              "Store cash flows in R0-R9, then 'f PV' calculates NPV"
+            ],
+            keystrokes: "f PV"
+          }
+        ],
+        blue: [
+          {
+            label: "CFo",
+            title: "Initial Cash Flow",
+            description: "Stores the initial (time=0) cash flow for NPV/IRR calculations.",
+            implementationStatus: "planned",
+            examples: [
+              "-50000 g PV' stores initial investment"
+            ],
+            keystrokes: "g PV"
+          }
+        ]
+      },
+      
+      shortDescription: "Present value - principal amount or current investment value",
+      longDescription: "PV represents 'money now' in TVM calculations. For loans, PV is the borrowed amount (entered as negative since money flows out). For investments, PV is the current value or initial deposit. The HP-12C uses cash flow sign convention: money you receive is positive, money you pay is negative.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires TVM engine. PV has closed-form solution, making it easier to implement than n or i.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Stores or retrieves present value. Solving for PV is fast (closed-form solution). Sign convention: negative = cash outflow, positive = cash inflow.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Time Value of Money (TVM)",
+        "Present Value",
+        "Cash Flow Convention",
+        "Loan Principal"
+      ],
+      
+      relatedKeys: ["n", "i", "pmt", "fv"],
+      
+      commonMistakes: [
+        "Wrong sign convention (loan principal should be negative)",
+        "Confusing PV with payment amount (that's PMT)"
+      ],
+      
+      expertTips: [
+        "For loans: PV negative (you get money), PMT positive (you pay)",
+        "Use CHS to change sign: '100000 CHS PV' for borrowing"
+      ]
+    },
+    
+    "pmt": {
+      id: "pmt",
+      dataKey: "pmt",
+      label: "PMT",
+      displayName: "Payment",
+      category: "financial",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Payment Amount",
+        description: "Stores or solves for the periodic payment amount in TVM calculations. This is the regular payment made each period.",
+        examples: [
+          "Solve for payment: After entering n, i, PV, FV, press 'PMT'",
+          "Store known payment: '1500 CHS PMT' (negative = paying out)"
+        ],
+        keystrokes: "PMT"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "RND",
+            title: "Round",
+            description: "Rounds the X register to the number of decimal places shown in the display format. Useful for rounding calculated payments to cents.",
+            implementationStatus: "planned",
+            examples: [
+              "After calculating payment, 'f PMT' rounds to display format"
+            ],
+            keystrokes: "f PMT"
+          }
+        ],
+        blue: [
+          {
+            label: "CFj",
+            title: "Cash Flow j",
+            description: "Stores individual cash flows for NPV/IRR calculations.",
+            implementationStatus: "planned",
+            examples: [
+              "Enter series: '5000 g PMT, 6000 g PMT' stores CF1, CF2"
+            ],
+            keystrokes: "g PMT"
+          }
+        ]
+      },
+      
+      shortDescription: "Periodic payment amount in TVM calculations",
+      longDescription: "PMT is the regular payment made each period. For loans, this is your monthly payment (negative = outflow). For savings, this is your regular deposit. PMT must have opposite sign from PV in most calculations.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires TVM engine. PMT has closed-form solution.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Stores or retrieves periodic payment. Solving for PMT is fast. Sign convention applies.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Time Value of Money (TVM)",
+        "Loan Payments",
+        "Annuities",
+        "Regular Deposits"
+      ],
+      
+      relatedKeys: ["n", "i", "pv", "fv"],
+      
+      commonMistakes: [
+        "Wrong sign (payment should be negative when you pay it out)",
+        "Not matching payment frequency with n and i periods"
+      ],
+      
+      expertTips: [
+        "For standard loans: PV negative, PMT positive",
+        "Use 'f PMT' (RND) to round calculated payments to cents"
+      ]
+    },
+    
+    "fv": {
+      id: "fv",
+      dataKey: "fv",
+      label: "FV",
+      displayName: "Future Value",
+      category: "financial",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Future Value",
+        description: "Stores or solves for the future value in TVM calculations. The lump sum amount at the end of the investment or loan period.",
+        examples: [
+          "Solve for FV: After entering n, i, PV, PMT, press 'FV'",
+          "Balloon payment: '50000 FV' stores final payment"
+        ],
+        keystrokes: "FV"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "IRR",
+            title: "Internal Rate of Return",
+            description: "Calculates IRR for uneven cash flows. One of the most powerful financial functions.",
+            implementationStatus: "planned",
+            examples: [
+              "After storing cash flows, 'f FV' calculates IRR"
+            ],
+            keystrokes: "f FV"
+          }
+        ],
+        blue: [
+          {
+            label: "Nj",
+            title: "Number of times CFj occurs",
+            description: "Specifies how many times the current cash flow repeats in NPV/IRR calculations.",
+            implementationStatus: "planned",
+            examples: [
+              "'5000 g PMT 3 g FV' means $5000 occurs 3 times"
+            ],
+            keystrokes: "g FV"
+          }
+        ]
+      },
+      
+      shortDescription: "Future value - lump sum amount at end of period",
+      longDescription: "FV represents the value at the end of the time period. For savings, it's how much you'll have. For loans with balloon payments, it's the remaining balance. FV is often zero for fully-amortized loans.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires TVM engine. FV has closed-form solution for most cases, but solving for FV when it's unknown can require iterative methods.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Stores or retrieves future value. Sign convention applies. Solving for FV is typically fast.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Time Value of Money (TVM)",
+        "Future Value",
+        "Compound Growth",
+        "Balloon Payments"
+      ],
+      
+      relatedKeys: ["n", "i", "pv", "pmt"],
+      
+      commonMistakes: [
+        "Forgetting FV exists (often zero for standard loans)",
+        "Wrong sign convention"
+      ],
+      
+      expertTips: [
+        "For fully-amortized loans, FV = 0",
+        "Use FV for balloon payment calculations"
+      ]
+    },
+    
+    // ============================================
     // NUMERIC ENTRY KEYS (11 keys) - All Implemented
     // ============================================
     
@@ -1711,6 +2118,685 @@
         "ON is the universal 'get out of trouble' button for errors",
         "Use CLx instead of ON if you just made a mistake in X",
         "ON won't erase your carefully stored memory values or programs"
+      ]
+    },
+    
+    // ============================================
+    // SCIENTIFIC & PERCENTAGE KEYS (6 keys) - All Planned
+    // ============================================
+    
+    "reciprocal": {
+      id: "reciprocal",
+      dataKey: "reciprocal",
+      label: "1/x",
+      displayName: "Reciprocal",
+      category: "arithmetic",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Reciprocal (1/x)",
+        description: "Calculates the reciprocal of X (1 divided by X). Replaces X with the result. Essential for converting between rates, finding reciprocals, and inverting ratios.",
+        examples: [
+          "'4 1/x' → displays 0.25",
+          "'0.5 1/x' → displays 2",
+          "Convert miles to km: '1.609 1/x' → miles per km"
+        ],
+        keystrokes: "1/x"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "eˣ",
+            title: "e to the x",
+            description: "Raises mathematical constant e (2.71828...) to the power in X register. Natural exponential function.",
+            implementationStatus: "planned",
+            examples: [
+              "'1 g 1/x' → displays 2.7183 (e¹)",
+              "'2 g 1/x' → displays 7.3891 (e²)"
+            ],
+            keystrokes: "g 1/x"
+          }
+        ]
+      },
+      
+      shortDescription: "Calculates 1 divided by X",
+      longDescription: "The reciprocal function calculates 1/X, replacing X with the result. This is faster than entering '1 ENTER X ÷' and is commonly used in engineering, physics, and financial calculations. Division by zero produces an error.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires implementation of reciprocal calculation with division-by-zero error handling.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Calculates 1/X immediately. Division by zero displays 'Error 0'. Does not affect stack (no stack drop).",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Reciprocals",
+        "Division",
+        "Rate Conversion"
+      ],
+      
+      relatedKeys: ["op-divide", "power-yx"],
+      
+      commonMistakes: [
+        "Trying 1/x on zero (undefined)",
+        "Confusing 1/x with x⁻¹ (they're the same)"
+      ],
+      
+      expertTips: [
+        "Use 1/x twice to return to original value",
+        "1/x is faster than '1 ENTER x ÷'"
+      ]
+    },
+    
+    "percent": {
+      id: "percent",
+      dataKey: "percent",
+      label: "%",
+      displayName: "Percent",
+      category: "percentage",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Percentage",
+        description: "Calculates what percentage X is of Y. Result shows 'X is what percent of Y'. Useful for finding percentage values, discounts, and markups.",
+        examples: [
+          "'200 ENTER 50 %' → displays 25 (50 is 25% of 200)",
+          "'100 ENTER 15 %' → displays 15 (15% of 100)",
+          "Find discount %: 'original ENTER discount %'"
+        ],
+        keystrokes: "%"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "INTG",
+            title: "Integer Part",
+            description: "Returns the integer (whole number) part of X, discarding the fractional part.",
+            implementationStatus: "planned",
+            examples: [
+              "'3.75 g %' → displays 3",
+              "'-2.9 g %' → displays -2"
+            ],
+            keystrokes: "g %"
+          }
+        ]
+      },
+      
+      shortDescription: "Calculates percentage (X is what % of Y)",
+      longDescription: "The % key calculates percentages using Y as the base and X as the amount. It answers: 'X is what percentage of Y?' This is essential for retail calculations, financial analysis, and everyday percentage problems.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires percentage calculation logic. Formula: (X / Y) × 100",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Calculates (X/Y) × 100, displaying the percentage. Both X and Y remain on stack.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Percentages",
+        "Discounts",
+        "Markups",
+        "Ratios"
+      ],
+      
+      relatedKeys: ["percent-total", "delta-percent"],
+      
+      commonMistakes: [
+        "Entering numbers in wrong order (base should be in Y)",
+        "Confusing % with %T (% total) or Δ% (delta percent)"
+      ],
+      
+      expertTips: [
+        "For 'what is 15% of 200': type '200 ENTER 15 %'",
+        "Y register is the base (100%), X is compared to it"
+      ]
+    },
+    
+    "percent-total": {
+      id: "percent-total",
+      dataKey: "percent-total",
+      label: "%T",
+      displayName: "Percent of Total",
+      category: "percentage",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Percent of Total",
+        description: "Calculates what amount is X% of Y. Result shows the actual value. Useful for adding/subtracting percentages, calculating tips, discounts.",
+        examples: [
+          "'200 ENTER 15 %T' → displays 30 (15% of 200)",
+          "'50 ENTER 20 %T' → displays 10 (20% of 50)",
+          "Add 25%: 'value ENTER 25 %T +'"
+        ],
+        keystrokes: "%T"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "LN",
+            title: "Natural Logarithm",
+            description: "Calculates the natural logarithm (base e) of X.",
+            implementationStatus: "planned",
+            examples: [
+              "'  2.7183 g %T' → displays 1 (ln(e) = 1)",
+              "'10 g %T' → displays 2.3026"
+            ],
+            keystrokes: "g %T"
+          }
+        ]
+      },
+      
+      shortDescription: "Calculates X percent of Y",
+      longDescription: "The %T key answers 'what is X% of Y?' by calculating (X/100) × Y. This is the complement to the % key. Use it when you know the percentage and want the actual amount.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires percentage calculation. Formula: (X / 100) × Y",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Calculates (X/100) × Y. Both X and Y remain on stack after calculation.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Percentages",
+        "Tips",
+        "Discounts",
+        "Markups"
+      ],
+      
+      relatedKeys: ["percent", "delta-percent"],
+      
+      commonMistakes: [
+        "Confusing %T with % (they're inverses)",
+        "Wrong order: base in Y, percentage in X"
+      ],
+      
+      expertTips: [
+        "For tips: 'bill ENTER 20 %T' gives tip amount",
+        "Chain: 'price ENTER 25 %T +' adds 25% markup"
+      ]
+    },
+    
+    "delta-percent": {
+      id: "delta-percent",
+      dataKey: "delta-percent",
+      label: "Δ%",
+      displayName: "Delta Percent",
+      category: "percentage",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Percent Change",
+        description: "Calculates the percentage change from Y to X. Shows by what percent Y changed to become X. Essential for growth rates, investment returns, price changes.",
+        examples: [
+          "'100 ENTER 120 Δ%' → displays 20 (20% increase)",
+          "'50 ENTER 40 Δ%' → displays -20 (20% decrease)",
+          "Stock gain: 'old_price ENTER new_price Δ%'"
+        ],
+        keystrokes: "Δ%"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "SL/SOYD/DB",
+            title: "Depreciation Methods",
+            description: "Calculates depreciation using Straight Line, Sum-of-Years-Digits, or Declining Balance methods.",
+            implementationStatus: "planned",
+            examples: [
+              "Complex depreciation calculations"
+            ],
+            keystrokes: "f Δ%"
+          }
+        ],
+        blue: [
+          {
+            label: "FRAC",
+            title: "Fractional Part",
+            description: "Returns the fractional (decimal) part of X, discarding the integer part.",
+            implementationStatus: "planned",
+            examples: [
+              "'3.75 g Δ%' → displays 0.75",
+              "'-2.3 g Δ%' → displays -0.3"
+            ],
+            keystrokes: "g Δ%"
+          }
+        ]
+      },
+      
+      shortDescription: "Calculates percentage change from Y to X",
+      longDescription: "Δ% calculates the percent change: ((X - Y) / Y) × 100. This answers 'by what percent did Y change to become X?' Positive means increase, negative means decrease. Critical for analyzing investment returns, sales growth, inflation rates.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires delta percent calculation. Formula: ((X - Y) / Y) × 100",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Calculates percentage change from Y (old) to X (new). Both values remain on stack.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Percentage Change",
+        "Growth Rates",
+        "Returns",
+        "Inflation"
+      ],
+      
+      relatedKeys: ["percent", "percent-total"],
+      
+      commonMistakes: [
+        "Entering new value in Y and old in X (should be reversed)",
+        "Forgetting that negative results mean decrease"
+      ],
+      
+      expertTips: [
+        "Old value in Y, new value in X",
+        "For investment return: 'cost ENTER sale_price Δ%'"
+      ]
+    },
+    
+    "power-yx": {
+      id: "power-yx",
+      dataKey: "power-yx",
+      label: "yˣ",
+      displayName: "Y to the power of X",
+      category: "power-log",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Power Function",
+        description: "Raises Y to the power of X. Calculates Y^X. Essential for exponential calculations, compound interest, engineering formulas.",
+        examples: [
+          "'2 ENTER 3 yˣ' → displays 8 (2³)",
+          "'10 ENTER 2 yˣ' → displays 100 (10²)",
+          "'5 ENTER 0.5 yˣ' → displays 2.236 (√5)"
+        ],
+        keystrokes: "yˣ"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "PRICE/BOND/YTM",
+            title: "Bond Calculations",
+            description: "Calculates bond price, yield to maturity, or other bond-related values.",
+            implementationStatus: "planned",
+            examples: [
+              "Complex bond pricing calculations"
+            ],
+            keystrokes: "f yˣ"
+          }
+        ],
+        blue: [
+          {
+            label: "√x",
+            title: "Square Root",
+            description: "Calculates the square root of X.",
+            implementationStatus: "planned",
+            examples: [
+              "'16 g yˣ' → displays 4",
+              "'2 g yˣ' → displays 1.4142"
+            ],
+            keystrokes: "g yˣ"
+          }
+        ]
+      },
+      
+      shortDescription: "Raises Y to the power of X (Y^X)",
+      longDescription: "The yˣ key performs exponentiation: Y to the power of X. This is fundamental for compound growth, scientific calculations, and many engineering formulas. For square roots, use 0.5 as the exponent, or use the dedicated √x function (g yˣ).",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires power function implementation with proper handling of negative bases, fractional exponents, and overflow.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Calculates Y^X with stack drop. Handles integer and fractional exponents. Negative bases with fractional exponents may produce errors.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Exponentiation",
+        "Powers",
+        "Exponential Growth",
+        "Roots"
+      ],
+      
+      relatedKeys: ["reciprocal"],
+      
+      commonMistakes: [
+        "Confusing order: base in Y, exponent in X",
+        "Trying negative base with fractional exponent"
+      ],
+      
+      expertTips: [
+        "For square: 'x ENTER 2 yˣ' or faster: 'x ENTER ×'",
+        "For nth root: 'x ENTER n 1/x yˣ' or use √x for square root",
+        "Compound growth: 'principal ENTER 1.05 yˣ' for 5% over x years"
+      ]
+    },
+    
+    "eex": {
+      id: "eex",
+      dataKey: "eex",
+      label: "EEX",
+      displayName: "Enter Exponent",
+      category: "numeric-entry",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Enter Exponent (Scientific Notation)",
+        description: "Enters the exponent for scientific notation. Allows entry of very large or very small numbers like 1.5×10²³ or 3.2×10⁻⁹.",
+        examples: [
+          "'6.02 EEX 23' → 6.02×10²³ (Avogadro's number)",
+          "'3 EEX 8' → 3×10⁸ (speed of light)",
+          "'1.6 EEX 19 CHS' → 1.6×10⁻¹⁹ (electron charge)"
+        ],
+        keystrokes: "EEX"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "ΔDYS",
+            title: "Delta Days",
+            description: "Calculates the number of days between two dates.",
+            implementationStatus: "planned",
+            examples: [
+              "Enter two dates, press 'g EEX' for days between"
+            ],
+            keystrokes: "g EEX"
+          }
+        ]
+      },
+      
+      shortDescription: "Enters scientific notation exponent",
+      longDescription: "EEX (Enter Exponent) allows entry of numbers in scientific notation. After typing the mantissa, press EEX followed by the exponent digits. Use CHS after the exponent to make it negative. Essential for scientific and engineering calculations with very large or small numbers.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires scientific notation number entry mode with separate mantissa and exponent tracking.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Enters exponent entry mode. Display shows small exponent. Press CHS after exponent digits to make exponent negative, not mantissa.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Scientific Notation",
+        "Numeric Entry",
+        "Exponents",
+        "Large Numbers"
+      ],
+      
+      relatedKeys: ["chs", "digit-0", "digit-1", "digit-2", "digit-3", "digit-4", "digit-5", "digit-6", "digit-7", "digit-8", "digit-9"],
+      
+      commonMistakes: [
+        "Pressing CHS before EEX (negates mantissa, not exponent)",
+        "Forgetting that EEX means '×10^' not '^'",
+        "Confusing EEX with yˣ (power function)"
+      ],
+      
+      expertTips: [
+        "For 1.5×10⁻³: type '1.5 EEX 3 CHS'",
+        "CHS after exponent negates exponent; before EEX negates mantissa",
+        "Display format affects how exponents are shown but not internal precision"
+      ]
+    },
+    
+    // ============================================
+    // PROGRAMMING & CONTROL KEYS (2 keys) - Planned
+    // ============================================
+    
+    "rs": {
+      id: "rs",
+      dataKey: "rs",
+      label: "R/S",
+      displayName: "Run/Stop",
+      category: "control",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Run/Stop Program",
+        description: "Starts program execution from current position, or stops a running program. Essential for calculator programming and automation.",
+        examples: [
+          "Press R/S to start program from line 000",
+          "Press R/S during execution to pause",
+          "Press R/S again to continue"
+        ],
+        keystrokes: "R/S"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "P/R",
+            title: "Program Mode",
+            description: "Toggles between program mode (for entering/editing programs) and run mode (for calculations).",
+            implementationStatus: "planned",
+            examples: [
+              "'f R/S' enters program mode",
+              "'f R/S' again returns to run mode"
+            ],
+            keystrokes: "f R/S"
+          }
+        ],
+        blue: [
+          {
+            label: "PSE",
+            title: "Pause",
+            description: "Pauses program execution for about 1 second to display intermediate results, then continues automatically.",
+            implementationStatus: "planned",
+            examples: [
+              "In program: 'g R/S' pauses to show display"
+            ],
+            keystrokes: "g R/S"
+          }
+        ]
+      },
+      
+      shortDescription: "Runs or stops program execution",
+      longDescription: "R/S controls program execution. Press it to start running a program from the current program counter position. Press it again to stop execution. This is fundamental to HP-12C programming, which allows recording sequences of keystrokes for automated calculations.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires full programming engine: program memory, program counter, instruction execution loop, and program/run mode toggle.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Starts/stops program execution. In run mode, starts from current position. Can be used to single-step through programs.",
+      
+      simulatorBehavior: "Currently not implemented. Programming features are planned for future phase.",
+      
+      relatedTopics: [
+        "Calculator Programming",
+        "Automation",
+        "Program Execution",
+        "Program Mode"
+      ],
+      
+      relatedKeys: ["sst", "prefix-f", "prefix-g"],
+      
+      commonMistakes: [
+        "Forgetting to set program counter to 000 before running",
+        "Not understanding P/R (program mode) vs R/S (run)"
+      ],
+      
+      expertTips: [
+        "GTO 000 then R/S to start program from beginning",
+        "R/S during execution = pause; R/S again = continue",
+        "Use PSE (g R/S) in programs to show intermediate results"
+      ]
+    },
+    
+    "sst": {
+      id: "sst",
+      dataKey: "sst",
+      label: "SST",
+      displayName: "Single Step",
+      category: "programming",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Single Step",
+        description: "In run mode, executes one program line and stops. In program mode, advances to next program line without executing. Essential for debugging programs.",
+        examples: [
+          "Debug: Press SST repeatedly to step through program",
+          "View program: In PRGM mode, SST shows each line"
+        ],
+        keystrokes: "SST"
+      },
+      
+      shiftedFunctions: {
+        gold: [
+          {
+            label: "Σ",
+            title: "Sigma (Summation Symbol)",
+            description: "Display symbol used in statistical operations. Not a function itself.",
+            implementationStatus: "informational-only",
+            examples: [],
+            keystrokes: "f SST"
+          }
+        ],
+        blue: [
+          {
+            label: "BST",
+            title: "Back Step",
+            description: "Steps backward through program memory. Opposite of SST.",
+            implementationStatus: "planned",
+            examples: [
+              "In PRGM mode: 'g SST' moves back one line"
+            ],
+            keystrokes: "g SST"
+          }
+        ]
+      },
+      
+      shortDescription: "Steps through program one line at a time",
+      longDescription: "SST (Single Step) is the programmer's debugging tool. In run mode, it executes one program instruction and stops, allowing you to inspect the results. In program mode, it advances through the program listing without executing. Combined with BST (backstep), you can navigate through your program.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires programming engine with single-step execution capability and program counter management.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Executes one program step in run mode. Advances program counter in program mode. Shows current line in display.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Calculator Programming",
+        "Debugging",
+        "Program Navigation",
+        "Program Mode"
+      ],
+      
+      relatedKeys: ["rs", "prefix-f", "prefix-g"],
+      
+      commonMistakes: [
+        "Confusing SST behavior in run mode vs program mode",
+        "Not realizing SST executes in run mode"
+      ],
+      
+      expertTips: [
+        "SST in run mode = execute and stop (for debugging)",
+        "SST in PRGM mode = view next line (no execution)",
+        "Use BST (g SST) to go backward through program"
+      ]
+    },
+    
+    // ============================================
+    // STATISTICS KEYS (1 key) - Planned
+    // ============================================
+    
+    "sigma-plus": {
+      id: "sigma-plus",
+      dataKey: "sigma-plus",
+      label: "Σ+",
+      displayName: "Sigma Plus",
+      category: "statistics",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Accumulate Statistics",
+        description: "Adds the current X (and Y if doing two-variable statistics) to statistical registers. Essential for calculating mean, standard deviation, and regression.",
+        examples: [
+          "One variable: '10 Σ+', '20 Σ+', '30 Σ+' (adds data)",
+          "Two variable: '5 ENTER 10 Σ+' (adds x=5, y=10 pair)",
+          "Then: 'g 0' for mean, 'g .' for std dev"
+        ],
+        keystrokes: "Σ+"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "Σ−",
+            title: "Sigma Minus",
+            description: "Removes the last data point added with Σ+. Useful for correcting data entry mistakes.",
+            implementationStatus: "planned",
+            examples: [
+              "After incorrect Σ+: 'RCL X, g Σ+' removes that point"
+            ],
+            keystrokes: "g Σ+"
+          }
+        ]
+      },
+      
+      shortDescription: "Adds data to statistical registers",
+      longDescription: "Σ+ is the foundation of statistical calculations on the HP-12C. Each press accumulates data into the statistical registers (R1-R6). For single-variable statistics, it uses X. For two-variable (regression), it uses both X and Y. After accumulating data, you can calculate mean, standard deviation, correlation, linear regression, and more.",
+      
+      implementation: {
+        status: "planned",
+        note: "Requires statistical register allocation (R1-R6) and accumulation formulas for sum(x), sum(x²), sum(y), sum(y²), sum(xy), and n.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Adds X to R1 (n), X to R2 (Σx), X² to R3 (Σx²). For two-variable: Y to R4 (Σy), Y² to R5 (Σy²), X×Y to R6 (Σxy). Increments n counter.",
+      
+      simulatorBehavior: "Currently not implemented.",
+      
+      relatedTopics: [
+        "Statistics",
+        "Mean",
+        "Standard Deviation",
+        "Linear Regression",
+        "Correlation"
+      ],
+      
+      relatedKeys: ["digit-0", "decimal"],
+      
+      commonMistakes: [
+        "Forgetting to clear statistics before new data set",
+        "Not entering Y value for two-variable statistics",
+        "Accumulating in wrong order for x,y pairs"
+      ],
+      
+      expertTips: [
+        "Clear statistics: 'f CLx' then select REG clears all",
+        "For x,y pairs: 'x ENTER y Σ+' (x in stack first)",
+        "To remove bad data: recall it, then use Σ− (g Σ+)",
+        "Statistical functions: g 0 (x̄), g . (s), g 1 (ŷ,r), g 2 (x̂,r)"
       ]
     }
   };
