@@ -1,7 +1,7 @@
 /**
  * HP-12C Financial Calculator - Authentic Visual Design
- * Based on original HP-12C Voyager Series specifications
- * Photorealistic replica with exact proportions and styling
+ * Based on exact HP-12C Voyager Series specifications
+ * Button-by-button accurate implementation
  */
 
 /* ============================================
@@ -42,28 +42,20 @@
     --button-black: #2a2a2a;
     --button-black-hover: #353535;
     --button-black-active: #1a1a1a;
-    --button-shadow: rgba(0, 0, 0, 0.4);
-    --button-highlight: rgba(255, 255, 255, 0.1);
     
-    /* Labels */
+    /* Labels - Exact Colors from Specification */
     --label-white: #ffffff;
-    --label-gold: #ff9900;
-    --label-blue: #6db4e8;
+    --label-gold: #ff9f00;
+    --label-blue: #00b0ff;
     
     /* Special Buttons */
-    --prefix-f-bg: #cc7700;
-    --prefix-g-bg: #4a8fc4;
-    --on-red: #8b0000;
+    --prefix-f-bg: #f5a623;
+    --prefix-g-bg: #00a0d8;
+    --on-red: #c8102a;
     
     /* Text */
     --text-black: #000000;
     --text-white: #ffffff;
-    
-    /* Shadows and Depths */
-    --shadow-deep: 0 8px 16px rgba(0, 0, 0, 0.3);
-    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.2);
-    --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.15);
-    --inset-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* ============================================
@@ -95,18 +87,17 @@ body {
    ============================================ */
 .calculator {
     width: 512px;
-    /* Maintain 128:79 aspect ratio */
     position: relative;
-    filter: drop-shadow(var(--shadow-deep));
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.3));
 }
 
-/* Black Case Border */
+/* Black Case Border with rounded corners (4-5mm radius = ~16-20px) */
 .calculator-case {
     background: var(--case-black);
     border-radius: 20px;
     padding: 16px;
     box-shadow: 
-        var(--shadow-deep),
+        0 8px 16px rgba(0, 0, 0, 0.3),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
@@ -118,11 +109,11 @@ body {
     padding: 20px 16px;
     position: relative;
     box-shadow: 
-        var(--inset-shadow),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
         0 1px 0 rgba(255, 255, 255, 0.2);
     border: 1px solid var(--gold-shadow);
     
-    /* Simulate brushed metal texture */
+    /* Simulate brushed metal texture - horizontal brush strokes */
     background-image: 
         repeating-linear-gradient(
             90deg,
@@ -175,21 +166,21 @@ body {
     border-radius: 8px;
     padding: 16px 20px;
     margin-bottom: 16px;
-    box-shadow: var(--inset-shadow);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* LCD Display with Gold Border */
+/* LCD Display with Gold Border (2mm = ~8px) */
 .display {
     margin-bottom: 8px;
 }
 
 .display-bezel {
     background: var(--lcd-bezel);
-    border: 3px solid var(--lcd-border);
+    border: 2px solid var(--lcd-border);
     border-radius: 4px;
-    padding: 4px;
+    padding: 3px;
     box-shadow: 
-        var(--inset-shadow),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
         0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
@@ -206,7 +197,7 @@ body {
     overflow: hidden;
 }
 
-/* Simulate LCD segments */
+/* Simulate LCD ghost segments (off state) */
 .lcd-window::before {
     content: '88888888.88';
     position: absolute;
@@ -255,17 +246,16 @@ body {
 }
 
 /* ============================================
-   BUTTON GRID - 5 COLUMNS × 8 ROWS
+   BUTTON GRID - 5 COLUMNS
    ============================================ */
 .button-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(8, 1fr);
     gap: 6px;
     margin-bottom: 16px;
 }
 
-/* Make ENTER button span 2 rows */
+/* ENTER button spans 2 rows vertically */
 .btn[data-key="ENTER"] {
     grid-row: span 2;
 }
@@ -278,11 +268,11 @@ body {
     height: 44px;
     background: var(--button-black);
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     box-shadow: 
         0 3px 0 rgba(0, 0, 0, 0.4),
-        0 5px 8px var(--button-shadow),
-        inset 0 1px 0 var(--button-highlight);
+        0 5px 8px rgba(0, 0, 0, 0.4),
+        inset 1px 1px 2px rgba(255, 255, 255, 0.1);
     cursor: pointer;
     transition: all 0.1s ease;
     display: flex;
@@ -303,42 +293,51 @@ body {
     transform: translateY(2px);
     box-shadow: 
         0 1px 0 rgba(0, 0, 0, 0.4),
-        0 2px 4px var(--button-shadow),
-        var(--inset-shadow);
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-/* Button Labels - Three-layer layout */
+/* ============================================
+   BUTTON LABELS - EXACT POSITIONING
+   ============================================ */
+
+/* Gold/Orange f-function labels (top: 8%) */
 .label-gold {
     position: absolute;
-    top: 3px;
+    top: 8%;
     font-size: 7px;
     font-weight: 700;
     color: var(--label-gold);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     line-height: 1;
+    z-index: 2;
 }
 
+/* Primary white labels (center) */
 .label-primary {
     font-size: 13px;
     font-weight: 700;
     color: var(--label-white);
     letter-spacing: 0.5px;
     line-height: 1;
+    z-index: 2;
 }
 
+/* Blue g-function labels (bottom: 12%) */
 .label-blue {
     position: absolute;
-    bottom: 3px;
+    bottom: 12%;
     font-size: 7px;
     font-weight: 700;
     color: var(--label-blue);
     text-transform: uppercase;
     letter-spacing: 0.3px;
     line-height: 1;
+    z-index: 2;
 }
 
-/* Simulate slanted front edge for blue labels */
+/* Simulate slanted front edge for blue labels (bottom 14px) */
 .btn::after {
     content: '';
     position: absolute;
@@ -347,17 +346,18 @@ body {
     right: 0;
     height: 14px;
     background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.15) 100%);
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 6px 6px;
     pointer-events: none;
+    z-index: 1;
 }
 
 /* ============================================
    BUTTON VARIANTS
    ============================================ */
 
-/* Prefix Keys - f (gold) */
+/* Prefix f-key - Orange/Gold */
 .btn-f {
-    background: linear-gradient(180deg, var(--prefix-f-bg) 0%, #aa6600 100%);
+    background: linear-gradient(180deg, var(--prefix-f-bg) 0%, #d88d1c 100%);
 }
 
 .prefix-f {
@@ -367,9 +367,9 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Prefix Keys - g (blue) */
+/* Prefix g-key - Blue */
 .btn-g {
-    background: linear-gradient(180deg, var(--prefix-g-bg) 0%, #3a6fa0 100%);
+    background: linear-gradient(180deg, var(--prefix-g-bg) 0%, #0080b0 100%);
 }
 
 .prefix-g {
@@ -383,17 +383,17 @@ body {
     box-shadow: 
         0 0 12px rgba(255, 200, 0, 0.8),
         0 3px 0 rgba(0, 0, 0, 0.4),
-        0 5px 8px var(--button-shadow);
+        0 5px 8px rgba(0, 0, 0, 0.4);
 }
 
-/* ON Key - Recessed (lower profile) */
+/* ON Key - Red, Recessed (lower profile = slightly smaller height) */
 .btn-on {
-    background: linear-gradient(180deg, #a00000 0%, var(--on-red) 100%);
+    background: linear-gradient(180deg, #d01020 0%, var(--on-red) 100%);
     height: 40px;
     box-shadow: 
         0 2px 0 rgba(0, 0, 0, 0.4),
-        0 3px 6px var(--button-shadow),
-        var(--inset-shadow);
+        0 3px 6px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .on-label {
@@ -403,7 +403,7 @@ body {
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* ENTER Key - Vertical spanning */
+/* ENTER Key - Vertical spanning (larger) */
 .btn-enter {
     background: var(--button-black);
     height: auto;
@@ -416,18 +416,18 @@ body {
     letter-spacing: 1px;
 }
 
-/* Number Keys */
+/* Number Keys - Slightly larger digits */
 .btn-number .label-primary {
     font-size: 16px;
 }
 
-/* Operator Keys */
+/* Operator Keys - Enlarged symbols */
 .btn-operator .label-primary {
     font-size: 22px;
     font-weight: 900;
 }
 
-/* Decimal Key */
+/* Decimal Key - Very large dot */
 .btn-decimal .label-primary {
     font-size: 28px;
     font-weight: 900;
@@ -441,18 +441,18 @@ body {
     outline: 3px solid var(--label-gold);
     outline-offset: 2px;
     box-shadow: 
-        0 0 15px rgba(255, 153, 0, 0.6),
+        0 0 15px rgba(255, 159, 0, 0.6),
         0 3px 0 rgba(0, 0, 0, 0.4),
-        0 5px 8px var(--button-shadow);
+        0 5px 8px rgba(0, 0, 0, 0.4);
 }
 
 .btn.g-active {
     outline: 3px solid var(--label-blue);
     outline-offset: 2px;
     box-shadow: 
-        0 0 15px rgba(109, 180, 232, 0.6),
+        0 0 15px rgba(0, 176, 255, 0.6),
         0 3px 0 rgba(0, 0, 0, 0.4),
-        0 5px 8px var(--button-shadow);
+        0 5px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* ============================================
@@ -579,7 +579,11 @@ body {
     
     .btn {
         height: 36px;
-        border-radius: 3px;
+        border-radius: 4px;
+    }
+    
+    .btn-on {
+        height: 34px;
     }
     
     .label-primary {
@@ -616,6 +620,10 @@ body {
         height: 32px;
     }
     
+    .btn-on {
+        height: 30px;
+    }
+    
     .button-grid {
         gap: 4px;
     }
@@ -629,7 +637,9 @@ body {
    ACCESSIBILITY
    ============================================ */
 @media (prefers-reduced-motion: reduce) {
-    * {
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
