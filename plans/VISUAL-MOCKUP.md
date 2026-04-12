@@ -1,5 +1,7 @@
 # HP-12C Visual Mockup
 
+> **⚠️ For AI Image Generation:** See [`AI-IMAGE-GENERATION-PROMPT.md`](AI-IMAGE-GENERATION-PROMPT.md) for the exact prompt to generate photorealistic HP-12C images with correct button layout.
+
 ## 🎨 Calculator Preview
 
 ### Classic HP Theme (Default)
