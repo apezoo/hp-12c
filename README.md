@@ -1,11 +1,13 @@
-# HP-12C Financial Calculator
+# HP-12C Financial Calculator (Web Implementation)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 
-A photorealistic web-based implementation of the legendary HP-12C Financial Calculator with authentic design, RPN logic, and financial functions.
+An independent, educational web-based implementation inspired by the classic HP-12C Financial Calculator, featuring authentic design, RPN logic, and financial functions.
+
+> **⚠️ Disclaimer:** This project is NOT affiliated with HP Inc. or Hewlett-Packard. "HP-12C" is a registered trademark of HP Inc. This is an independent fan project created for educational purposes.
 
 ![HP-12C Calculator](https://img.shields.io/badge/Authenticity-98%25-success)
 
@@ -161,14 +163,25 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+### Trademark Notice
+
+This is an **independent, educational project** and is NOT affiliated with, endorsed by, or sponsored by HP Inc. or Hewlett-Packard Company.
+
+- **"HP"**, **"HP-12C"**, and **"Hewlett-Packard"** are registered trademarks of HP Inc.
+- All trademarks, logos, and brand names are the property of their respective owners.
+- This project is a fan-made tribute created for educational purposes and to demonstrate web development techniques.
+- The visual design is inspired by the original HP-12C calculator, but this is an independent implementation using modern web technologies.
+
+If you are a representative of HP Inc. and have concerns about this project, please contact the repository owner.
 
 ## 🙏 Acknowledgments
 
-- Original HP-12C design by Hewlett-Packard (Voyager Series)
-- Authentic specifications from HP-12C Owner's Handbook
-- RPN logic based on classic HP calculator behavior
-- Financial formulas validated against HP-12C Platinum
+- Inspired by the original HP-12C Financial Calculator design by Hewlett-Packard (Voyager Series)
+- RPN logic inspired by classic HP calculator behavior
+- This is an independent implementation - not an official HP product
+- Created as an educational project and tribute to the legendary HP-12C
 
 ## 🌟 Project Status
 
