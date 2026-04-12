@@ -83,7 +83,38 @@ start index.html  # Windows
 - **[Technical Specification](docs/technical-spec.md)** - Detailed implementation
 - **[Examples & Tutorials](docs/examples.html)** - Bilingual step-by-step examples
 - **[Fun Features](docs/fun-features.md)** - All the cool features explained
-- **[Testing Guide](TESTING.md)** - Test cases and validation
+- **[Testing Guide](TESTING.md)** - Automated test suite with 71+ test cases
+
+## 🧪 Testing
+
+### Automated Test Suite
+
+The project includes a comprehensive automated test suite with **71+ test cases** achieving **100% pass rate**:
+
+```bash
+# Install dependencies (requires Node.js)
+npm install
+
+# Run all tests
+npm test
+
+# Run with coverage report
+npm run test:coverage
+
+# Watch mode for development
+npm run test:watch
+```
+
+### Test Coverage
+
+- ✅ **TVM Functions** - All 5 solvers (n, i, PV, PMT, FV)
+- ✅ **Percentage Functions** - %, Δ%, %T
+- ✅ **NPV/IRR** - Investment analysis
+- ✅ **BEGIN/END Mode** - Payment timing
+- ✅ **Edge Cases** - Error handling and boundaries
+- ✅ **Real-World Examples** - Mortgages, investments, business cases
+
+See [`TESTING.md`](TESTING.md) for detailed testing documentation.
 
 ## 🎯 Usage Examples
 

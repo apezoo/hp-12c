@@ -482,3 +482,8 @@ class FinancialEngine {
         }
     }
 }
+
+// Export for Node.js/Jest (browser compatibility maintained)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = FinancialEngine;
+}
