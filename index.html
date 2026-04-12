@@ -8,241 +8,216 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="calculator-container">
-        <div class="calculator">
-            <!-- Black Case Border -->
-            <div class="calculator-case">
-                <!-- Gold Metallic Front Plate -->
-                <div class="front-plate">
-                    <!-- Header Branding -->
-                    <div class="calculator-header">
-                        <div class="logo-hp">hp</div>
-                        <div class="logo-model">
-                            <span class="model-badge">hp 12C</span>
-                        </div>
-                    </div>
+    <div class="hp12c" aria-label="HP-12C Financial Calculator">
+        <!-- Top Gold Plate -->
+        <div class="top-plate"></div>
 
-                    <!-- Display Module -->
-                    <div class="display-module">
-                        <!-- Main LCD Display -->
-                        <div class="display">
-                            <div class="display-bezel">
-                                <div class="lcd-window">
-                                    <div class="display-value" id="displayValue">0.</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Status Indicators -->
-                        <div class="display-indicators">
-                            <span class="indicator" id="indUser">USER</span>
-                            <span class="indicator" id="indF">f</span>
-                            <span class="indicator" id="indG">g</span>
-                            <span class="indicator" id="indBegin">BEGIN</span>
-                            <span class="indicator" id="indGrad">GRAD</span>
-                            <span class="indicator" id="indDmy">D.MY</span>
-                            <span class="indicator" id="indC">C</span>
-                            <span class="indicator" id="indPrgm">PRGM</span>
-                        </div>
-                    </div>
+        <!-- LCD Display -->
+        <div class="display">
+            <div class="digits">
+                <span id="displayValue">0.</span>
+            </div>
+        </div>
 
-                    <!-- Button Grid - Exact HP-12C Layout -->
-                    <div class="button-grid">
-                        <!-- Row 1: Financial Functions -->
-                        <button class="btn" data-key="n">
-                            <span class="label-gold">AMORT</span>
-                            <span class="label-primary">n</span>
-                            <span class="label-blue">12×</span>
-                        </button>
-                        <button class="btn" data-key="i">
-                            <span class="label-gold">INT</span>
-                            <span class="label-primary">i</span>
-                            <span class="label-blue">12÷</span>
-                        </button>
-                        <button class="btn" data-key="PV">
-                            <span class="label-gold">NPV</span>
-                            <span class="label-primary">PV</span>
-                            <span class="label-blue">CF<sub>o</sub></span>
-                        </button>
-                        <button class="btn" data-key="PMT">
-                            <span class="label-gold">RND</span>
-                            <span class="label-primary">PMT</span>
-                            <span class="label-blue">CF<sub>j</sub></span>
-                        </button>
-                        <button class="btn" data-key="FV">
-                            <span class="label-gold">IRR</span>
-                            <span class="label-primary">FV</span>
-                            <span class="label-blue">N<sub>j</sub></span>
-                        </button>
+        <!-- Logo Badge -->
+        <div class="logo" aria-hidden="true">
+            <div class="hp">hp</div>
+            <div class="model">12c</div>
+        </div>
 
-                        <!-- Row 2: CHS and Numbers 7-9, Divide -->
-                        <button class="btn" data-key="CHS">
-                            <span class="label-gold">DATE</span>
-                            <span class="label-primary">CHS</span>
-                            <span class="label-blue">BEG</span>
-                        </button>
-                        <button class="btn btn-number" data-key="7">
-                            <span class="label-gold">MEM</span>
-                            <span class="label-primary">7</span>
-                            <span class="label-blue">FIX</span>
-                        </button>
-                        <button class="btn btn-number" data-key="8">
-                            <span class="label-gold">END</span>
-                            <span class="label-primary">8</span>
-                            <span class="label-blue">SCI</span>
-                        </button>
-                        <button class="btn btn-number" data-key="9">
-                            <span class="label-gold">MEM</span>
-                            <span class="label-primary">9</span>
-                            <span class="label-blue">ENG</span>
-                        </button>
-                        <button class="btn btn-operator" data-key="divide">
-                            <span class="label-primary">÷</span>
-                        </button>
+        <!-- Keyboard Shell -->
+        <div class="keyboard-shell">
+            <div class="keyboard-border"></div>
 
-                        <!-- Row 3: y^x, 1/x, %T, Δ%, % -->
-                        <button class="btn" data-key="yx">
-                            <span class="label-gold">PRICE</span>
-                            <span class="label-primary">y<sup>x</sup></span>
-                            <span class="label-blue">√x</span>
-                        </button>
-                        <button class="btn" data-key="1x">
-                            <span class="label-gold">YTM</span>
-                            <span class="label-primary">1/x</span>
-                            <span class="label-blue">e<sup>x</sup></span>
-                        </button>
-                        <button class="btn" data-key="PT">
-                            <span class="label-gold">SL</span>
-                            <span class="label-primary">%T</span>
-                            <span class="label-blue">LN</span>
-                        </button>
-                        <button class="btn" data-key="DP">
-                            <span class="label-gold">SOYD</span>
-                            <span class="label-primary">Δ%</span>
-                            <span class="label-blue">FRAC</span>
-                        </button>
-                        <button class="btn" data-key="PCT">
-                            <span class="label-gold">DB</span>
-                            <span class="label-primary">%</span>
-                            <span class="label-blue">INTG</span>
-                        </button>
+            <div class="key-area">
+                <!-- Gold Label Row 1 -->
+                <div class="gold-text" style="grid-column:1;grid-row:1;">AMORT</div>
+                <div class="gold-text" style="grid-column:2;grid-row:1;">INT</div>
+                <div class="gold-text" style="grid-column:3;grid-row:1;">NPV</div>
+                <div class="gold-text" style="grid-column:4;grid-row:1;">RND</div>
+                <div class="gold-text" style="grid-column:5;grid-row:1;">IRR</div>
 
-                        <!-- Row 4: EEX, 4, 5, 6, Multiply -->
-                        <button class="btn" data-key="EEX">
-                            <span class="label-primary">EEX</span>
-                        </button>
-                        <button class="btn btn-number" data-key="4">
-                            <span class="label-gold">ΔDYS</span>
-                            <span class="label-primary">4</span>
-                            <span class="label-blue">D.MY</span>
-                        </button>
-                        <button class="btn btn-number" data-key="5">
-                            <span class="label-primary">5</span>
-                            <span class="label-blue">M.DY</span>
-                        </button>
-                        <button class="btn btn-number" data-key="6">
-                            <span class="label-primary">6</span>
-                            <span class="label-blue">x<sub>w</sub></span>
-                        </button>
-                        <button class="btn btn-operator" data-key="multiply">
-                            <span class="label-primary">×</span>
-                        </button>
+                <!-- Row 1: Financial Keys -->
+                <button class="key fn" style="grid-column:1;grid-row:2;" data-key="n">
+                    <span class="main">n</span>
+                    <span class="blue">12×</span>
+                </button>
+                <button class="key fn" style="grid-column:2;grid-row:2;" data-key="i">
+                    <span class="main">i</span>
+                    <span class="blue">12÷</span>
+                </button>
+                <button class="key medium" style="grid-column:3;grid-row:2;" data-key="PV">
+                    <span class="main">PV</span>
+                    <span class="blue">CFo</span>
+                </button>
+                <button class="key medium" style="grid-column:4;grid-row:2;" data-key="PMT">
+                    <span class="main">PMT</span>
+                    <span class="blue">CFj</span>
+                </button>
+                <button class="key medium" style="grid-column:5;grid-row:2;" data-key="FV">
+                    <span class="main">FV</span>
+                    <span class="blue">Nj</span>
+                </button>
+                <button class="key medium" style="grid-column:6;grid-row:2;" data-key="CHS">
+                    <span class="main">CHS</span>
+                    <span class="blue">DATE</span>
+                </button>
+                <button class="key" style="grid-column:7;grid-row:2;" data-key="7">
+                    <span class="main">7</span>
+                    <span class="blue">BEG</span>
+                </button>
+                <button class="key" style="grid-column:8;grid-row:2;" data-key="8">
+                    <span class="main">8</span>
+                    <span class="blue">END</span>
+                </button>
+                <button class="key" style="grid-column:9;grid-row:2;" data-key="9">
+                    <span class="main">9</span>
+                    <span class="blue">MEM</span>
+                </button>
+                <button class="key small" style="grid-column:10;grid-row:2;" data-key="divide">
+                    <span class="main">÷</span>
+                </button>
 
-                        <!-- Row 5: R/S, SST, R↓, x⟷y, CLx -->
-                        <button class="btn" data-key="RS">
-                            <span class="label-gold">PSE</span>
-                            <span class="label-primary">R/S</span>
-                            <span class="label-blue">P/R</span>
-                        </button>
-                        <button class="btn" data-key="SST">
-                            <span class="label-gold">BST</span>
-                            <span class="label-primary">SST</span>
-                            <span class="label-blue">Σ</span>
-                        </button>
-                        <button class="btn" data-key="Rdown">
-                            <span class="label-gold">GTO</span>
-                            <span class="label-primary">R↓</span>
-                            <span class="label-blue">x↔y</span>
-                        </button>
-                        <button class="btn" data-key="xy">
-                            <span class="label-gold">x=0</span>
-                            <span class="label-primary">x↔y</span>
-                            <span class="label-blue">CLΣ</span>
-                        </button>
-                        <button class="btn" data-key="CLx">
-                            <span class="label-gold">∫<sub>xy</sub></span>
-                            <span class="label-primary">CLx</span>
-                            <span class="label-blue">∫<sub>xR</sub></span>
-                        </button>
-
-                        <!-- Row 6: ENTER (spans 2 rows), 1, 2, 3, Subtract -->
-                        <button class="btn btn-enter" data-key="ENTER">
-                            <span class="label-primary enter-label">ENTER ↑</span>
-                        </button>
-                        <button class="btn btn-number" data-key="1">
-                            <span class="label-gold">YLD</span>
-                            <span class="label-primary">1</span>
-                            <span class="label-blue">10<sup>x</sup></span>
-                        </button>
-                        <button class="btn btn-number" data-key="2">
-                            <span class="label-primary">2</span>
-                            <span class="label-blue">LOG</span>
-                        </button>
-                        <button class="btn btn-number" data-key="3">
-                            <span class="label-primary">3</span>
-                            <span class="label-blue">y<sup>x</sup></span>
-                        </button>
-                        <button class="btn btn-operator" data-key="subtract">
-                            <span class="label-primary">−</span>
-                        </button>
-
-                        <!-- Row 7: 0, ., Σ+, + (ENTER continues from row 6, column 1) -->
-                        <button class="btn btn-number" data-key="0">
-                            <span class="label-gold">BOND</span>
-                            <span class="label-primary">0</span>
-                            <span class="label-blue">x²</span>
-                        </button>
-                        <button class="btn btn-decimal" data-key="decimal">
-                            <span class="label-gold">DBY</span>
-                            <span class="label-primary">.</span>
-                            <span class="label-blue">1/x</span>
-                        </button>
-                        <button class="btn" data-key="SigmaPlus">
-                            <span class="label-gold">L.R.</span>
-                            <span class="label-primary">Σ+</span>
-                            <span class="label-blue">Σ−</span>
-                        </button>
-                        <button class="btn btn-operator" data-key="add">
-                            <span class="label-primary">+</span>
-                        </button>
-
-                        <!-- Row 8: ON, f, g, STO, RCL -->
-                        <button class="btn btn-on" data-key="ON">
-                            <span class="label-primary on-label">ON</span>
-                        </button>
-                        <button class="btn btn-prefix btn-f" data-key="f">
-                            <span class="label-primary prefix-f">f</span>
-                        </button>
-                        <button class="btn btn-prefix btn-g" data-key="g">
-                            <span class="label-primary prefix-g">g</span>
-                        </button>
-                        <button class="btn" data-key="STO">
-                            <span class="label-gold">ŷ,r</span>
-                            <span class="label-primary">STO</span>
-                            <span class="label-blue">x̄</span>
-                        </button>
-                        <button class="btn" data-key="RCL">
-                            <span class="label-gold">%</span>
-                            <span class="label-primary">RCL</span>
-                            <span class="label-blue">s</span>
-                        </button>
-                    </div>
-
-                    <!-- Footer Branding -->
-                    <div class="calculator-footer">
-                        <div class="brand-hp">HEWLETT·PACKARD</div>
-                    </div>
+                <!-- Gold Label Row 2: PRICE/BOND/YTM and SL/DEPRECIATION/SOYD/DB -->
+                <div class="group-label" style="grid-column:1 / span 2; grid-row:3;">
+                    <span>PRICE</span>
+                    <span>BOND</span>
+                    <span>YTM</span>
                 </div>
+                <div class="group-label" style="grid-column:3 / span 3; grid-row:3;">
+                    <span>SL</span>
+                    <span class="center-stack"><span>DEPRECIATION</span><span>SOYD</span></span>
+                    <span>DB</span>
+                </div>
+
+                <!-- Row 2: Scientific Keys -->
+                <button class="key medium" style="grid-column:1;grid-row:4;" data-key="yx">
+                    <span class="main">yˣ</span>
+                    <span class="blue">√x</span>
+                </button>
+                <button class="key medium" style="grid-column:2;grid-row:4;" data-key="1x">
+                    <span class="main">1/x</span>
+                    <span class="blue">eˣ</span>
+                </button>
+                <button class="key medium" style="grid-column:3;grid-row:4;" data-key="PT">
+                    <span class="main">%T</span>
+                    <span class="blue">LN</span>
+                </button>
+                <button class="key medium" style="grid-column:4;grid-row:4;" data-key="DP">
+                    <span class="main">Δ%</span>
+                    <span class="blue">FRAC</span>
+                </button>
+                <button class="key medium" style="grid-column:5;grid-row:4;" data-key="PCT">
+                    <span class="main">%</span>
+                    <span class="blue">INTG</span>
+                </button>
+                <button class="key medium" style="grid-column:6;grid-row:4;" data-key="EEX">
+                    <span class="main">EEX</span>
+                    <span class="blue">ΔDYS</span>
+                </button>
+                <button class="key" style="grid-column:7;grid-row:4;" data-key="4">
+                    <span class="main">4</span>
+                    <span class="blue">D.MY</span>
+                </button>
+                <button class="key" style="grid-column:8;grid-row:4;" data-key="5">
+                    <span class="main">5</span>
+                    <span class="blue">M.DY</span>
+                </button>
+                <button class="key" style="grid-column:9;grid-row:4;" data-key="6">
+                    <span class="main">6</span>
+                    <span class="blue">x̄w</span>
+                </button>
+                <button class="key small" style="grid-column:10;grid-row:4;" data-key="multiply">
+                    <span class="main">×</span>
+                </button>
+
+                <!-- Gold Label Row 3: P/R, Σ, PRGM/CLEAR/FIN/REG/PREFIX -->
+                <div class="gold-text" style="grid-column:1;grid-row:5;">P/R</div>
+                <div class="gold-text" style="grid-column:2;grid-row:5;">Σ</div>
+                <div class="group-program" style="grid-column:3 / span 4; grid-row:5;">
+                    <span>PRGM</span>
+                    <span class="stacked"><span>CLEAR</span><span>FIN</span></span>
+                    <span>REG</span>
+                    <span>PREFIX</span>
+                </div>
+
+                <!-- Row 3: Stack Operations -->
+                <button class="key medium" style="grid-column:1;grid-row:6;" data-key="RS">
+                    <span class="main">R/S</span>
+                    <span class="blue">PSE</span>
+                </button>
+                <button class="key medium" style="grid-column:2;grid-row:6;" data-key="SST">
+                    <span class="main">SST</span>
+                    <span class="blue">BST</span>
+                </button>
+                <button class="key medium" style="grid-column:3;grid-row:6;" data-key="Rdown">
+                    <span class="main">R↓</span>
+                    <span class="blue">GTO</span>
+                </button>
+                <button class="key medium" style="grid-column:4;grid-row:6;" data-key="xy">
+                    <span class="main">x↔y</span>
+                    <span class="blue">x&lt;&gt;y</span>
+                </button>
+                <button class="key medium" style="grid-column:5;grid-row:6;" data-key="CLx">
+                    <span class="main">CLx</span>
+                    <span class="blue">x=0</span>
+                </button>
+                <button class="key enter" data-key="ENTER">
+                    <span class="main">ENTER</span>
+                    <span class="blue">LSTx</span>
+                </button>
+                <button class="key" style="grid-column:7;grid-row:6;" data-key="1">
+                    <span class="main">1</span>
+                    <span class="blue">ŷ,r</span>
+                </button>
+                <button class="key" style="grid-column:8;grid-row:6;" data-key="2">
+                    <span class="main">2</span>
+                    <span class="blue">x̂,r</span>
+                </button>
+                <button class="key" style="grid-column:9;grid-row:6;" data-key="3">
+                    <span class="main">3</span>
+                    <span class="blue">n!</span>
+                </button>
+                <button class="key small" style="grid-column:10;grid-row:6;" data-key="subtract">
+                    <span class="main">−</span>
+                </button>
+
+                <!-- Row 4: Bottom Row -->
+                <button class="key medium on" style="grid-column:1;grid-row:7;" data-key="ON">
+                    <span class="main">ON</span>
+                </button>
+                <button class="key f fn" style="grid-column:2;grid-row:7;" data-key="f">
+                    <span class="main">f</span>
+                </button>
+                <button class="key g fn" style="grid-column:3;grid-row:7;" data-key="g">
+                    <span class="main">g</span>
+                </button>
+                <button class="key medium" style="grid-column:4;grid-row:7;" data-key="STO">
+                    <span class="main">STO</span>
+                </button>
+                <button class="key medium" style="grid-column:5;grid-row:7;" data-key="RCL">
+                    <span class="main">RCL</span>
+                </button>
+                <button class="key" style="grid-column:7;grid-row:7;" data-key="0">
+                    <span class="main">0</span>
+                    <span class="blue">x̄</span>
+                </button>
+                <button class="key" style="grid-column:8;grid-row:7;" data-key="decimal">
+                    <span class="main">.</span>
+                    <span class="blue">s</span>
+                </button>
+                <button class="key medium" style="grid-column:9;grid-row:7;" data-key="SigmaPlus">
+                    <span class="main">Σ+</span>
+                    <span class="blue">Σ−</span>
+                </button>
+                <button class="key small" style="grid-column:10;grid-row:7;" data-key="add">
+                    <span class="main">+</span>
+                </button>
+            </div>
+
+            <!-- Brand Strip -->
+            <div class="brand-strip">
+                <div class="brand">HEWLETT·PACKARD</div>
             </div>
         </div>
     </div>
@@ -260,7 +235,7 @@
         let calculator;
         
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('HP-12C Calculator loaded - Authentic visual design');
+            console.log('HP-12C Calculator loaded - Superior authentic design applied');
         });
     </script>
 </body>

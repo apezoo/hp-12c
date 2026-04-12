@@ -58,7 +58,7 @@ class Calculator {
      * Attach event listeners to all buttons
      */
     attachEventListeners() {
-        this.buttons = document.querySelectorAll('.btn');
+        this.buttons = document.querySelectorAll('.key');
         
         this.buttons.forEach(button => {
             button.addEventListener('click', (e) => {
