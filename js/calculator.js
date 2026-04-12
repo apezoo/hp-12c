@@ -103,9 +103,10 @@ class Calculator {
      * @param {string} primary - Primary label
      */
     handlePrimaryFunction(key, primary) {
-        // Number keys (0-9)
-        if (key >= '0' && key <= '9') {
-            this.enterDigit(key);
+        // Number keys (digit-0 through digit-9)
+        if (key.startsWith('digit-')) {
+            const digit = key.replace('digit-', '');
+            this.enterDigit(digit);
             return;
         }
         
@@ -116,49 +117,49 @@ class Calculator {
         }
         
         switch(key) {
-            case 'f':
+            case 'prefix-f':
                 this.prefixF = true;
                 this.display.setIndicator('f', true);
                 break;
                 
-            case 'g':
+            case 'prefix-g':
                 this.prefixG = true;
                 this.display.setIndicator('g', true);
                 break;
                 
-            case 'ENTER':
+            case 'enter':
                 this.enter();
                 break;
                 
-            case 'CLx':
+            case 'clx':
                 this.clearX();
                 break;
                 
-            case 'Rdown':
+            case 'roll-down':
                 this.rollDown();
                 break;
                 
-            case 'xy':
+            case 'swap-xy':
                 this.swapXY();
                 break;
                 
-            case 'add':
+            case 'op-add':
                 this.add();
                 break;
                 
-            case 'subtract':
+            case 'op-subtract':
                 this.subtract();
                 break;
                 
-            case 'multiply':
+            case 'op-multiply':
                 this.multiply();
                 break;
                 
-            case 'divide':
+            case 'op-divide':
                 this.divide();
                 break;
                 
-            case 'ON':
+            case 'on':
                 this.reset();
                 break;
                 

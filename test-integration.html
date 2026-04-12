@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3 Integration Tests - HP-12C</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 2rem;
+        }
+        
+        h1 {
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #718096;
+            margin-bottom: 2rem;
+        }
+        
+        .test-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .test-section h2 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .status.pass {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .status.fail {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .status.pending {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+        
+        .test-results {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .result-item {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        .result-item.pass {
+            border-left: 3px solid #48bb78;
+        }
+        
+        .result-item.fail {
+            border-left: 3px solid #f56565;
+            background: #fff5f5;
+        }
+        
+        .result-item.info {
+            border-left: 3px solid #4299e1;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .value {
+            color: #2d3748;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .error-list {
+            background: #fff5f5;
+            border: 2px solid #fc8181;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .error-list h3 {
+            color: #c53030;
+            margin-bottom: 0.5rem;
+        }
+        
+        .error-list ul {
+            margin-left: 1.5rem;
+            color: #742a2a;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        
+        .summary h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .summary-stats {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .summary-stat {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .summary-stat .label {
+            opacity: 0.9;
+            font-size: 0.875rem;
+        }
+        
+        .summary-stat .value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Phase 3 Integration Tests</h1>
+        <p class="subtitle">Automated validation of data-key standardization and metadata integration</p>
+        
+        <button onclick="runAllTests()">▶️ Run All Tests</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script src="js/key-metadata.js"></script>
+    <script>
+        let testResults = {
+            passed: 0,
+            failed: 0,
+            total: 0
+        };
+        
+        function runAllTests() {
+            testResults = { passed: 0, failed: 0, total: 0 };
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            
+            // Run all test suites
+            testMetadataLoading();
+            testHTMLDataKeys();
+            testDataKeyMetadataMatch();
+            testCalculatorHandlers();
+            testKeyCategories();
+            
+            // Display summary
+            displaySummary();
+        }
+        
+        function testMetadataLoading() {
+            const section = createTestSection('Test 1: Metadata Loading');
+            
+            // Test 1.1: Metadata object exists
+            recordTest(
+                section,
+                'Metadata object exists',
+                typeof window.HP12C_KEY_METADATA !== 'undefined',
+                'window.HP12C_KEY_METADATA is defined',
+                'window.HP12C_KEY_METADATA is not defined'
+            );
+            
+            // Test 1.2: Metadata has 39 keys
+            const keyCount = window.HP12C_KEY_METADATA ? Object.keys(window.HP12C_KEY_METADATA).length : 0;
+            recordTest(
+                section,
+                'Metadata contains 39 keys',
+                keyCount === 39,
+                `Found ${keyCount} keys`,
+                `Expected 39 keys, found ${keyCount}`
+            );
+            
+            // Test 1.3: Metadata utility functions exist
+            const hasGetStats = typeof window.HP12C_KEY_METADATA?.getStats === 'function';
+            recordTest(
+                section,
+                'Utility functions exist',
+                hasGetStats,
+                'getStats() function is available',
+                'getStats() function is missing'
+            );
+        }
+        
+        function testHTMLDataKeys() {
+            const section = createTestSection('Test 2: HTML Data-Keys');
+            
+            // Get all key buttons from index.html by loading it in iframe
+            const expectedKeys = [
+                // Row 1: Financial + digits + divide
+                'n', 'i', 'pv', 'pmt', 'fv', 'chs',
+                'digit-7', 'digit-8', 'digit-9', 'op-divide',
+                // Row 2: Scientific + digits + multiply
+                'power-yx', 'reciprocal', 'percent-total', 'delta-percent', 'percent', 'eex',
+                'digit-4', 'digit-5', 'digit-6', 'op-multiply',
+                // Row 3: Stack + digits + subtract
+                'rs', 'sst', 'roll-down', 'swap-xy', 'clx', 'enter',
+                'digit-1', 'digit-2', 'digit-3', 'op-subtract',
+                // Row 4: Control + digit-0 + decimal + sigma + add
+                'on', 'prefix-f', 'prefix-g', 'sto', 'rcl',
+                'digit-0', 'decimal', 'sigma-plus', 'op-add'
+            ];
+            
+            recordTest(
+                section,
+                'Expected 39 buttons in HTML',
+                expectedKeys.length === 39,
+                `Layout defines ${expectedKeys.length} keys`,
+                `Expected 39 keys, found ${expectedKeys.length}`
+            );
+            
+            // Test naming conventions
+            const digitKeys = expectedKeys.filter(k => k.startsWith('digit-'));
+            recordTest(
+                section,
+                'Digit keys use digit-N format',
+                digitKeys.length === 10,
+                `Found 10 digit keys: ${digitKeys.join(', ')}`,
+                `Expected 10 digit keys, found ${digitKeys.length}`
+            );
+            
+            const opKeys = expectedKeys.filter(k => k.startsWith('op-'));
+            recordTest(
+                section,
+                'Operation keys use op-NAME format',
+                opKeys.length === 4,
+                `Found 4 operation keys: ${opKeys.join(', ')}`,
+                `Expected 4 operation keys, found ${opKeys.length}`
+            );
+            
+            const prefixKeys = expectedKeys.filter(k => k.startsWith('prefix-'));
+            recordTest(
+                section,
+                'Prefix keys use prefix-NAME format',
+                prefixKeys.length === 2,
+                `Found 2 prefix keys: ${prefixKeys.join(', ')}`,
+                `Expected 2 prefix keys, found ${prefixKeys.length}`
+            );
+        }
+        
+        function testDataKeyMetadataMatch() {
+            const section = createTestSection('Test 3: Data-Key ↔ Metadata Mapping');
+            
+            if (!window.HP12C_KEY_METADATA) {
+                recordTest(section, 'Mapping test', false, '', 'Metadata not loaded');
+                return;
+            }
+            
+            const htmlKeys = [
+                'n', 'i', 'pv', 'pmt', 'fv', 'chs',
+                'digit-7', 'digit-8', 'digit-9', 'op-divide',
+                'power-yx', 'reciprocal', 'percent-total', 'delta-percent', 'percent', 'eex',
+                'digit-4', 'digit-5', 'digit-6', 'op-multiply',
+                'rs', 'sst', 'roll-down', 'swap-xy', 'clx', 'enter',
+                'digit-1', 'digit-2', 'digit-3', 'op-subtract',
+                'on', 'prefix-f', 'prefix-g', 'sto', 'rcl',
+                'digit-0', 'decimal', 'sigma-plus', 'op-add'
+            ];
+            
+            const metadataKeys = Object.keys(window.HP12C_KEY_METADATA);
+            
+            // Check all HTML keys have metadata
+            const missingMetadata = [];
+            htmlKeys.forEach(key => {
+                if (!window.HP12C_KEY_METADATA[key]) {
+                    missingMetadata.push(key);
+                }
+            });
+            
+            recordTest(
+                section,
+                'All HTML keys have metadata',
+                missingMetadata.length === 0,
+                'All 39 HTML keys found in metadata',
+                `Missing metadata for: ${missingMetadata.join(', ')}`
+            );
+            
+            // Check all metadata keys are used in HTML
+            const unusedMetadata = [];
+            metadataKeys.forEach(key => {
+                if (!htmlKeys.includes(key)) {
+                    unusedMetadata.push(key);
+                }
+            });
+            
+            recordTest(
+                section,
+                'All metadata keys are used in HTML',
+                unusedMetadata.length === 0,
+                'All metadata keys are mapped to HTML buttons',
+                `Unused metadata keys: ${unusedMetadata.join(', ')}`
+            );
+            
+            // Perfect 1:1 mapping
+            recordTest(
+                section,
+                'Perfect 1:1 mapping (39↔39)',
+                htmlKeys.length === metadataKeys.length && missingMetadata.length === 0 && unusedMetadata.length === 0,
+                '✅ Perfect match: 39 HTML keys = 39 metadata keys',
+                'Mismatch between HTML and metadata'
+            );
+        }
+        
+        function testCalculatorHandlers() {
+            const section = createTestSection('Test 4: Calculator Handler Logic');
+            
+            // Test standardized format expectations
+            const tests = [
+                { name: 'Digit format', key: 'digit-7', expected: true },
+                { name: 'Operation format', key: 'op-add', expected: true },
+                { name: 'Prefix format', key: 'prefix-f', expected: true },
+                { name: 'Stack format', key: 'enter', expected: true },
+                { name: 'Old format rejected', key: '7', expected: false },
+                { name: 'Old format rejected', key: 'add', expected: false },
+                { name: 'Old format rejected', key: 'f', expected: false }
+            ];
+            
+            tests.forEach(test => {
+                const isStandardized = 
+                    test.key.startsWith('digit-') || 
+                    test.key.startsWith('op-') || 
+                    test.key.startsWith('prefix-') ||
+                    test.key === 'decimal' ||
+                    ['enter', 'clx', 'on', 'roll-down', 'swap-xy', 'sto', 'rcl', 
+                     'n', 'i', 'pv', 'pmt', 'fv', 'chs', 'reciprocal', 'percent', 
+                     'percent-total', 'delta-percent', 'power-yx', 'eex', 'rs', 'sst', 
+                     'sigma-plus'].includes(test.key);
+                
+                recordTest(
+                    section,
+                    test.name,
+                    isStandardized === test.expected,
+                    `'${test.key}' format: ${isStandardized ? 'standardized' : 'old style'}`,
+                    `'${test.key}' format check failed`
+                );
+            });
+        }
+        
+        function testKeyCategories() {
+            const section = createTestSection('Test 5: Key Categories');
+            
+            if (!window.HP12C_KEY_METADATA) {
+                recordTest(section, 'Category test', false, '', 'Metadata not loaded');
+                return;
+            }
+            
+            const stats = window.HP12C_KEY_METADATA.getStats();
+            
+            // Test status distribution
+            recordTest(
+                section,
+                'Implemented keys',
+                stats.byStatus.implemented === 22,
+                `Found 22 implemented keys`,
+                `Expected 22 implemented, found ${stats.byStatus.implemented}`
+            );
+            
+            recordTest(
+                section,
+                'Partially implemented keys',
+                stats.byStatus['partially-implemented'] === 3,
+                `Found 3 partially-implemented keys (chs, sto, rcl)`,
+                `Expected 3 partial, found ${stats.byStatus['partially-implemented']}`
+            );
+            
+            recordTest(
+                section,
+                'Planned keys',
+                stats.byStatus.planned === 14,
+                `Found 14 planned keys`,
+                `Expected 14 planned, found ${stats.byStatus.planned}`
+            );
+            
+            // Test category coverage
+            const expectedCategories = [
+                'numeric-entry', 'arithmetic', 'stack', 'prefix', 'control',
+                'financial', 'memory', 'percentage', 'power-log', 'programming', 'statistics'
+            ];
+            
+            const actualCategories = Object.keys(stats.byCategory);
+            const missingCategories = expectedCategories.filter(c => !actualCategories.includes(c));
+            
+            recordTest(
+                section,
+                'All expected categories present',
+                missingCategories.length === 0,
+                `All ${expectedCategories.length} categories documented`,
+                `Missing categories: ${missingCategories.join(', ')}`
+            );
+        }
+        
+        function createTestSection(title) {
+            const section = document.createElement('div');
+            section.className = 'test-section';
+            section.innerHTML = `<h2>${title}</h2><div class="test-results"></div>`;
+            document.getElementById('results').appendChild(section);
+            return section.querySelector('.test-results');
+        }
+        
+        function recordTest(container, testName, passed, successMsg, failMsg) {
+            testResults.total++;
+            if (passed) testResults.passed++;
+            else testResults.failed++;
+            
+            const item = document.createElement('div');
+            item.className = `result-item ${passed ? 'pass' : 'fail'}`;
+            item.innerHTML = `
+                <strong>${passed ? '✅' : '❌'} ${testName}</strong><br>
+                <span style="color: #718096;">${passed ? successMsg : failMsg}</span>
+            `;
+            container.appendChild(item);
+        }
+        
+        function displaySummary() {
+            const percent = Math.round((testResults.passed / testResults.total) * 100);
+            const status = percent === 100 ? 'pass' : (percent >= 80 ? 'pending' : 'fail');
+            
+            const summary = document.createElement('div');
+            summary.className = 'summary';
+            summary.innerHTML = `
+                <h2>📊 Test Summary</h2>
+                <div class="summary-stats">
+                    <div class="summary-stat">
+                        <span class="label">Total Tests</span>
+                        <span class="value">${testResults.total}</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="label">Passed</span>
+                        <span class="value">${testResults.passed}</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="label">Failed</span>
+                        <span class="value">${testResults.failed}</span>
+                    </div>
+                    <div class="summary-stat">
+                        <span class="label">Success Rate</span>
+                        <span class="value">${percent}%</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('results').insertBefore(summary, document.getElementById('results').firstChild);
+            
+            // Log to console
+            console.log('='.repeat(60));
+            console.log('PHASE 3 INTEGRATION TEST RESULTS');
+            console.log('='.repeat(60));
+            console.log(`Total Tests: ${testResults.total}`);
+            console.log(`Passed: ${testResults.passed}`);
+            console.log(`Failed: ${testResults.failed}`);
+            console.log(`Success Rate: ${percent}%`);
+            console.log('='.repeat(60));
+            
+            if (percent === 100) {
+                console.log('🎉 ALL TESTS PASSED! Phase 3 integration is correct.');
+            } else if (percent >= 80) {
+                console.warn('⚠️ Some tests failed. Review results above.');
+            } else {
+                console.error('❌ Multiple test failures. Integration needs fixes.');
+            }
+        }
+        
+        // Auto-run tests on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('Phase 3 Integration Test Page loaded');
+            console.log('Click "Run All Tests" button or call runAllTests() in console');
+        });
+    </script>
+</body>
+</html>

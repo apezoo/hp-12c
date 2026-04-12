@@ -554,3 +554,267 @@ body {
         transition: none;
     }
 }
+
+/* ============================================
+   EDUCATIONAL LAYER STYLES
+   ============================================ */
+
+/* Learn Mode Toggle */
+.learn-mode-control {
+    max-width: min(980px, 96vw);
+    margin: 0 auto 1rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.learn-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.learn-toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #2a2a2a;
+    cursor: pointer;
+}
+
+.learn-icon {
+    font-size: 1.5rem;
+}
+
+.learn-toggle-button {
+    position: relative;
+    width: 60px;
+    height: 32px;
+    background: #6b7280;
+    border: none;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.learn-toggle-button[aria-checked="true"] {
+    background: linear-gradient(135deg, #2aa4e6, #1f97da);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.learn-toggle-button[aria-checked="true"] .toggle-slider {
+    transform: translateX(28px);
+}
+
+.toggle-state-text {
+    position: absolute;
+    right: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    line-height: 32px;
+}
+
+.learn-toggle-button[aria-checked="true"] .toggle-state-text {
+    left: 8px;
+    right: auto;
+}
+
+.learn-mode-hint {
+    flex-basis: 100%;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.learn-mode-hint .hint-active {
+    display: none;
+}
+
+.learn-mode-control.active .learn-mode-hint .hint-default {
+    display: none;
+}
+
+.learn-mode-control.active .learn-mode-hint .hint-active {
+    display: inline;
+    color: #2aa4e6;
+    font-weight: 600;
+}
+
+/* Key Hover Enhancement in Learn Mode */
+.learn-mode-active .key {
+    cursor: help;
+}
+
+.learn-mode-active .key:hover {
+    outline: 2px solid #2aa4e6;
+    outline-offset: 2px;
+}
+
+/* Tooltip Styles */
+.key-tooltip {
+    position: fixed;
+    z-index: 10000;
+    background: rgba(26, 29, 35, 0.95);
+    backdrop-filter: blur(10px);
+    color: #f4f3ef;
+    border: 1px solid #d79a33;
+    border-radius: 8px;
+    padding: 12px 16px;
+    max-width: 320px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.key-tooltip.visible {
+    opacity: 1;
+}
+
+.tooltip-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(215, 154, 51, 0.3);
+}
+
+.tooltip-key-label {
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: #d79a33;
+}
+
+.tooltip-display-name {
+    font-size: 0.875rem;
+    color: #b0b5ba;
+}
+
+.tooltip-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.tooltip-category,
+.tooltip-primary,
+.tooltip-shifted {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.tooltip-shifted.gold strong {
+    color: #d79a33;
+}
+
+.tooltip-shifted.blue strong {
+    color: #2aa4e6;
+}
+
+.tooltip-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(215, 154, 51, 0.3);
+    font-size: 0.75rem;
+}
+
+.tooltip-hint {
+    color: #b0b5ba;
+    font-style: italic;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-badge.implemented {
+    background: rgba(72, 199, 116, 0.2);
+    color: #48c774;
+}
+
+.status-badge.partially-implemented {
+    background: rgba(245, 166, 35, 0.2);
+    color: #f5a623;
+}
+
+.status-badge.planned {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ff9800;
+}
+
+.status-badge.not-implemented {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+}
+
+.status-badge.informational-only {
+    background: rgba(74, 159, 222, 0.2);
+    color: #4a9fde;
+}
+
+/* Mobile Responsiveness for Educational Layer */
+@media (max-width: 640px) {
+    .key-tooltip {
+        max-width: 280px;
+        padding: 10px 14px;
+    }
+    
+    .learn-mode-control {
+        padding: 0.75rem 1rem;
+    }
+    
+    .learn-toggle-container {
+        justify-content: center;
+    }
+}
+
+/* Reduced Motion for Educational Layer */
+@media (prefers-reduced-motion: reduce) {
+    .key-tooltip,
+    .toggle-slider,
+    .learn-toggle-button {
+        transition: none;
+    }
+}
+
+/* Focus Visible Enhancement */
+.key:focus-visible {
+    outline: 2px solid #f4d03f;
+    outline-offset: 2px;
+    z-index: 10;
+}
+
+.learn-toggle-button:focus-visible {
+    outline: 2px solid #f4d03f;
+    outline-offset: 2px;
+}
