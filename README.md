@@ -13,6 +13,13 @@ An independent, educational web-based implementation inspired by the classic HP-
 
 ## ✨ Features
 
+### 🎓 Learn Mode (NEW!)
+- **Interactive educational layer** - Click any key to see detailed information
+- **Hover tooltips** - Quick info appears when hovering over keys
+- **Complete documentation** - All 39 keys documented with functions, examples, and status
+- **Non-intrusive** - Toggle on/off without affecting calculator operation
+- **Beautiful UI** - Consistent design with gold-themed educational pages
+
 ### 🎨 Authentic Design
 - **Photorealistic appearance** matching the original HP-12C Voyager Series
 - Brushed gold metallic front plate with horizontal texture
@@ -76,7 +83,16 @@ start index.html  # Windows
 - **[Fun Features](docs/fun-features.md)** - All the cool features explained
 - **[Testing Guide](TESTING.md)** - Test cases and validation
 
-## 🎯 Usage Example
+## 🎯 Usage Examples
+
+### Learn Mode (Educational Layer)
+```
+1. Click the "Learn Mode" toggle at the top
+2. Hover over any key to see quick info in a tooltip
+3. Click any key to see detailed documentation
+4. View functions, descriptions, examples, and status
+5. Return to calculator and toggle off to use normally
+```
 
 ### Basic Arithmetic (RPN)
 ```
@@ -102,20 +118,25 @@ PV → -1,126.74
 HP-12C/
 ├── index.html              # Main calculator interface
 ├── css/
-│   └── styles.css         # Authentic HP-12C styling
+│   └── styles.css         # Authentic HP-12C styling + educational layer
 ├── js/
 │   ├── calculator.js      # Main controller
 │   ├── rpn-stack.js       # RPN stack engine
 │   ├── display.js         # Display manager
 │   ├── memory.js          # Memory registers
 │   ├── financial.js       # Financial calculations
-│   └── keyboard.js        # Keyboard handler
+│   ├── keyboard.js        # Keyboard handler
+│   ├── key-metadata.js    # 🆕 Key documentation metadata (39 keys)
+│   └── key-info.js        # 🆕 Learn Mode & tooltip system
 ├── docs/
+│   ├── key-detail.html    # 🆕 Individual key detail page
 │   ├── examples.html      # Bilingual examples page
 │   ├── examples.md        # Examples documentation
 │   └── *.md              # Additional documentation
 └── tests/
-    └── test-cases.md      # Test scenarios
+    ├── test-cases.md      # Test scenarios
+    ├── test-metadata.html # 🆕 Metadata validation tests
+    └── test-integration.html # 🆕 Integration tests
 ```
 
 ## 🛠️ Technology Stack
@@ -185,7 +206,7 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 ## 🌟 Project Status
 
-**Current Phase:** Phase 2 Complete (30% overall)
+**Current Phase:** Phase 4 Complete - Educational Layer (40% overall)
 
 ✅ **Completed:**
 - Complete visual design (98% authenticity)
@@ -193,8 +214,16 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 - Display manager with multiple formats
 - Memory registers (20 registers)
 - Basic arithmetic operations
+- **Learn Mode with interactive key documentation (39 keys)**
+- **Hover tooltips with quick info**
+- **Detailed key information pages**
 - Bilingual examples page
 - Comprehensive documentation
+
+### Implementation Status by Key Type
+- ✅ **22 keys fully implemented** (digits, arithmetic, stack, control)
+- ⚙️ **3 keys partially implemented** (CHS, STO, RCL)
+- 📋 **14 keys planned** (financial, scientific, statistics)
 
 🚧 **In Progress:**
 - Financial functions implementation
@@ -202,7 +231,8 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 - Advanced display modes
 - Program memory
 
-📋 **Planned:**
+📋 **Planned (Phase 5+):**
+- Complete TVM solver (n, i, PV, PMT, FV)
 - Statistical functions
 - Date calculations
 - Additional display formats
@@ -218,4 +248,23 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 *Built with ❤️ and attention to detail*
 
-**Visual Authenticity:** 98% | **Functional Completeness:** 30% | **Documentation:** Comprehensive
+**Visual Authenticity:** 98% | **Calculator Implementation:** 30% | **Educational Layer:** 100% | **Documentation:** Comprehensive
+
+---
+
+## 💡 About Learn Mode
+
+The **Learn Mode** is a unique educational feature that helps users understand every key on the HP-12C:
+
+- **All 39 keys documented** with primary, gold (f), and blue (g) functions
+- **Implementation status badges** show which functions are currently working
+- **Clear descriptions** explain what each key does
+- **Hover tooltips** provide quick reference without leaving the calculator
+- **Detailed pages** offer comprehensive information, examples, and technical details
+
+**Important:** Learn Mode shows documentation for ALL keys, including those not yet implemented in the calculator. Check the status badge on each key's detail page:
+- ✅ **Implemented** - Fully working in calculator
+- ⚙️ **Partially Implemented** - Basic functionality working
+- 📋 **Planned** - Documentation ready, calculator function coming soon
+
+This allows you to learn about ALL HP-12C functions, even those we're still implementing!

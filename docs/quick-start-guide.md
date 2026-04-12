@@ -1,5 +1,37 @@
 # HP-12C Quick Start Guide
 
+## 🎓 Learn Mode - Your Interactive Guide
+
+Before diving into calculations, take advantage of the **Learn Mode** feature!
+
+### What is Learn Mode?
+
+Learn Mode is an interactive educational layer that helps you understand every key on the HP-12C calculator. It's perfect for beginners and experts alike.
+
+### How to Use Learn Mode
+
+1. **Find the toggle** at the top of the calculator (below the title)
+2. **Click the toggle** to turn Learn Mode ON
+3. **Hover over any key** to see a quick tooltip with basic information
+4. **Click any key** to open a detailed information page with:
+   - Complete function descriptions
+   - Primary, gold (f), and blue (g) functions
+   - Implementation status
+   - Technical details
+5. **Click "← Back to Calculator"** to return
+6. **Toggle OFF** when you're ready to use the calculator normally
+
+### Understanding Status Badges
+
+When viewing key details, you'll see status badges:
+- ✅ **Implemented** - This function works right now!
+- ⚙️ **Partially Implemented** - Basic functionality working
+- 📋 **Planned** - Coming soon (but documentation is ready)
+
+**Tip:** All 39 keys are documented in Learn Mode, even those not yet implemented in the calculator. This lets you learn about the complete HP-12C while we continue development.
+
+---
+
 ## Introduction to RPN (Reverse Polish Notation)
 
 The HP-12C uses RPN logic, which is different from standard calculators. Instead of pressing `2 + 3 =`, you press `2 ENTER 3 +`.
