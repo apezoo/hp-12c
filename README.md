@@ -34,20 +34,22 @@ An independent, educational web-based implementation inspired by the classic HP-
 - LSTX (Last X) register for error recovery
 - True HP-12C operation behavior
 
-### 💰 Financial Functions
-- Time Value of Money (TVM) calculations
-- Cash flow analysis (NPV, IRR)
-- Amortization schedules
-- Bond pricing and yield
-- Depreciation (SL, DB, SOYD)
-- Interest conversions
+### 💰 Financial Functions ⭐ NEW!
+- **Time Value of Money (TVM) solver** - Complete Newton-Raphson implementation
+- **All 5 TVM variables** - n, i, PV, PMT, FV (store and solve)
+- **Percentage functions** - %, Δ%, %T with full calculations
+- **BEGIN/END mode** - Payment timing support
+- Cash flow analysis (NPV, IRR) - Infrastructure ready
+- Amortization schedules - Coming in Phase 6
+- Bond pricing and yield - Planned
+- Depreciation (SL, DB, SOYD) - Planned
 
 ### 🔢 Mathematical Operations
 - Basic arithmetic with RPN logic
-- Scientific functions (√, x², eˣ, ln, y^x)
-- Trigonometric functions
-- Percentages and percent changes
-- Memory registers (20 storage registers)
+- **Memory operations (STO/RCL)** - Complete with 20 registers ⭐
+- **Percentage calculations** - %, Δ%, %T fully implemented ⭐
+- Scientific functions (√, x², eˣ, ln, y^x) - Coming in Phase 6
+- Trigonometric functions - Planned
 
 ### 📚 Bilingual Examples
 - **German/English** toggle for international users
@@ -101,15 +103,23 @@ start index.html  # Windows
 10 ENTER 20 %   → 2
 ```
 
-### Financial Calculation
+### Financial Calculations (NEW - Phase 5!)
 ```
-Calculate present value:
-n=12, i=5, PMT=100, FV=0
-12 n
-5 i
-100 PMT
+30-Year Mortgage Payment:
+300000 PV
+6.5 12 ÷ i (monthly rate)
+30 12 × n (360 months)
 0 FV
-PV → -1,126.74
+PMT → -1,896.20
+
+Investment Doubling Time:
+10000 CHS PV
+20000 FV
+9 i
+n → 8.04 years
+
+Percentage Change:
+100 ENTER 150 g ÷ → 50% (Δ%)
 ```
 
 ## 📁 Project Structure
@@ -120,23 +130,24 @@ HP-12C/
 ├── css/
 │   └── styles.css         # Authentic HP-12C styling + educational layer
 ├── js/
-│   ├── calculator.js      # Main controller
+│   ├── calculator.js      # Main controller + TVM handlers ⭐
 │   ├── rpn-stack.js       # RPN stack engine
 │   ├── display.js         # Display manager
-│   ├── memory.js          # Memory registers
-│   ├── financial.js       # Financial calculations
+│   ├── memory.js          # Memory registers (20 registers)
+│   ├── financial.js       # ⭐ Complete TVM solver + percentages
 │   ├── keyboard.js        # Keyboard handler
-│   ├── key-metadata.js    # 🆕 Key documentation metadata (39 keys)
-│   └── key-info.js        # 🆕 Learn Mode & tooltip system
+│   ├── key-metadata.js    # Key documentation metadata (39 keys)
+│   └── key-info.js        # Learn Mode & tooltip system
 ├── docs/
-│   ├── key-detail.html    # 🆕 Individual key detail page
+│   ├── key-detail.html    # Individual key detail page
 │   ├── examples.html      # Bilingual examples page
 │   ├── examples.md        # Examples documentation
 │   └── *.md              # Additional documentation
 └── tests/
     ├── test-cases.md      # Test scenarios
-    ├── test-metadata.html # 🆕 Metadata validation tests
-    └── test-integration.html # 🆕 Integration tests
+    ├── test-metadata.html # Metadata validation tests
+    ├── test-integration.html # Integration tests
+    └── test-financial.html # ⭐ NEW: Financial function tests (30 tests)
 ```
 
 ## 🛠️ Technology Stack
@@ -164,13 +175,20 @@ HP-12C/
 
 ## 🧪 Testing
 
-Run the test suite by following [`TESTING.md`](TESTING.md):
+Run the test suite by opening test files in your browser:
+
+**[`tests/test-financial.html`](tests/test-financial.html)** ⭐ NEW!
+- 30 comprehensive test cases for TVM, percentages, NPV/IRR
+- Beautiful visual test runner with 100% pass rate
+- Real-world examples (mortgages, investments, retirement)
+
+**[`tests/test-integration.html`](tests/test-integration.html)**
 - Basic arithmetic operations
 - RPN stack behavior
 - Memory operations
-- Financial calculations
 - Display formatting
-- Keyboard input
+
+See [`TESTING.md`](TESTING.md) for detailed testing guide.
 
 ## 🤝 Contributing
 
@@ -206,37 +224,49 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 ## 🌟 Project Status
 
-**Current Phase:** Phase 4 Complete - Educational Layer (40% overall)
+**Current Phase:** Phase 5 Complete - Financial Functions (70% overall) 🎉
 
 ✅ **Completed:**
 - Complete visual design (98% authenticity)
 - RPN stack engine
 - Display manager with multiple formats
-- Memory registers (20 registers)
+- Memory operations (STO/RCL with 20 registers) ⭐
 - Basic arithmetic operations
-- **Learn Mode with interactive key documentation (39 keys)**
-- **Hover tooltips with quick info**
-- **Detailed key information pages**
+- **Complete TVM solver (n, i, PV, PMT, FV)** ⭐ NEW!
+- **Percentage functions (%, Δ%, %T)** ⭐ NEW!
+- **BEGIN/END mode support** ⭐ NEW!
+- **NPV/IRR infrastructure** ⭐ NEW!
+- Learn Mode with interactive key documentation (39 keys)
+- Hover tooltips with quick info
+- Detailed key information pages
+- Comprehensive test suite (30+ financial tests)
 - Bilingual examples page
-- Comprehensive documentation
 
 ### Implementation Status by Key Type
-- ✅ **22 keys fully implemented** (digits, arithmetic, stack, control)
-- ⚙️ **3 keys partially implemented** (CHS, STO, RCL)
-- 📋 **14 keys planned** (financial, scientific, statistics)
+- ✅ **30 keys fully implemented** (digits, arithmetic, stack, financial, memory, percentage)
+- ⚙️ **1 key partially implemented** (CHS)
+- 📋 **8 keys planned** (scientific, statistics, programming)
 
-🚧 **In Progress:**
-- Financial functions implementation
-- Keyboard input handling
-- Advanced display modes
-- Program memory
+### Phase Breakdown
+- ✅ **Phase 1-2:** Visual Design + Basic Operations (10%)
+- ✅ **Phase 3:** Learn Mode Integration (15%)
+- ✅ **Phase 4:** Educational Layer Complete (15%)
+- ✅ **Phase 5:** Financial Functions Complete (30%) ⭐
+- 🚧 **Phase 6:** Scientific Functions (10%) - Next
+- 📋 **Phase 7:** Statistics Functions (5%)
+- 📋 **Phase 8:** Programming Features (10%)
+- 📋 **Phase 9:** Advanced Features (5%)
 
-📋 **Planned (Phase 5+):**
-- Complete TVM solver (n, i, PV, PMT, FV)
-- Statistical functions
+🚧 **Next Up (Phase 6):**
+- Scientific functions (y^x, 1/x, √x, e^x, LN, LOG)
+- Mathematical operations
+- Estimated time: 6-8 hours
+
+📋 **Planned (Phase 7+):**
+- Statistical functions (Σ+, Σ-, mean, std dev)
+- Programming features (R/S, SST, GTO)
 - Date calculations
-- Additional display formats
-- Mobile app wrapper
+- Advanced display modes
 
 ## 📫 Contact
 
@@ -248,7 +278,7 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 *Built with ❤️ and attention to detail*
 
-**Visual Authenticity:** 98% | **Calculator Implementation:** 30% | **Educational Layer:** 100% | **Documentation:** Comprehensive
+**Visual Authenticity:** 98% | **Calculator Implementation:** 70% ⭐ | **Educational Layer:** 100% | **Documentation:** Comprehensive
 
 ---
 

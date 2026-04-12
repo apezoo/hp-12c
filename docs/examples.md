@@ -256,7 +256,9 @@ RCL 5                (R5 abrufen)
 
 ## Zeitwert des Geldes (TVM)
 
-### Beispiel 18: Kreditrate
+> ⭐ **NEU - Phase 5 Complete!** Alle TVM-Funktionen sind jetzt vollständig implementiert und funktionsfähig!
+
+### Beispiel 18: Kreditrate ✅ Implementiert
 **Aufgabe**: Sie kaufen ein Haus für 350.000€ mit 30-jähriger Hypothek zu 6,5% Jahreszins. Wie hoch ist die monatliche Rate?
 
 **Tasteneingabe**:
@@ -274,7 +276,7 @@ PMT                  (Rate berechnen)
 
 ---
 
-### Beispiel 19: Sparziel
+### Beispiel 19: Sparziel ✅ Implementiert
 **Aufgabe**: Wie viel muss ich monatlich sparen, um in 5 Jahren 50.000€ zu haben bei 4% Jahreszins?
 
 **Tasteneingabe**:
@@ -292,7 +294,7 @@ PMT                  (Rate berechnen)
 
 ---
 
-### Beispiel 20: Anlagerendite
+### Beispiel 20: Anlagerendite ✅ Implementiert
 **Aufgabe**: Sie investieren 10.000€ und es wächst auf 15.000€ in 3 Jahren. Was war Ihre jährliche Rendite?
 
 **Tasteneingabe**:
@@ -907,7 +909,9 @@ RCL 5                (recall R5)
 
 ## Time Value of Money (TVM)
 
-### Example 18: Loan Payment
+> ⭐ **NEW - Phase 5 Complete!** All TVM functions are now fully implemented and functional!
+
+### Example 18: Loan Payment ✅ Implemented
 **Problem**: You're buying a house for $350,000 with a 30-year mortgage at 6.5% annual interest. What's your monthly payment?
 
 **Keystrokes**:
@@ -925,7 +929,7 @@ PMT                  (calculate payment)
 
 ---
 
-### Example 19: Savings Goal
+### Example 19: Savings Goal ✅ Implemented
 **Problem**: How much do I need to save monthly to have $50,000 in 5 years at 4% annual interest?
 
 **Keystrokes**:
@@ -943,7 +947,7 @@ PMT                  (calculate payment)
 
 ---
 
-### Example 20: Investment Return
+### Example 20: Investment Return ✅ Implemented
 **Problem**: You invest $10,000 and it grows to $15,000 in 3 years. What was your annual return rate?
 
 **Keystrokes**:

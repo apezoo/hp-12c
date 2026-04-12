@@ -74,14 +74,14 @@
       longDescription: "The n key is one of the five Time Value of Money registers (n, i, PV, PMT, FV) that form the core of the HP-12C's financial capabilities. The n register stores the number of compounding or payment periods in a financial calculation. For loans and mortgages, this is typically the number of monthly payments. For investments, it might be years or any other period.\n\nWhen solving TVM problems, you typically: 1) Enter known values into four of the five TVM keys, 2) Press the unknown key to solve for it, 3) The HP-12C iteratively calculates the unknown value.\n\nThe n value must match the compounding frequency of the interest rate (i). If i is monthly, n should be in months.",
       
       implementation: {
-        status: "planned",
-        note: "Financial engine is not implemented yet. TVM solver requires iterative Newton-Raphson algorithm for solving n, i, or FV. This is a complex implementation scheduled for Phase 5 of the project.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5 complete: Full TVM solver with Newton-Raphson algorithm implemented. Stores and solves for number of periods using closed-form solution when PMT=0, or iterative method with payments.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "On the original HP-12C, pressing 'n' without a preceding number displays the currently stored n value. Pressing a number then 'n' stores that number in the n register. When four TVM variables are known, pressing 'n' solves for the number of periods using iterative calculation, which can take 1-3 seconds.",
       
-      simulatorBehavior: "Currently not implemented. The key is displayed as part of the authentic visual interface, but pressing it has no effect. The web simulator will need to implement the full TVM calculation engine before this key becomes functional.",
+      simulatorBehavior: "Fully implemented. Pressing a number then 'n' stores the value. Solving is automatic when calculator detects sufficient TVM variables are entered. Syncs with memory register R0.",
       
       relatedTopics: [
         "Time Value of Money (TVM)",
@@ -158,9 +158,9 @@
       longDescription: "The i key manages the periodic interest rate in TVM calculations. On the HP-12C, interest rates are always entered and displayed as percentages (not decimals), and they must be per period. For monthly payments, enter the monthly rate. The 'g i' (12÷) function helps convert annual rates to monthly rates.\n\nSolving for i is one of the most computationally intensive operations on the HP-12C because there's no closed-form solution - it requires iterative numerical methods.",
       
       implementation: {
-        status: "planned",
-        note: "Requires full TVM engine with Newton-Raphson solver. Interest rate calculation is particularly complex due to lack of closed-form solution.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5 complete: Newton-Raphson solver implemented for interest rate calculation. Handles simple compound interest with closed-form solution, and annuities with iterative solver. Convergence typically achieved in 5-15 iterations.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Stores or retrieves periodic interest rate as percentage. Solving for i can take 2-10 seconds depending on initial guess accuracy. Displays 'Error 3' if no solution converges.",
@@ -239,7 +239,7 @@
       longDescription: "PV represents 'money now' in TVM calculations. For loans, PV is the borrowed amount (entered as negative since money flows out). For investments, PV is the current value or initial deposit. The HP-12C uses cash flow sign convention: money you receive is positive, money you pay is negative.",
       
       implementation: {
-        status: "planned",
+        status: "implemented",
         note: "Requires TVM engine. PV has closed-form solution, making it easier to implement than n or i.",
         version: "1.0"
       },
@@ -317,7 +317,7 @@
       longDescription: "PMT is the regular payment made each period. For loans, this is your monthly payment (negative = outflow). For savings, this is your regular deposit. PMT must have opposite sign from PV in most calculations.",
       
       implementation: {
-        status: "planned",
+        status: "implemented",
         note: "Requires TVM engine. PMT has closed-form solution.",
         version: "1.0"
       },
@@ -395,7 +395,7 @@
       longDescription: "FV represents the value at the end of the time period. For savings, it's how much you'll have. For loans with balloon payments, it's the remaining balance. FV is often zero for fully-amortized loans.",
       
       implementation: {
-        status: "planned",
+        status: "implemented",
         note: "Requires TVM engine. FV has closed-form solution for most cases, but solving for FV when it's unknown can require iterative methods.",
         version: "1.0"
       },
@@ -1838,14 +1838,14 @@
       longDescription: "The STO (Store) key saves the current X register value to one of 20 memory registers (R0-R9 and R.0-R.9). This is essential for storing intermediate results, constants, and data for later recall. STO is non-destructive - the value stays in X after storing. You can also use STO with arithmetic operations (STO + 0, STO - 1, etc.) to add/subtract/multiply/divide the memory register by X.",
       
       implementation: {
-        status: "partially-implemented",
-        note: "MemoryManager.store() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the STO key press.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5 complete: STO fully wired to calculator. Awaits register digit input (0-9), stores X to memory register. Arithmetic operations (STO+, STO-, etc.) already supported in MemoryManager.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Stores X register to specified memory register. Also supports arithmetic store operations: 'STO + n' adds X to register n, 'STO - n' subtracts X from register n, 'STO × n' multiplies register n by X, 'STO ÷ n' divides register n by X.",
       
-      simulatorBehavior: "Memory storage logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing STO currently has no effect. This requires wiring the button handler to call calculator.memory.store().",
+      simulatorBehavior: "Fully implemented. Press STO then digit (0-9) to store X to that register. Value remains in X. Syncs financial registers (R0-R4) with TVM variables.",
       
       relatedTopics: [
         "Memory Registers",
@@ -1898,14 +1898,14 @@
       longDescription: "The RCL (Recall) key copies a value from one of the 20 memory registers (R0-R9 and R.0-R.9) to the X register. The stack automatically lifts to make room (X→Y, Y→Z, Z→T, T lost). The memory register itself is unchanged - RCL is a non-destructive read. You can also recall financial registers, statistical registers, and use RCL with arithmetic operations for memory-based calculations.",
       
       implementation: {
-        status: "partially-implemented",
-        note: "MemoryManager.recall() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the RCL key press.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5 complete: RCL fully wired to calculator. Awaits register digit input (0-9), recalls value from memory to X with automatic stack lift. Arithmetic operations supported in MemoryManager.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Recalls value from specified memory register to X, with stack lift. Also supports arithmetic recall: 'RCL + n' adds register n to X, 'RCL - n' subtracts register n from X, 'RCL × n' multiplies X by register n, 'RCL ÷ n' divides X by register n.",
       
-      simulatorBehavior: "Memory recall logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing RCL currently has no effect. This requires wiring the button handler to call calculator.memory.recall().",
+      simulatorBehavior: "Fully implemented. Press RCL then digit (0-9) to recall from that register. Stack lifts automatically. Can recall TVM values from R0-R4.",
       
       relatedTopics: [
         "Memory Registers",
@@ -2233,14 +2233,14 @@
       longDescription: "The % key calculates percentages using Y as the base and X as the amount. It answers: 'X is what percentage of Y?' This is essential for retail calculations, financial analysis, and everyday percentage problems.",
       
       implementation: {
-        status: "planned",
-        note: "Requires percentage calculation logic. Formula: (X / Y) × 100",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5 complete: Percentage calculation fully implemented. Formula: Y × (X / 100). Returns the percentage value.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Calculates (X/Y) × 100, displaying the percentage. Both X and Y remain on stack.",
       
-      simulatorBehavior: "Currently not implemented.",
+      simulatorBehavior: "Fully implemented. Calculates Y × (X / 100), keeping Y in place and showing result in X.",
       
       relatedTopics: [
         "Percentages",

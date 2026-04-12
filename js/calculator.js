@@ -16,6 +16,10 @@ class Calculator {
         this.hasDecimal = false;
         this.isExponent = false;
         
+        // Register input state
+        this.awaitingRegisterNumber = null;
+        this.registerInputBuffer = '';
+        
         // Prefix state
         this.prefixF = false;
         this.prefixG = false;
@@ -163,8 +167,52 @@ class Calculator {
                 this.reset();
                 break;
                 
+            case 'chs':
+                this.changeSign();
+                break;
+                
+            case 'n':
+                this.handleTVMKey('n');
+                break;
+                
+            case 'i':
+                this.handleTVMKey('i');
+                break;
+                
+            case 'pv':
+                this.handleTVMKey('pv');
+                break;
+                
+            case 'pmt':
+                this.handleTVMKey('pmt');
+                break;
+                
+            case 'fv':
+                this.handleTVMKey('fv');
+                break;
+                
+            case 'percent':
+                this.percent();
+                break;
+                
+            case 'sto':
+                this.awaitingRegisterNumber = 'sto';
+                console.log('Awaiting register number for STO');
+                break;
+                
+            case 'rcl':
+                this.awaitingRegisterNumber = 'rcl';
+                console.log('Awaiting register number for RCL');
+                break;
+                
             default:
-                console.log('Unimplemented function:', key);
+                // Check if awaiting register number
+                if (this.awaitingRegisterNumber && key.startsWith('digit-')) {
+                    const digit = parseInt(key.replace('digit-', ''));
+                    this.handleRegisterNumber(digit);
+                } else {
+                    console.log('Unimplemented function:', key);
+                }
         }
     }
 
@@ -173,8 +221,39 @@ class Calculator {
      * @param {string} key - Button key
      */
     handleGoldFunction(key) {
-        console.log('Gold function:', key);
-        // Gold functions will be implemented in later phases
+        switch(key) {
+            case 'pmt':
+                // f PMT = BEGIN/END mode toggle
+                this.toggleBeginMode();
+                break;
+                
+            case 'pv':
+                // f PV = NPV calculation
+                this.calculateNPV();
+                break;
+                
+            case 'fv':
+                // f FV = IRR calculation
+                this.calculateIRR();
+                break;
+                
+            case 'chs':
+                // f CHS = Clear Financial registers
+                this.clearFinancial();
+                break;
+                
+            case 'clx':
+                // f CLX = Clear all registers (CLR REG)
+                this.clearRegisters();
+                break;
+                
+            case 'enter':
+                // f ENTER = Clear PREFIX (already handled)
+                break;
+                
+            default:
+                console.log('Gold function:', key);
+        }
     }
 
     /**
@@ -182,8 +261,26 @@ class Calculator {
      * @param {string} key - Button key
      */
     handleBlueFunction(key) {
-        console.log('Blue function:', key);
-        // Blue functions will be implemented in later phases
+        switch(key) {
+            case 'op-divide':
+                // g ÷ = Delta % (Δ%)
+                this.deltaPercent();
+                break;
+                
+            case 'op-multiply':
+                // g × = Percent Total (%T)
+                this.percentTotal();
+                break;
+                
+            case 'clx':
+                // g CLX = Clear LSTX
+                this.stack.lstx = 0;
+                console.log('Last X cleared');
+                break;
+                
+            default:
+                console.log('Blue function:', key);
+        }
     }
 
     /**
@@ -356,19 +453,220 @@ class Calculator {
     }
 
     /**
+     * Handle TVM key press (store or solve)
+     * @param {string} variable - TVM variable (n, i, pv, pmt, fv)
+     */
+    handleTVMKey(variable) {
+        this.finishNumberEntry();
+        
+        // Store current X value to the TVM variable
+        this.financial.store(variable, this.stack.x);
+        console.log(`Stored ${this.stack.x} to ${variable.toUpperCase()}`);
+        
+        // Sync with memory registers (R0-R4)
+        const registerMap = { 'n': 0, 'i': 1, 'pv': 2, 'pmt': 3, 'fv': 4 };
+        this.memory.store(registerMap[variable], this.stack.x);
+        
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Solve for a TVM variable (when pressed while awaiting result)
+     * This would be triggered by pressing a TVM key without entering a number first
+     * For now, we'll implement direct solve by double-pressing or using a prefix
+     */
+    solveTVM(variable) {
+        try {
+            let result;
+            
+            switch(variable.toLowerCase()) {
+                case 'n':
+                    result = this.financial.solveN();
+                    break;
+                case 'i':
+                    result = this.financial.solveI();
+                    break;
+                case 'pv':
+                    result = this.financial.solvePV();
+                    break;
+                case 'pmt':
+                    result = this.financial.solvePMT();
+                    break;
+                case 'fv':
+                    result = this.financial.solveFV();
+                    break;
+                default:
+                    throw new Error('Invalid TVM variable');
+            }
+            
+            this.stack.push(result);
+            this.isNewNumber = true;
+            
+            // Sync with memory
+            const registerMap = { 'n': 0, 'i': 1, 'pv': 2, 'pmt': 3, 'fv': 4 };
+            this.memory.store(registerMap[variable], result);
+            
+            console.log(`Solved ${variable.toUpperCase()} = ${result}`);
+            
+        } catch (error) {
+            this.display.showError(error.message);
+            console.error(`Error solving ${variable}:`, error);
+        }
+    }
+
+    /**
+     * Percent function: Y = base, X = percentage -> Result = Y * (X / 100)
+     */
+    percent() {
+        this.finishNumberEntry();
+        const base = this.stack.y;
+        const percentage = this.stack.x;
+        const result = this.financial.calculatePercent(base, percentage);
+        
+        // Push result to stack (keeps Y in place)
+        this.stack.x = result;
+        this.isNewNumber = true;
+        
+        console.log(`${base} × ${percentage}% = ${result}`);
+    }
+
+    /**
+     * Delta percent function: Y = old, X = new -> Result = ((X - Y) / Y) * 100
+     */
+    deltaPercent() {
+        this.finishNumberEntry();
+        const oldValue = this.stack.y;
+        const newValue = this.stack.x;
+        
+        try {
+            const result = this.financial.calculateDeltaPercent(oldValue, newValue);
+            
+            // Replace X with result, drop stack
+            this.stack.binaryOp((y, x) => this.financial.calculateDeltaPercent(y, x));
+            this.isNewNumber = true;
+            
+            console.log(`Δ%: ${oldValue} → ${newValue} = ${result}%`);
+            
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Percent of total function: Y = total, X = part -> Result = (X / Y) * 100
+     */
+    percentTotal() {
+        this.finishNumberEntry();
+        const total = this.stack.y;
+        const part = this.stack.x;
+        
+        try {
+            const result = this.financial.calculatePercentTotal(total, part);
+            
+            // Replace X with result, drop stack
+            this.stack.binaryOp((y, x) => this.financial.calculatePercentTotal(y, x));
+            this.isNewNumber = true;
+            
+            console.log(`%T: ${part} / ${total} = ${result}%`);
+            
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Toggle BEGIN/END mode for TVM calculations
+     */
+    toggleBeginMode() {
+        this.financial.setBeginMode(!this.financial.getBeginMode());
+        this.display.setIndicator('begin', this.financial.getBeginMode());
+        console.log('Payment mode:', this.financial.getBeginMode() ? 'BEGIN' : 'END');
+    }
+
+    /**
+     * Calculate NPV
+     */
+    calculateNPV() {
+        this.finishNumberEntry();
+        try {
+            const rate = this.stack.x;  // Interest rate from X
+            const npv = this.financial.calculateNPV(rate);
+            this.stack.push(npv);
+            this.isNewNumber = true;
+            console.log(`NPV at ${rate}% = ${npv}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Calculate IRR
+     */
+    calculateIRR() {
+        try {
+            const irr = this.financial.calculateIRR();
+            this.stack.push(irr);
+            this.isNewNumber = true;
+            console.log(`IRR = ${irr}%`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Clear financial registers
+     */
+    clearFinancial() {
+        this.financial.clear();
+        // Clear memory registers R0-R4
+        for (let i = 0; i < 5; i++) {
+            this.memory.store(i, 0);
+        }
+        console.log('Financial registers cleared');
+    }
+
+    /**
+     * Clear all memory registers
+     */
+    clearRegisters() {
+        this.memory.clear();
+        console.log('All registers cleared');
+    }
+
+    /**
+     * Handle register number input (for STO/RCL)
+     * @param {number} digit - Register digit (0-9)
+     */
+    handleRegisterNumber(digit) {
+        if (this.awaitingRegisterNumber === 'sto') {
+            this.storeRegister(digit);
+            this.awaitingRegisterNumber = null;
+            this.registerInputBuffer = '';
+        } else if (this.awaitingRegisterNumber === 'rcl') {
+            this.recallRegister(digit);
+            this.awaitingRegisterNumber = null;
+            this.registerInputBuffer = '';
+        }
+    }
+
+    /**
      * Reset calculator
      */
     reset() {
         this.stack.reset();
         this.memory.reset();
+        this.financial.clear();
         this.currentInput = '';
         this.isNewNumber = true;
         this.hasDecimal = false;
         this.prefixF = false;
         this.prefixG = false;
+        this.awaitingRegisterNumber = null;
+        this.registerInputBuffer = '';
         this.display.setFormat('fixed', 2);
         this.display.setIndicator('f', false);
         this.display.setIndicator('g', false);
+        this.display.setIndicator('begin', false);
         console.log('Calculator reset');
     }
 
