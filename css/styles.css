@@ -1,2 +1,586 @@
-/* HP-12C Calculator Styles */
-/* Color palette and base styles will be added in Phase 1.3 */
+/**
+ * HP-12C Financial Calculator Styles
+ * Classic HP Theme with authentic appearance
+ */
+
+/* ============================================
+   CSS VARIABLES - COLOR PALETTE
+   ============================================ */
+:root {
+    /* Body & Case */
+    --hp-body-dark: #2B1810;
+    --hp-body-medium: #4A3428;
+    --hp-body-light: #6B4E3D;
+    --hp-bezel: #1A1A1A;
+    
+    /* Display */
+    --display-bg: #1C2218;
+    --display-on: #9FCD5A;
+    --display-off: #2A3324;
+    --display-border: #0D0F0B;
+    
+    /* Buttons - Main */
+    --button-bg: #8B6B47;
+    --button-text: #FFFEF0;
+    --button-hover: #A37C52;
+    --button-active: #6B4E35;
+    --button-shadow: rgba(0, 0, 0, 0.3);
+    
+    /* Buttons - Gold (f key functions) */
+    --gold-bg: #D4AF37;
+    --gold-text: #1A1A1A;
+    --gold-shine: #F0D870;
+    --gold-label: #FFD700;
+    
+    /* Buttons - Blue (g key functions) */
+    --blue-bg: #2C4875;
+    --blue-text: #87CEEB;
+    --blue-highlight: #4A6FA5;
+    --blue-label: #87CEEB;
+    
+    /* Special Buttons */
+    --special-bg: #5C3D2E;
+    --special-text: #FFAA00;
+    --on-bg: #8B0000;
+    
+    /* Accent Colors */
+    --white-label: #FFFFFF;
+    
+    /* Transitions */
+    --transition-fast: 0.1s ease;
+    --transition-medium: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
+
+/* ============================================
+   GLOBAL STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.calculator-container {
+    perspective: 1000px;
+}
+
+/* ============================================
+   CALCULATOR BODY
+   ============================================ */
+.calculator {
+    width: 400px;
+    background: linear-gradient(180deg, var(--hp-body-medium) 0%, var(--hp-body-dark) 100%);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.calculator-header {
+    text-align: center;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold-label);
+    letter-spacing: 4px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+    font-size: 10px;
+    color: var(--button-text);
+    letter-spacing: 2px;
+    margin-top: 2px;
+    opacity: 0.7;
+}
+
+/* ============================================
+   DISPLAY MODULE
+   ============================================ */
+.display-module {
+    background: var(--hp-bezel);
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Stack Display (Optional) */
+.stack-display {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+}
+
+.stack-level {
+    font-family: 'Courier New', 'Consolas', monospace;
+    font-size: 11px;
+    color: var(--display-off);
+}
+
+.stack-level.active {
+    color: var(--display-on);
+}
+
+/* Main Display */
+.display {
+    background: var(--display-bg);
+    border: 3px solid var(--display-border);
+    border-radius: 2px;
+    padding: 15px 20px;
+    box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.5),
+        0 1px 0 rgba(255, 255, 255, 0.1);
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.display-value {
+    font-family: 'Courier New', 'Consolas', 'Monaco', monospace;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--display-on);
+    letter-spacing: 2px;
+    text-align: right;
+    text-shadow: 
+        0 0 8px var(--display-on),
+        0 0 15px rgba(159, 205, 90, 0.6);
+    filter: blur(0.3px);
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Display Indicators */
+.display-indicators {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    justify-content: flex-start;
+}
+
+.indicator {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--display-off);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all var(--transition-fast);
+}
+
+.indicator.active {
+    color: var(--display-on);
+    text-shadow: 0 0 5px var(--display-on);
+}
+
+/* ============================================
+   BUTTON GRID
+   ============================================ */
+.button-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.button-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+/* ============================================
+   BUTTON BASE STYLES
+   ============================================ */
+.btn {
+    position: relative;
+    height: 45px;
+    background: linear-gradient(180deg, var(--button-bg) 0%, var(--button-hover) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    box-shadow: 0 2px 4px var(--button-shadow);
+    cursor: pointer;
+    transition: all var(--transition-medium);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    color: var(--button-text);
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px var(--button-shadow);
+    filter: brightness(1.1);
+}
+
+.btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px var(--button-shadow) inset;
+    filter: brightness(0.9);
+    transition: all 0.05s ease;
+}
+
+.btn:focus {
+    outline: 3px solid var(--gold-label);
+    outline-offset: 2px;
+    z-index: 10;
+}
+
+/* Button Labels */
+.label-gold {
+    position: absolute;
+    top: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--gold-label);
+    text-transform: uppercase;
+}
+
+.label-primary {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white-label);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.label-blue {
+    position: absolute;
+    bottom: 3px;
+    font-size: 9px;
+    font-weight: 600;
+    color: var(--blue-label);
+    text-transform: uppercase;
+}
+
+/* ============================================
+   BUTTON VARIANTS
+   ============================================ */
+
+/* Financial Keys */
+.btn-financial {
+    background: linear-gradient(180deg, #6B4E3D 0%, #5C3D2E 100%);
+    border-top: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Prefix Keys (f and g) */
+.btn-prefix .label-primary {
+    font-size: 18px;
+}
+
+.prefix-f {
+    color: var(--gold-label);
+}
+
+.prefix-g {
+    color: var(--blue-label);
+}
+
+.btn-prefix.active {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.7);
+}
+
+/* ENTER Key */
+.btn-enter {
+    grid-column: span 1;
+    background: linear-gradient(180deg, var(--special-bg) 0%, #4A3020 100%);
+}
+
+.enter-label {
+    color: var(--special-text);
+    font-size: 12px;
+}
+
+/* ON Key */
+.btn-on {
+    background: linear-gradient(180deg, #B22222 0%, var(--on-bg) 100%);
+}
+
+.on-label {
+    color: var(--white-label);
+    font-weight: 700;
+}
+
+/* Number Keys */
+.btn-number {
+    background: linear-gradient(180deg, #7B5B37 0%, #6B4E35 100%);
+}
+
+/* Operator Keys */
+.btn-operator {
+    background: linear-gradient(180deg, var(--button-bg) 0%, var(--button-active) 100%);
+}
+
+.btn-operator .label-primary {
+    font-size: 20px;
+}
+
+/* Decimal Key */
+.btn-decimal .label-primary {
+    font-size: 24px;
+    font-weight: 900;
+}
+
+/* ============================================
+   PREFIX ACTIVE STATES
+   ============================================ */
+.btn.f-active {
+    outline: 2px solid var(--gold-label);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.btn.g-active {
+    outline: 2px solid var(--blue-label);
+    box-shadow: 0 0 10px rgba(135, 206, 235, 0.5);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes button-press {
+    0% { transform: scale(1) translateY(0); }
+    50% { transform: scale(0.95) translateY(2px); }
+    100% { transform: scale(1) translateY(0); }
+}
+
+@keyframes display-flash {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+@keyframes error-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.btn.pressed {
+    animation: button-press 0.15s ease;
+}
+
+.display-value.flash {
+    animation: display-flash 0.1s ease;
+}
+
+.display-value.error {
+    animation: error-shake 0.4s ease;
+    color: #FF6B6B;
+}
+
+/* ============================================
+   CONTROL PANEL
+   ============================================ */
+.control-panel {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.control-btn {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+}
+
+/* ============================================
+   HELP PANEL
+   ============================================ */
+.help-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--hp-body-medium);
+    border: 2px solid var(--gold-label);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    max-width: 500px;
+    z-index: 1000;
+}
+
+.help-content h3 {
+    color: var(--gold-label);
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.help-content p {
+    color: var(--button-text);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.help-content button {
+    background: var(--gold-bg);
+    color: var(--gold-text);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all var(--transition-fast);
+}
+
+.help-content button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .calculator {
+        width: 360px;
+        padding: 15px;
+    }
+    
+    .btn {
+        height: 42px;
+    }
+    
+    .label-primary {
+        font-size: 13px;
+    }
+    
+    .display-value {
+        font-size: 28px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    
+    .calculator {
+        width: 100%;
+        max-width: 340px;
+        padding: 10px;
+    }
+    
+    .btn {
+        height: 40px;
+    }
+    
+    .label-primary {
+        font-size: 12px;
+    }
+    
+    .label-gold,
+    .label-blue {
+        font-size: 8px;
+    }
+    
+    .display-value {
+        font-size: 24px;
+    }
+    
+    .brand {
+        font-size: 20px;
+        letter-spacing: 3px;
+    }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .display-value {
+        filter: none;
+        text-shadow: none;
+    }
+    
+    .btn {
+        border: 2px solid var(--white-label);
+    }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Loading indicator for long calculations */
+.loading::after {
+    content: '⟳';
+    display: inline-block;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
