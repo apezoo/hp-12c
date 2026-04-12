@@ -308,6 +308,53 @@ class Calculator {
     }
 
     /**
+     * Change sign of X (CHS)
+     */
+    changeSign() {
+        if (!this.isNewNumber) {
+            // Change sign of current input
+            if (this.currentInput.startsWith('-')) {
+                this.currentInput = this.currentInput.substring(1);
+            } else {
+                this.currentInput = '-' + this.currentInput;
+            }
+            this.stack.x = parseFloat(this.currentInput) || 0;
+        } else {
+            // Change sign of stack X
+            this.stack.x = -this.stack.x;
+        }
+    }
+
+    /**
+     * Recall last X value
+     */
+    recallLastX() {
+        this.stack.recallLastX();
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Store X to memory register
+     * @param {number} registerNum - Register number (0-19)
+     */
+    storeRegister(registerNum) {
+        this.finishNumberEntry();
+        this.memory.store(registerNum, this.stack.x);
+        console.log(`Stored ${this.stack.x} to R${registerNum}`);
+    }
+
+    /**
+     * Recall value from memory register
+     * @param {number} registerNum - Register number (0-19)
+     */
+    recallRegister(registerNum) {
+        const value = this.memory.recall(registerNum);
+        this.stack.push(value);
+        this.isNewNumber = true;
+        console.log(`Recalled ${value} from R${registerNum}`);
+    }
+
+    /**
      * Reset calculator
      */
     reset() {
