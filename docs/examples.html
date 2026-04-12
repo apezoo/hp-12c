@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HP-12C Examples & Tutorials | Viel Spass Klaus! 🎉</title>
+  <style>
+    :root{
+      --bg:#d9dde1;
+      --case:#202228;
+      --plate-hi:#eadcae;
+      --plate-mid:#d2bd82;
+      --gold:#d8942b;
+      --blue:#1f97da;
+      --text:#f2f1ec;
+      --lcd:#b6b9a6;
+      --lcd-ink:#5d7898;
+      --key:#17191d;
+      --yellow:#d4a11f;
+      --cyan:#47a9db;
+      
+      /* New vars for examples page */
+      --gradient-start: #667eea;
+      --gradient-end: #764ba2;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --shadow-hover: rgba(0, 0, 0, 0.25);
+      --success: #48de48;
+      --info: #4a9fde;
+      --warning: #f5a623;
+    }
+
+    *{box-sizing:border-box; margin:0; padding:0;}
+    
+    body{
+      margin:0;
+      background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #2a2a2a;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .nav-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.4rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-brand .icon {
+      font-size: 2rem;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.95rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      background: rgba(120, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav-btn.primary {
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      color: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-btn.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 0.3rem;
+      background: #f0f0f0;
+      padding: 0.3rem;
+      border-radius: 50px;
+      box-shadow: inset 0 2px 5px var(--shadow);
+    }
+
+    .lang-btn {
+      padding: 0.4rem 1rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      color: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(220, 163, 35, 0.95), rgba(31, 151, 218, 0.95));
+      color: white;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 40px var(--shadow);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-banner h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-banner .greeting {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .hero-banner p {
+      font-size: 1.1rem;
+      max-width: 800px;
+      margin: 0 auto;
+      opacity: 0.95;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem 3rem;
+    }
+
+    /* Category Grid */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .category-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold), var(--blue));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .category-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 40px var(--shadow-hover);
+    }
+
+    .category-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .category-icon {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      color: #2a2a2a;
+    }
+
+    .category-desc {
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    /* Example Section */
+    .example-section {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px var(--shadow);
+      animation: slideUp 0.5s ease-out;
+      display: none;
+    }
+
+    .example-section.active {
+      display: block;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid #f0f0f0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .back-btn {
+      padding: 0.75rem 1.5rem;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--shadow-hover);
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      color: white;
+    }
+
+    /* Example Card */
+    .example-card {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      border-left: 5px solid var(--blue);
+      transition: all 0.3s ease;
+      animation: fadeInCard 0.5s ease-out;
+    }
+
+    @keyframes fadeInCard {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .example-card:hover {
+      transform: translateX(10px);
+      box-shadow: 0 5px 20px var(--shadow);
+    }
+
+    .example-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .example-number {
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      color: white;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .example-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+
+    .problem {
+      background: white;
+      padding: 1.2rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      border-left: 3px solid var(--info);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .problem-label {
+      font-weight: bold;
+      color: var(--info);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .keystrokes {
+      background: linear-gradient(135deg, #2a2d35, #1a1d25);
+      color: #fff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .keystrokes::before {
+      content: '⌨️';
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 1.5rem;
+      opacity: 0.3;
+    }
+
+    .keystrokes-label {
+      font-weight: bold;
+      color: var(--gold);
+      margin-bottom: 0.7rem;
+      font-size: 1.05rem;
+    }
+
+    .keystroke-line {
+      padding: 0.3rem 0;
+      line-height: 1.8;
+      font-size: 1.05rem;
+    }
+
+    .answer {
+      background: linear-gradient(135deg, rgba(72, 222, 72, 0.15), rgba(72, 159, 222, 0.15));
+      padding: 1.2rem;
+      border-radius: 10px;
+      border-left: 3px solid var(--success);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .answer-label {
+      font-weight: bold;
+      color: var(--success);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .explanation {
+      background: linear-gradient(135deg, #fff3cd, #ffe8a1);
+      padding: 1.2rem;
+      border-radius: 10px;
+      margin-top: 1rem;
+      border-left: 3px solid var(--warning);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .explanation-label {
+      font-weight: bold;
+      color: var(--warning);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    /* Language Toggle */
+    .lang-content {
+      display: none;
+    }
+
+    .lang-content.active {
+      display: block;
+    }
+
+    /* Scroll to Top Button */
+    .scroll-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 55px;
+      height: 55px;
+      background: linear-gradient(135deg, var(--gold), var(--blue));
+      color: white;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.8rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-8px) scale(1.1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-banner h1 { font-size: 1.8rem; }
+      .hero-banner .greeting { font-size: 1.4rem; }
+      .nav-content { flex-direction: column; text-align: center; }
+      .category-grid { grid-template-columns: 1fr; }
+      .section-header { flex-direction: column; text-align: center; }
+      .example-card:hover { transform: translateX(5px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <div class="nav-content">
+      <a href="#" class="nav-brand">
+        <span class="icon">🧮</span>
+        <span>HP-12C Mastery</span>
+      </a>
+      <div class="nav-menu">
+        <a href="../index.html" class="nav-btn primary">
+          🖩 Calculator
+        </a>
+        <a href="#" class="nav-btn" onclick="showSection('home'); return false;">
+          📚 Examples
+        </a>
+        <div class="lang-switch">
+          <button class="lang-btn active" onclick="switchLang('de')">🇩🇪 DE</button>
+          <button class="lang-btn" onclick="switchLang('en')">🇬🇧 EN</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Banner -->
+  <div class="hero-banner">
+    <div class="lang-content active" data-lang="de">
+      <div class="greeting">Viel Spass Klaus! 🎉</div>
+      <h1>✨ HP-12C Beispiele & Tutorials ✨</h1>
+      <p>Lernen Sie Ihren HP-12C mit Spaß und interaktiven Beispielen zu meistern. Von Grundrechenarten bis zu fortgeschrittenen Finanzberechnungen!</p>
+    </div>
+    <div class="lang-content" data-lang="en">
+      <div class="greeting">Have Fun Klaus! 🎉</div>
+      <h1>✨ HP-12C Examples & Tutorials ✨</h1>
+      <p>Master your HP-12C with fun, interactive examples. From basic arithmetic to advanced financial calculations!</p>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Category Selection (German) -->
+    <div id="categories-de" class="lang-content active" data-lang="de">
+      <div class="category-grid">
+        <div class="category-card" onclick="showSection('basic-de')">
+          <span class="category-icon">➕</span>
+          <div class="category-title">Grundrechenarten</div>
+          <div class="category-desc">Einfache Berechnungen und RPN-Logik lernen</div>
+        </div>
+        <div class="category-card" onclick="showSection('math-de')">
+          <span class="category-icon">📐</span>
+          <div class="category-title">Mathematische Funktionen</div>
+          <div class="category-desc">Potenzen, Wurzeln, Logarithmen</div>
+        </div>
+        <div class="category-card" onclick="showSection('percent-de')">
+          <span class="category-icon">💯</span>
+          <div class="category-title">Prozentberechnungen</div>
+          <div class="category-desc">Rabatte, Aufschläge, Veränderungen</div>
+        </div>
+        <div class="category-card" onclick="showSection('memory-de')">
+          <span class="category-icon">💾</span>
+          <div class="category-title">Speicheroperationen</div>
+          <div class="category-desc">Werte speichern und abrufen</div>
+        </div>
+        <div class="category-card" onclick="showSection('tvm-de')">
+          <span class="category-icon">💰</span>
+          <div class="category-title">Zeitwert des Geldes</div>
+          <div class="category-desc">Kredite, Sparen, Investitionen</div>
+        </div>
+        <div class="category-card" onclick="showSection('cashflow-de')">
+          <span class="category-icon">📊</span>
+          <div class="category-title">Cashflow-Analyse</div>
+          <div class="category-desc">NPV und IRR Berechnungen</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Selection (English) -->
+    <div id="categories-en" class="lang-content" data-lang="en">
+      <div class="category-grid">
+        <div class="category-card" onclick="showSection('basic-en')">
+          <span class="category-icon">➕</span>
+          <div class="category-title">Basic Arithmetic</div>
+          <div class="category-desc">Simple calculations and RPN logic</div>
+        </div>
+        <div class="category-card" onclick="showSection('math-en')">
+          <span class="category-icon">📐</span>
+          <div class="category-title">Math Functions</div>
+          <div class="category-desc">Powers, roots, logarithms</div>
+        </div>
+        <div class="category-card" onclick="showSection('percent-en')">
+          <span class="category-icon">💯</span>
+          <div class="category-title">Percentages</div>
+          <div class="category-desc">Discounts, markups, changes</div>
+        </div>
+        <div class="category-card" onclick="showSection('memory-en')">
+          <span class="category-icon">💾</span>
+          <div class="category-title">Memory Operations</div>
+          <div class="category-desc">Store and recall values</div>
+        </div>
+        <div class="category-card" onclick="showSection('tvm-en')">
+          <span class="category-icon">💰</span>
+          <div class="category-title">Time Value of Money</div>
+          <div class="category-desc">Loans, savings, investments</div>
+        </div>
+        <div class="category-card" onclick="showSection('cashflow-en')">
+          <span class="category-icon">📊</span>
+          <div class="category-title">Cash Flow Analysis</div>
+          <div class="category-desc">NPV and IRR calculations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GERMAN EXAMPLE SECTIONS -->
+    <div id="basic-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">➕ Grundrechenarten</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Einfache Addition</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>125 + 375 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">125 ENTER 375 +</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Anzeige: <strong>500.00</strong></div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Erklärung:</div>
+          <div>Bei RPN geben Sie zuerst beide Zahlen ein (getrennt durch ENTER), dann die Operation!</div>
+        </div>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">2</div>
+          <h3 class="example-title">Kettenberechnung</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>(45 + 55) × 2 - 20 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">45 ENTER 55 +  → 100</div>
+          <div class="keystroke-line">2 ×            → 200</div>
+          <div class="keystroke-line">20 -           → 180</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Anzeige: <strong>180.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="math-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">📐 Mathematische Funktionen</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Quadratwurzel</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>√144 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">144 g √x</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Anzeige: <strong>12.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="percent-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💯 Prozentberechnungen</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Rabattberechnung</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>500€ mit 20% Rabatt?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">500 ENTER 20 %  → 100</div>
+          <div class="keystroke-line">-               → 400</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Anzeige: <strong>400.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="memory-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💾 Speicheroperationen</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Werte speichern</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>100 in R5 speichern, dann 50 addieren</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">100 STO 5</div>
+          <div class="keystroke-line">50 STO+ 5</div>
+          <div class="keystroke-line">RCL 5  → 150</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Anzeige: <strong>150.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tvm-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💰 Zeitwert des Geldes</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Kreditrate berechnen</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>200.000€ Kredit, 30 Jahre, 6% Zinsen</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">360 n</div>
+          <div class="keystroke-line">6 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">200000 PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Monatliche Rate: <strong>1.199,10€</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cashflow-de" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">📊 Cashflow-Analyse</h2>
+        <button class="back-btn" onclick="showSection('home')">← Zurück</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">NPV Berechnung</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>10.000€ Investment, 4 Jahre je 4.000€, Zinssatz 10%</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">f CLX</div>
+          <div class="keystroke-line">10000 CHS g CF₀</div>
+          <div class="keystroke-line">4000 g CFⱼ</div>
+          <div class="keystroke-line">4 g Nⱼ</div>
+          <div class="keystroke-line">10 i</div>
+          <div class="keystroke-line">f NPV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>NPV: <strong>2.679,46€</strong> ✓ Gute Investition!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENGLISH EXAMPLE SECTIONS -->
+    <div id="basic-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">➕ Basic Arithmetic</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Simple Addition</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>125 + 375 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">125 ENTER 375 +</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Display: <strong>500.00</strong></div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Explanation:</div>
+          <div>In RPN, enter both numbers first (separated by ENTER), then the operation!</div>
+        </div>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">2</div>
+          <h3 class="example-title">Chain Calculation</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>(45 + 55) × 2 - 20 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">45 ENTER 55 +  → 100</div>
+          <div class="keystroke-line">2 ×            → 200</div>
+          <div class="keystroke-line">20 -           → 180</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Display: <strong>180.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="math-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">📐 Mathematical Functions</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Square Root</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>√144 = ?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">144 g √x</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Display: <strong>12.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="percent-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💯 Percentages</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Discount Calculation</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>$500 minus 20% discount?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">500 ENTER 20 %  → 100</div>
+          <div class="keystroke-line">-               → 400</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Display: <strong>400.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="memory-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💾 Memory Operations</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Store Values</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>Store 100 in R5, then add 50</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">100 STO 5</div>
+          <div class="keystroke-line">50 STO+ 5</div>
+          <div class="keystroke-line">RCL 5  → 150</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Display: <strong>150.00</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tvm-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">💰 Time Value of Money</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">Loan Payment</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>$200,000 loan, 30 years, 6% interest</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">360 n</div>
+          <div class="keystroke-line">6 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">200000 PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Monthly payment: <strong>$1,199.10</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cashflow-en" class="example-section">
+      <div class="section-header">
+        <h2 class="section-title">📊 Cash Flow Analysis</h2>
+        <button class="back-btn" onclick="showSection('home')">← Back</button>
+      </div>
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">1</div>
+          <h3 class="example-title">NPV Calculation</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>$10,000 investment, 4 years × $4,000, 10% rate</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">f CLX</div>
+          <div class="keystroke-line">10000 CHS g CF₀</div>
+          <div class="keystroke-line">4000 g CFⱼ</div>
+          <div class="keystroke-line">4 g Nⱼ</div>
+          <div class="keystroke-line">10 i</div>
+          <div class="keystroke-line">f NPV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>NPV: <strong>$2,679.46</strong> ✓ Good investment!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-top" onclick="scrollToTop()">↑</button>
+
+  <script>
+    let currentLang = 'de';
+    let currentSection = 'home';
+
+    function switchLang(lang) {
+      currentLang = lang;
+      
+      // Update lang buttons
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Hide all lang content
+      document.querySelectorAll('.lang-content').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Show selected lang content
+      document.querySelectorAll(`[data-lang="${lang}"]`).forEach(el => {
+        el.classList.add('active');
+      });
+      
+      // If we're in a section, show the correct language version
+      if (currentSection !== 'home') {
+        showSection(currentSection);
+      }
+    }
+
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.example-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Hide categories
+      document.querySelectorAll('[id^="categories-"]').forEach(cat => {
+        cat.classList.remove('active');
+      });
+      
+      if (sectionId === 'home') {
+        // Show categories for current language
+        document.getElementById(`categories-${currentLang}`).classList.add('active');
+        currentSection = 'home';
+      } else {
+        // Determine which section to show based on current language
+        let targetSection = sectionId;
+        
+        // If section doesn't include language suffix, add current language
+        if (!sectionId.endsWith('-de') && !sectionId.endsWith('-en')) {
+          targetSection = `${sectionId}-${currentLang}`;
+        }
+        
+        // Show the section
+        const section = document.getElementById(targetSection);
+        if (section) {
+          section.classList.add('active');
+          currentSection = sectionId;
+        }
+      }
+      
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Show/hide scroll button
+    window.addEventListener('scroll', () => {
+      const scrollBtn = document.querySelector('.scroll-top');
+      if (window.scrollY > 300) {
+        scrollBtn.classList.add('visible');
+      } else {
+        scrollBtn.classList.remove('visible');
+      }
+    });
+
+    // Initialize
+    showSection('home');
+  </script>
+</body>
+</html>

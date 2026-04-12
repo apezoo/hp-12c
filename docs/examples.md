@@ -1,4 +1,661 @@
-# HP-12C Calculator Examples
+# HP-12C Calculator Examples / HP-12C Taschenrechner Beispiele
+
+**🇬🇧 [English Version](#english-version) | 🇩🇪 [Deutsche Version](#deutsche-version)**
+
+---
+
+# Deutsche Version
+
+Dieser Leitfaden bietet schrittweise Beispiele zur Verwendung des HP-12C Taschenrechners, von grundlegender Arithmetik bis zu fortgeschrittenen Finanzberechnungen.
+
+## Inhaltsverzeichnis
+- [Grundrechenarten](#grundrechenarten)
+- [Mathematische Funktionen](#mathematische-funktionen)
+- [Prozentberechnungen](#prozentberechnungen)
+- [Speicheroperationen](#speicheroperationen)
+- [Zeitwert des Geldes (TVM)](#zeitwert-des-geldes-tvm)
+- [Cashflow-Analyse (NPV/IRR)](#cashflow-analyse-npvirr)
+- [Amortisation](#amortisation)
+- [Abschreibung](#abschreibung)
+- [Datumsberechnungen](#datumsberechnungen)
+- [Praxisnahe Szenarien](#praxisnahe-szenarien)
+
+---
+
+## Grundrechenarten
+
+### Beispiel 1: Einfache Addition
+**Aufgabe**: 125 + 375 = ?
+
+**Tasteneingabe**:
+```
+125 ENTER 375 +
+```
+
+**Anzeige**: `500.00`
+
+**Erklärung**: Bei RPN (Umgekehrte Polnische Notation) geben Sie zuerst beide Zahlen ein, getrennt durch ENTER, und dann die Operation.
+
+---
+
+### Beispiel 2: Subtraktion
+**Aufgabe**: 1.250 - 450 = ?
+
+**Tasteneingabe**:
+```
+1250 ENTER 450 -
+```
+
+**Anzeige**: `800.00`
+
+---
+
+### Beispiel 3: Multiplikation
+**Aufgabe**: 24 × 15 = ?
+
+**Tasteneingabe**:
+```
+24 ENTER 15 ×
+```
+
+**Anzeige**: `360.00`
+
+---
+
+### Beispiel 4: Division
+**Aufgabe**: 2.500 ÷ 25 = ?
+
+**Tasteneingabe**:
+```
+2500 ENTER 25 ÷
+```
+
+**Anzeige**: `100.00`
+
+---
+
+### Beispiel 5: Kettenberechnung
+**Aufgabe**: (45 + 55) × 2 - 20 = ?
+
+**Tasteneingabe**:
+```
+45 ENTER 55 +        → 100
+2 ×                  → 200
+20 -                 → 180
+```
+
+**Anzeige**: `180.00`
+
+**Erklärung**: Bei RPN lösen Sie von links nach rechts auf natürliche Weise, keine Klammern nötig!
+
+---
+
+### Beispiel 6: Komplexer Ausdruck
+**Aufgabe**: (12 + 8) ÷ (5 - 1) = ?
+
+**Tasteneingabe**:
+```
+12 ENTER 8 +         → 20
+5 ENTER 1 -          → 4
+÷                    → 5
+```
+
+**Anzeige**: `5.00`
+
+---
+
+## Mathematische Funktionen
+
+### Beispiel 7: Quadratwurzel
+**Aufgabe**: √144 = ?
+
+**Tasteneingabe**:
+```
+144 g √x
+```
+
+**Anzeige**: `12.00`
+
+---
+
+### Beispiel 8: Quadrat
+**Aufgabe**: 13² = ?
+
+**Tasteneingabe**:
+```
+13 g x²
+```
+
+**Anzeige**: `169.00`
+
+---
+
+### Beispiel 9: Kehrwert
+**Aufgabe**: 1/8 = ?
+
+**Tasteneingabe**:
+```
+8 1/x
+```
+
+**Anzeige**: `0.125`
+
+---
+
+### Beispiel 10: Potenzfunktion
+**Aufgabe**: 2⁸ = ?
+
+**Tasteneingabe**:
+```
+2 ENTER 8 yˣ
+```
+
+**Anzeige**: `256.00`
+
+---
+
+## Prozentberechnungen
+
+### Beispiel 11: Einfacher Prozentsatz
+**Aufgabe**: Was sind 15% von 200?
+
+**Tasteneingabe**:
+```
+200 ENTER 15 %
+```
+
+**Anzeige**: `30.00`
+
+**Erklärung**: Der ursprüngliche Wert (200) bleibt im Y-Register.
+
+---
+
+### Beispiel 12: Prozent addieren
+**Aufgabe**: Was ist 200 plus 15%?
+
+**Tasteneingabe**:
+```
+200 ENTER 15 %       → 30
++                    → 230
+```
+
+**Anzeige**: `230.00`
+
+---
+
+### Beispiel 13: Prozent subtrahieren (Rabatt)
+**Aufgabe**: Was kostet ein Artikel für 500€ nach 20% Rabatt?
+
+**Tasteneingabe**:
+```
+500 ENTER 20 %       → 100
+-                    → 400
+```
+
+**Anzeige**: `400.00` (Preis nach Rabatt)
+
+---
+
+### Beispiel 14: Prozentuale Veränderung
+**Aufgabe**: Der Umsatz stieg von 50.000€ auf 65.000€. Wie hoch ist die prozentuale Steigerung?
+
+**Tasteneingabe**:
+```
+50000 ENTER 65000 Δ%
+```
+
+**Anzeige**: `30.00` (30% Steigerung)
+
+---
+
+### Beispiel 15: Umgekehrter Prozentsatz
+**Aufgabe**: Wenn 120€ 80% einer Zahl sind, wie hoch ist die Gesamtzahl?
+
+**Tasteneingabe**:
+```
+120 ENTER 80 %T
+```
+
+**Anzeige**: `150.00`
+
+**Erklärung**: %T berechnet die Gesamtsumme, wenn ein Prozentteil gegeben ist.
+
+---
+
+## Speicheroperationen
+
+### Beispiel 16: Speichern und Abrufen
+**Aufgabe**: Berechne (5 × 8) + (12 × 3), speichere Zwischenergebnisse
+
+**Tasteneingabe**:
+```
+5 ENTER 8 ×          → 40
+STO 1                (in R1 speichern)
+12 ENTER 3 ×         → 36
+RCL 1                (aus R1 abrufen)
++                    → 76
+```
+
+**Anzeige**: `76.00`
+
+---
+
+### Beispiel 17: Register-Arithmetik
+**Aufgabe**: Speichere 100 in Register 5, addiere dann 50 dazu
+
+**Tasteneingabe**:
+```
+100 STO 5            (100 in R5 speichern)
+50 STO+ 5            (50 zu R5 addieren)
+RCL 5                (R5 abrufen)
+```
+
+**Anzeige**: `150.00`
+
+---
+
+## Zeitwert des Geldes (TVM)
+
+### Beispiel 18: Kreditrate
+**Aufgabe**: Sie kaufen ein Haus für 350.000€ mit 30-jähriger Hypothek zu 6,5% Jahreszins. Wie hoch ist die monatliche Rate?
+
+**Tasteneingabe**:
+```
+360 n                (30 Jahre × 12 Monate)
+6.5 ENTER 12 ÷ i     (6,5% ÷ 12 = 0,542% pro Monat)
+350000 PV            (Darlehensbetrag)
+0 FV                 (am Ende vollständig abbezahlt)
+PMT                  (Rate berechnen)
+```
+
+**Anzeige**: `-2,212.75`
+
+**Antwort**: Monatliche Rate beträgt 2.212,75€ (negativ = Geldabfluss)
+
+---
+
+### Beispiel 19: Sparziel
+**Aufgabe**: Wie viel muss ich monatlich sparen, um in 5 Jahren 50.000€ zu haben bei 4% Jahreszins?
+
+**Tasteneingabe**:
+```
+60 n                 (5 Jahre × 12 Monate)
+4 ENTER 12 ÷ i       (4% ÷ 12 monatlich)
+0 PV                 (von Null starten)
+50000 FV             (Zielbetrag)
+PMT                  (Rate berechnen)
+```
+
+**Anzeige**: `-754.22`
+
+**Antwort**: Sparen Sie 754,22€ pro Monat
+
+---
+
+### Beispiel 20: Anlagerendite
+**Aufgabe**: Sie investieren 10.000€ und es wächst auf 15.000€ in 3 Jahren. Was war Ihre jährliche Rendite?
+
+**Tasteneingabe**:
+```
+3 n                  (3 Jahre)
+10000 CHS PV         (Anfangsinvestition, negativ)
+15000 FV             (Endwert)
+0 PMT                (keine zusätzlichen Zahlungen)
+i                    (Zinssatz berechnen)
+```
+
+**Anzeige**: `14.47`
+
+**Antwort**: 14,47% jährliche Rendite
+
+---
+
+### Beispiel 21: Verdopplungszeit
+**Aufgabe**: Bei 8% Jahreszins, wie lange dauert es, bis 1.000€ zu 2.000€ werden?
+
+**Tasteneingabe**:
+```
+8 i                  (8% jährlich)
+1000 CHS PV          (Anfangsbetrag, negativ)
+2000 FV              (doppelter Betrag)
+0 PMT                (keine Zahlungen)
+n                    (Perioden berechnen)
+```
+
+**Anzeige**: `9.01`
+
+**Antwort**: Etwa 9 Jahre bis zur Verdopplung
+
+---
+
+## Cashflow-Analyse (NPV/IRR)
+
+### Beispiel 22: Einfacher Kapitalwert (NPV)
+**Aufgabe**: Projekt kostet 10.000€ initial und bringt 4.000€/Jahr für 4 Jahre. NPV bei 10% Abzinsungssatz?
+
+**Tasteneingabe**:
+```
+f CLX                (Finanzregister löschen)
+10000 CHS g CF₀      (Anfangsinvestition, negativ)
+4000 g CFⱼ           (jährlicher Cashflow)
+4 g Nⱼ               (4 Jahre)
+10 i                 (Abzinsungssatz)
+f NPV                (NPV berechnen)
+```
+
+**Anzeige**: `2,679.46`
+
+**Antwort**: NPV = 2.679,46€ (positiv, also gute Investition!)
+
+---
+
+### Beispiel 23: Ungleiche Cashflows NPV
+**Aufgabe**: Investition kostet 50.000€. Rückflüsse: Jahr 1: 15.000€, Jahr 2: 20.000€, Jahr 3: 25.000€, Jahr 4: 12.000€. NPV bei 12%?
+
+**Tasteneingabe**:
+```
+f CLX                (Finanzregister löschen)
+50000 CHS g CF₀      (Anfangsinvestition)
+15000 g CFⱼ          (Jahr 1)
+20000 g CFⱼ          (Jahr 2)
+25000 g CFⱼ          (Jahr 3)
+12000 g CFⱼ          (Jahr 4)
+12 i                 (Abzinsungssatz)
+f NPV                (NPV berechnen)
+```
+
+**Anzeige**: `4,036.75`
+
+**Antwort**: NPV = 4.036,75€
+
+---
+
+### Beispiel 24: IRR-Berechnung
+**Aufgabe**: Gleiches Projekt wie Beispiel 23. Was ist der IRR?
+
+**Tasteneingabe**:
+```
+(Cashflows bereits von Beispiel 23 eingegeben)
+f IRR                (IRR berechnen)
+```
+
+**Anzeige**: `18.45`
+
+**Antwort**: IRR = 18,45% (höher als 12% Abzinsungssatz, also gute Investition)
+
+---
+
+## Amortisation
+
+### Beispiel 25: Erste Ratenzahlung aufschlüsseln
+**Aufgabe**: Bei einer 200.000€ Hypothek zu 6% für 30 Jahre, wie viel ist Kapital vs. Zinsen in der ersten Rate?
+
+**Tasteneingabe**:
+```
+360 n
+6 ENTER 12 ÷ i
+200000 PV
+0 FV
+PMT                  → -1,199.10 (monatliche Rate)
+
+1 f AMORT            (Periode 1 amortisieren)
+x↔y                  → -1,000.00 (Zinsen)
+RCL PV              → 199,800.90 (Restschuld)
+```
+
+**Ergebnisse**:
+- Monatliche Rate: 1.199,10€
+- Erste Rate Zinsen: 1.000,00€
+- Erste Rate Kapital: 199,10€
+- Verbleibende Schuld: 199.800,90€
+
+---
+
+### Beispiel 26: Amortisation erstes Jahr
+**Aufgabe**: Für dieselbe Hypothek, Gesamtzinsen und Kapital im ersten Jahr (12 Zahlungen)?
+
+**Tasteneingabe**:
+```
+(TVM bereits von Beispiel 25 eingegeben)
+1 ENTER 12 f AMORT   (Perioden 1-12)
+x↔y                  → -11,933.00 (Gesamtzinsen)
+g LST x              → -2,456.20 (Gesamtkapital)
+RCL PV              → 197,543.80 (Saldo nach 1 Jahr)
+```
+
+**Ergebnisse**:
+- Gesamtzahlungen Jahr 1: 14.389,20€
+- Gezahlte Zinsen: 11.933,00€
+- Gezahltes Kapital: 2.456,20€
+- Verbleibende Schuld: 197.543,80€
+
+---
+
+## Abschreibung
+
+### Beispiel 27: Lineare Abschreibung
+**Aufgabe**: Ausrüstung kostet 50.000€, Restwert 5.000€, Nutzungsdauer 10 Jahre. Jährliche Abschreibung?
+
+**Tasteneingabe**:
+```
+50000 ENTER          (Kosten)
+5000 -               → 45,000 (abschreibbarer Betrag)
+10 ÷                 → 4,500
+```
+
+**Anzeige**: `4,500.00`
+
+**Antwort**: 4.500€ Abschreibung pro Jahr
+
+Oder mit eingebauter Funktion:
+```
+10 n                 (Nutzungsdauer)
+50000 ENTER          (Kosten)
+5000 -               (Restwert)
+f SL                 (lineare Abschreibung)
+```
+
+---
+
+### Beispiel 28: Degressive Abschreibung
+**Aufgabe**: Gleiche Ausrüstung, 200% degressive Abschreibung (doppelt degressiv), Abschreibung Jahr 1?
+
+**Tasteneingabe**:
+```
+10 n                 (Nutzungsdauer)
+50000 ENTER          (Kosten)
+1 f DB               (degressive Abschreibung, Jahr 1)
+```
+
+**Anzeige**: `10,000.00`
+
+**Antwort**: 10.000€ erstes Jahr (20% von 50.000€)
+
+---
+
+## Datumsberechnungen
+
+### Beispiel 29: Tage zwischen Daten
+**Aufgabe**: Wie viele Tage vom 15. Januar 2024 bis 20. März 2024?
+
+**Tasteneingabe**:
+```
+1.152024 ENTER       (15. Jan 2024 im Format M.TTJJJJ)
+3.202024 g ΔDYS      (20. März 2024)
+```
+
+**Anzeige**: `65.00`
+
+**Antwort**: 65 Tage (tatsächliche Tage)
+
+---
+
+### Beispiel 30: Zukünftiges Datum
+**Aufgabe**: Welches Datum ist 90 Tage nach dem 1. Juni 2024?
+
+**Tasteneingabe**:
+```
+6.012024 ENTER       (1. Juni 2024)
+90 g DATE            (90 Tage addieren)
+```
+
+**Anzeige**: `8.302024`
+
+**Antwort**: 30. August 2024
+
+---
+
+## Praxisnahe Szenarien
+
+### Beispiel 31: Autoleasing-Entscheidung
+**Aufgabe**: Ein Auto für 35.000€ leasen für 36 Monate bei 450€/Monat mit 3.000€ Anzahlung, oder kaufen mit 4% Kredit für 60 Monate. Was ist besser?
+
+**Leasing effektive Kosten**:
+```
+36 n
+3000 PV              (Anzahlung)
+450 CHS PMT          (monatliche Zahlung)
+35000 FV             (Restwert)
+i                    → 1,52% monatlich = 18,24% jährlich
+```
+
+**Kauf Kreditrate**:
+```
+60 n
+4 ENTER 12 ÷ i
+35000 PV
+0 FV
+PMT                  → -645,30 monatlich
+```
+
+**Analyse**:
+- Leasing: Niedrigere Monatsrate (450€ vs. 645€), aber 18,24% impliziter Zinssatz
+- Kauf: Höhere Monatsrate, aber Sie besitzen das Auto und 4% Zinssatz ist besser
+- Wenn Sie Autos langfristig behalten, ist Kaufen besser
+
+---
+
+### Beispiel 32: Umschuldungsentscheidung
+**Aufgabe**: Sie haben noch 25 Jahre auf 6% Hypothek mit 250.000€ Saldo. Umschuldung auf 5% für 20 Jahre kostet 3.000€. Sollten Sie?
+
+**Aktueller Kredit**:
+```
+300 n                (25 Jahre)
+6 ENTER 12 ÷ i
+250000 PV
+PMT                  → -1,610.54
+```
+
+**Neuer Kredit** (inkl. Abschlusskosten):
+```
+240 n                (20 Jahre)
+5 ENTER 12 ÷ i
+253000 PV            (Saldo + Kosten)
+PMT                  → -1,672.54
+```
+
+**Ersparnis**: 1.610,54€ - 1.672,54€ = -62,00€ teurer!
+
+**Antwort**: Nicht umschulden. Die kürzere Laufzeit überwiegt die Zinsersparnis.
+
+---
+
+### Beispiel 33: Bildungssparplan
+**Aufgabe**: Studium kostet 30.000€/Jahr. Kind ist 5 Jahre alt, Studium mit 18 (in 13 Jahren). Annahme 3% Inflation und 6% Anlagerendite, wie viel monatlich sparen?
+
+**Schritt 1**: Zukünftige Kosten in 13 Jahren
+```
+13 n
+3 i                  (Inflation)
+30000 CHS PV
+FV                   → 43,906.37 (Kosten Jahr 1)
+```
+
+**Schritt 2**: Benötigte monatliche Sparrate
+```
+156 n                (13 Jahre × 12)
+6 ENTER 12 ÷ i      (monatliche Rendite)
+0 PV
+175625 FV            (4×43.906€, annähernd 4 Jahre)
+PMT                  → -818.65
+```
+
+**Antwort**: Sparen Sie etwa 819€/Monat
+
+---
+
+### Beispiel 34: Unternehmensbewertung
+**Aufgabe**: Unternehmen erwirtschaftet 100.000€/Jahr Gewinn. Gewinn wächst 5%/Jahr. Was ist sein Wert mit 10-Jahres-Projektion bei 15% Abzinsungssatz?
+
+**Tasteneingabe**:
+```
+f CLX
+0 g CF₀              (keine Anfangsinvestition)
+100000 g CFⱼ         (Jahr 1: 100.000€)
+1 g Nⱼ
+105000 g CFⱼ         (Jahr 2: 105.000€)
+1 g Nⱼ
+110250 g CFⱼ         (Jahr 3: 110.250€)
+1 g Nⱼ
+... (fortsetzen für 10 Jahre)
+15 i
+f NPV
+```
+
+**Anzeige**: ~772.173
+
+**Antwort**: Unternehmen wert ca. 772.000€
+
+---
+
+## Tipps für komplexe Berechnungen
+
+### Tipp 1: Komplexe Berechnungen aufteilen
+Versuchen Sie nicht, alles auf einmal zu machen. Berechnen Sie schrittweise und speichern Sie Zwischenergebnisse in Speicherregistern.
+
+### Tipp 2: Überprüfen Sie Ihre Arbeit
+Für wichtige Berechnungen arbeiten Sie rückwärts:
+- Rate berechnet? Überprüfen Sie, ob sie den Kredit tilgt.
+- NPV berechnet? Prüfen Sie, ob Ihre Cashflows korrekt summiert sind.
+
+### Tipp 3: Verwenden Sie Papier für Cashflows
+Für komplexe NPV/IRR mit vielen Cashflows, schreiben Sie diese zuerst auf, um Eingabefehler zu vermeiden.
+
+### Tipp 4: Verstehen Sie die Vorzeichenkonvention
+- Geld, das Sie zahlen (Investitionen, Kreditbetrag, Zahlungen) = negativ
+- Geld, das Sie erhalten (Renditen, Krediterlös, Einkommen) = positiv
+
+### Tipp 5: Einheiten prüfen
+- Ist der Zinssatz jährlich oder monatlich?
+- Ist die Periode in Monaten oder Jahren?
+- n und i müssen auf dieselbe Zeitperiode abgestimmt sein!
+
+---
+
+## Schnellreferenz: Häufige Berechnungen
+
+| Zu finden | Eingeben | Dann lösen für |
+|-----------|----------|----------------|
+| Kreditrate | n, i, PV, FV=0 | PMT |
+| Kreditsaldo | n, i, PMT, FV=0 | PV |
+| Anlagewachstum | n, i, PV, PMT | FV |
+| Rendite | n, PV, PMT, FV | i |
+| Zeit bis Ziel | i, PV, PMT, FV | n |
+| Projektwert | CF₀, CFⱼ, i | NPV |
+| Projektrendite | CF₀, CFⱼ | IRR |
+
+---
+
+**Mehr Hilfe benötigt?**
+- Siehe [`quick-start-guide.md`](./quick-start-guide.md) für RPN-Grundlagen
+- Siehe [`technical-spec.md`](./technical-spec.md) für detaillierte Formeln
+- Siehe [`user-guide.md`](./user-guide.md) für vollständige Funktionsreferenz
+
+---
+---
+---
+
+# English Version
 
 This guide provides step-by-step examples for using the HP-12C calculator, from basic arithmetic to advanced financial calculations.
 
@@ -27,6 +684,8 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 ```
 
 **Display**: `500.00`
+
+**Explanation**: In RPN (Reverse Polish Notation), you enter both numbers first, separated by ENTER, then the operation.
 
 ---
 
@@ -139,64 +798,16 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 **Keystrokes**:
 ```
-2 ENTER 8 g yˣ
+2 ENTER 8 yˣ
 ```
 
 **Display**: `256.00`
 
 ---
 
-### Example 11: Natural Logarithm
-**Problem**: ln(100) = ?
-
-**Keystrokes**:
-```
-100 g LN
-```
-
-**Display**: `4.61` (approximately)
-
----
-
-### Example 12: Exponential
-**Problem**: e² = ?
-
-**Keystrokes**:
-```
-2 g eˣ
-```
-
-**Display**: `7.39` (approximately)
-
----
-
-### Example 13: Common Logarithm
-**Problem**: log₁₀(1000) = ?
-
-**Keystrokes**:
-```
-1000 g LOG
-```
-
-**Display**: `3.00`
-
----
-
-### Example 14: 10 to the Power
-**Problem**: 10³ = ?
-
-**Keystrokes**:
-```
-3 g 10ˣ
-```
-
-**Display**: `1000.00`
-
----
-
 ## Percentage Calculations
 
-### Example 15: Simple Percentage
+### Example 11: Simple Percentage
 **Problem**: What is 15% of 200?
 
 **Keystrokes**:
@@ -210,7 +821,7 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 ---
 
-### Example 16: Add Percentage
+### Example 12: Add Percentage
 **Problem**: What is 200 plus 15%?
 
 **Keystrokes**:
@@ -223,7 +834,7 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 ---
 
-### Example 17: Subtract Percentage
+### Example 13: Subtract Percentage (Discount)
 **Problem**: What is $500 minus a 20% discount?
 
 **Keystrokes**:
@@ -236,7 +847,7 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 ---
 
-### Example 18: Percentage Change
+### Example 14: Percentage Change
 **Problem**: Sales increased from $50,000 to $65,000. What's the percentage increase?
 
 **Keystrokes**:
@@ -248,7 +859,7 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 ---
 
-### Example 19: Reverse Percentage
+### Example 15: Reverse Percentage
 **Problem**: If $120 is 80% of a number, what's the full number?
 
 **Keystrokes**:
@@ -264,7 +875,7 @@ This guide provides step-by-step examples for using the HP-12C calculator, from 
 
 ## Memory Operations
 
-### Example 20: Store and Recall
+### Example 16: Store and Recall
 **Problem**: Calculate (5 × 8) + (12 × 3), storing intermediate results
 
 **Keystrokes**:
@@ -280,7 +891,7 @@ RCL 1                (recall from R1)
 
 ---
 
-### Example 21: Register Arithmetic
+### Example 17: Register Arithmetic
 **Problem**: Store 100 in register 5, then add 50 to it
 
 **Keystrokes**:
@@ -294,26 +905,9 @@ RCL 5                (recall R5)
 
 ---
 
-### Example 22: Running Total
-**Problem**: Keep a running sum: 100 + 250 + 75 + 425
-
-**Keystrokes**:
-```
-0 STO 0              (initialize R0 to 0)
-100 STO+ 0           (add 100)
-250 STO+ 0           (add 250)
-75 STO+ 0            (add 75)
-425 STO+ 0           (add 425)
-RCL 0                (recall total)
-```
-
-**Display**: `850.00`
-
----
-
 ## Time Value of Money (TVM)
 
-### Example 23: Loan Payment
+### Example 18: Loan Payment
 **Problem**: You're buying a house for $350,000 with a 30-year mortgage at 6.5% annual interest. What's your monthly payment?
 
 **Keystrokes**:
@@ -331,7 +925,7 @@ PMT                  (calculate payment)
 
 ---
 
-### Example 24: Savings Goal
+### Example 19: Savings Goal
 **Problem**: How much do I need to save monthly to have $50,000 in 5 years at 4% annual interest?
 
 **Keystrokes**:
@@ -349,7 +943,7 @@ PMT                  (calculate payment)
 
 ---
 
-### Example 25: Investment Return
+### Example 20: Investment Return
 **Problem**: You invest $10,000 and it grows to $15,000 in 3 years. What was your annual return rate?
 
 **Keystrokes**:
@@ -367,7 +961,7 @@ i                    (calculate interest rate)
 
 ---
 
-### Example 26: How Long to Double?
+### Example 21: How Long to Double?
 **Problem**: At 8% annual interest, how long until $1,000 becomes $2,000?
 
 **Keystrokes**:
@@ -385,46 +979,9 @@ n                    (calculate periods)
 
 ---
 
-### Example 27: Present Value
-**Problem**: You'll receive $100,000 in 10 years. What's it worth today at 5% discount rate?
-
-**Keystrokes**:
-```
-10 n                 (10 years)
-5 i                  (5% discount rate)
-100000 CHS FV        (future amount, negative)
-0 PMT                (no payments)
-PV                   (calculate present value)
-```
-
-**Display**: `61,391.33`
-
-**Answer**: Worth $61,391.33 today
-
----
-
-### Example 28: Retirement Planning
-**Problem**: You have $500,000 saved. You want to withdraw $3,000/month for 20 years. What interest rate do you need?
-
-**Keystrokes**:
-```
-240 n                (20 years × 12 months)
-500000 PV            (starting balance)
-3000 CHS PMT         (monthly withdrawal, negative)
-0 FV                 (depleted at end)
-i                    (calculate rate)
-12 ×                 (convert to annual)
-```
-
-**Display**: `4.42`
-
-**Answer**: Need 4.42% annual return
-
----
-
 ## Cash Flow Analysis (NPV/IRR)
 
-### Example 29: Simple NPV
+### Example 22: Simple NPV
 **Problem**: Project costs $10,000 initially and returns $4,000/year for 4 years. NPV at 10% discount rate?
 
 **Keystrokes**:
@@ -443,7 +1000,7 @@ f NPV                (calculate NPV)
 
 ---
 
-### Example 30: Uneven Cash Flows NPV
+### Example 23: Uneven Cash Flows NPV
 **Problem**: Investment costs $50,000. Returns are: Year 1: $15,000, Year 2: $20,000, Year 3: $25,000, Year 4: $12,000. NPV at 12%?
 
 **Keystrokes**:
@@ -464,12 +1021,12 @@ f NPV                (calculate NPV)
 
 ---
 
-### Example 31: IRR Calculation
-**Problem**: Same project as Example 30. What's the IRR?
+### Example 24: IRR Calculation
+**Problem**: Same project as Example 23. What's the IRR?
 
 **Keystrokes**:
 ```
-(Cash flows already entered from Example 30)
+(Cash flows already entered from Example 23)
 f IRR                (calculate IRR)
 ```
 
@@ -479,38 +1036,9 @@ f IRR                (calculate IRR)
 
 ---
 
-### Example 32: Compare Investments
-**Problem**: Investment A: $10,000 cost, returns $3,500/year for 4 years. Investment B: $10,000 cost, returns $2,000/year for 7 years. Which is better at 8%?
-
-**Investment A**:
-```
-f CLX
-10000 CHS g CF₀
-3500 g CFⱼ
-4 g Nⱼ
-8 i
-f NPV                → 1,589.87
-f IRR                → 15.02%
-```
-
-**Investment B**:
-```
-f CLX
-10000 CHS g CF₀
-2000 g CFⱼ
-7 g Nⱼ
-8 i
-f NPV                → 405.44
-f IRR                → 9.20%
-```
-
-**Answer**: Investment A is better (higher NPV and IRR)
-
----
-
 ## Amortization
 
-### Example 33: First Payment Breakdown
+### Example 25: First Payment Breakdown
 **Problem**: For a $200,000 mortgage at 6% for 30 years, how much is principal vs. interest in first payment?
 
 **Keystrokes**:
@@ -534,12 +1062,12 @@ RCL PV              → 199,800.90 (remaining balance)
 
 ---
 
-### Example 34: First Year Amortization
+### Example 26: First Year Amortization
 **Problem**: For the same mortgage, total interest and principal in first year (12 payments)?
 
 **Keystrokes**:
 ```
-(TVM already entered from Example 33)
+(TVM already entered from Example 25)
 1 ENTER 12 f AMORT   (periods 1-12)
 x↔y                  → -11,933.00 (total interest)
 g LST x              → -2,456.20 (total principal)
@@ -554,23 +1082,9 @@ RCL PV              → 197,543.80 (balance after 1 year)
 
 ---
 
-### Example 35: Finding Payoff Balance
-**Problem**: After 10 years of payments on the above mortgage, what's the remaining balance?
-
-**Keystrokes**:
-```
-(TVM already entered)
-1 ENTER 120 f AMORT  (periods 1-120)
-RCL PV              → 166,791.61
-```
-
-**Answer**: After 10 years, $166,791.61 remains
-
----
-
 ## Depreciation
 
-### Example 36: Straight Line Depreciation
+### Example 27: Straight Line Depreciation
 **Problem**: Equipment costs $50,000, salvage value $5,000, life 10 years. Annual depreciation?
 
 **Keystrokes**:
@@ -594,7 +1108,7 @@ f SL                 (straight line)
 
 ---
 
-### Example 37: Declining Balance
+### Example 28: Declining Balance
 **Problem**: Same equipment, 200% declining balance (double declining), year 1 depreciation?
 
 **Keystrokes**:
@@ -610,26 +1124,9 @@ f SL                 (straight line)
 
 ---
 
-### Example 38: Sum of Years Digits
-**Problem**: Same equipment, SOYD method, year 1 depreciation?
-
-**Keystrokes**:
-```
-10 n                 (life)
-50000 ENTER          (cost)
-5000 -               → 45,000 (depreciable amount)
-1 f SOYD             (sum of years digits, year 1)
-```
-
-**Display**: `8,181.82`
-
-**Answer**: $8,181.82 first year
-
----
-
 ## Date Calculations
 
-### Example 39: Days Between Dates
+### Example 29: Days Between Dates
 **Problem**: How many days from January 15, 2024 to March 20, 2024?
 
 **Keystrokes**:
@@ -644,7 +1141,7 @@ f SL                 (straight line)
 
 ---
 
-### Example 40: Future Date
+### Example 30: Future Date
 **Problem**: What date is 90 days after June 1, 2024?
 
 **Keystrokes**:
@@ -659,24 +1156,9 @@ f SL                 (straight line)
 
 ---
 
-### Example 41: Age Calculation
-**Problem**: How many days has someone lived if born on July 4, 1990 and today is April 12, 2026?
-
-**Keystrokes**:
-```
-7.041990 ENTER       (birth date)
-4.122026 g ΔDYS      (today)
-```
-
-**Display**: `13,097.00`
-
-**Answer**: 13,097 days (about 35.86 years)
-
----
-
 ## Real-World Scenarios
 
-### Example 42: Car Lease Decision
+### Example 31: Car Lease Decision
 **Problem**: Lease a $35,000 car for 36 months at $450/month with $3,000 down, or buy with 4% loan for 60 months. Which is better?
 
 **Lease effective cost**:
@@ -704,7 +1186,7 @@ PMT                  → -645.30 monthly
 
 ---
 
-### Example 43: Refinance Decision
+### Example 32: Refinance Decision
 **Problem**: You have 25 years left on 6% mortgage with $250,000 balance. Refinance to 5% for 20 years costs $3,000. Should you?
 
 **Current loan**:
@@ -729,7 +1211,7 @@ PMT                  → -1,672.54
 
 ---
 
-### Example 44: Educational Savings Plan
+### Example 33: Educational Savings Plan
 **Problem**: College costs $30,000/year. Child is 5 years old, college at 18 (13 years). Assuming 3% inflation and 6% investment return, how much to save monthly?
 
 **Step 1**: Future cost in 13 years
@@ -753,7 +1235,7 @@ PMT                  → -818.65
 
 ---
 
-### Example 45: Business Valuation
+### Example 34: Business Valuation
 **Problem**: Business generates $100,000/year profit. Profit grows 5%/year. What's its value using 10-year projection at 15% discount rate?
 
 **Keystrokes**:
@@ -774,56 +1256,6 @@ f NPV
 **Display**: ~$772,173
 
 **Answer**: Business worth approximately $772,000
-
----
-
-### Example 46: Bond Pricing
-**Problem**: Bond pays $50 semi-annually, matures in 5 years at $1,000. Current market rate is 8% annual. What's the fair price?
-
-**Keystrokes**:
-```
-10 n                 (5 years × 2 periods)
-4 i                  (8% ÷ 2 semi-annual)
-50 PMT               (coupon payment)
-1000 FV              (face value)
-PV                   → -918.89
-```
-
-**Answer**: Fair price is $918.89 (trading at discount)
-
----
-
-### Example 47: Equipment Replacement
-**Problem**: Machine costs $100,000, saves $30,000/year, lasts 5 years. Required return 12%. Should you buy?
-
-**Keystrokes**:
-```
-f CLX
-100000 CHS g CF₀
-30000 g CFⱼ
-5 g Nⱼ
-12 i
-f NPV                → 8,140.33
-f IRR                → 15.24%
-```
-
-**Answer**: Yes! Positive NPV and IRR > 12%
-
----
-
-### Example 48: Salary Growth Analysis
-**Problem**: Current salary $60,000. If it grows 3% annually, what's total earnings over 30 years in today's dollars (3% inflation)?
-
-This requires calculating each year's real value. Simplified approach:
-
-**Nominal total**:
-```
-60000 ENTER
-1.03 yˣ              (growth factor)
-30 ×                 → approximate calculation
-```
-
-**Real total**: Since inflation = growth, real total ≈ 30 × $60,000 = $1,800,000
 
 ---
 
