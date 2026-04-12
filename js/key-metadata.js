@@ -1016,6 +1016,76 @@
       ]
     },
     
+    "chs": {
+      id: "chs",
+      dataKey: "chs",
+      label: "CHS",
+      displayName: "Change Sign",
+      category: "arithmetic",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Change Sign",
+        description: "Changes the sign of the current number in X register (multiplies by -1). If you're in the middle of typing a number, it changes the sign of what you're typing. If X already has a value, it negates that value.",
+        examples: [
+          "Type '5 CHS' → displays -5",
+          "From -5, press CHS → displays 5",
+          "Type '3 ENTER 2 CHS -' → displays 5 (3 - (-2))"
+        ],
+        keystrokes: "CHS"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: [
+          {
+            label: "DATE",
+            title: "Date",
+            description: "Displays current date stored in calculator or calculates date arithmetic. Used with calendar functions.",
+            implementationStatus: "planned",
+            examples: [
+              "Calculate days between dates",
+              "Find date N days in future/past"
+            ],
+            keystrokes: "g CHS"
+          }
+        ]
+      },
+      
+      shortDescription: "Changes sign of X register (negates)",
+      longDescription: "The CHS (Change Sign) key toggles the sign of the current value between positive and negative. This is essential for entering negative numbers in RPN calculators, since there is no minus sign on the numeric keypad. CHS can be pressed during number entry or after a number is complete. It does not affect the stack - only the X register changes.",
+      
+      implementation: {
+        status: "partially-implemented",
+        note: "The changeSign() method exists in calculator.js, but handlePrimaryFunction() does not call it when CHS is pressed. Needs wire-up in button handler.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Changes the sign of X register immediately. Works during digit entry or on completed numbers. If pressed during exponent entry (after EEX), changes the sign of the exponent, not the mantissa.",
+      
+      simulatorBehavior: "Logic is implemented but not connected to the UI. The key press is currently not handled, so pressing CHS has no effect. This is a wiring issue, not a logic issue.",
+      
+      relatedTopics: [
+        "Numeric Entry",
+        "Negative Numbers",
+        "RPN Operations"
+      ],
+      
+      relatedKeys: ["op-subtract", "digit-0", "digit-1", "digit-2", "digit-3", "digit-4", "digit-5", "digit-6", "digit-7", "digit-8", "digit-9"],
+      
+      commonMistakes: [
+        "Trying to use minus key (-) instead of CHS for negative numbers",
+        "Forgetting that CHS can be pressed during or after number entry",
+        "Not realizing CHS works differently during exponent entry"
+      ],
+      
+      expertTips: [
+        "CHS can be pressed at any time during number entry",
+        "For negative exponents, press EEX, then the exponent digits, then CHS",
+        "CHS is faster than '0 x -' for changing sign"
+      ]
+    },
+    
     // ============================================
     // STACK OPERATION KEYS (4 keys) - All Implemented
     // ============================================
@@ -1326,6 +1396,130 @@
         "'x↔y -' reverses subtraction direction: makes it 'X - Y' instead of 'Y - X'",
         "x↔y is faster than using R↓ when you only need to swap bottom two values",
         "In programming, g x↔y (x≤y test) enables comparison-based branching"
+      ]
+    },
+    
+    // ============================================
+    // MEMORY KEYS (2 keys) - Partially Implemented
+    // ============================================
+    
+    "sto": {
+      id: "sto",
+      dataKey: "sto",
+      label: "STO",
+      displayName: "Store",
+      category: "memory",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Store to Memory",
+        description: "Stores the value in the X register to a specified memory register (0-9 or .0-.9). After pressing STO, press a digit to specify which register. The value remains in X (non-destructive store).",
+        examples: [
+          "'5 STO 0' → stores 5 in register 0",
+          "'3.14 STO 5' → stores 3.14 in register 5",
+          "Store keeps value in X unchanged"
+        ],
+        keystrokes: "STO [digit]"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: []
+      },
+      
+      shortDescription: "Stores X to a memory register",
+      longDescription: "The STO (Store) key saves the current X register value to one of 20 memory registers (R0-R9 and R.0-R.9). This is essential for storing intermediate results, constants, and data for later recall. STO is non-destructive - the value stays in X after storing. You can also use STO with arithmetic operations (STO + 0, STO - 1, etc.) to add/subtract/multiply/divide the memory register by X.",
+      
+      implementation: {
+        status: "partially-implemented",
+        note: "MemoryManager.store() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the STO key press.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Stores X register to specified memory register. Also supports arithmetic store operations: 'STO + n' adds X to register n, 'STO - n' subtracts X from register n, 'STO × n' multiplies register n by X, 'STO ÷ n' divides register n by X.",
+      
+      simulatorBehavior: "Memory storage logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing STO currently has no effect. This requires wiring the button handler to call calculator.memory.store().",
+      
+      relatedTopics: [
+        "Memory Registers",
+        "Data Storage",
+        "Intermediate Results",
+        "Memory Arithmetic"
+      ],
+      
+      relatedKeys: ["rcl", "digit-0", "digit-1", "digit-2", "digit-3", "digit-4", "digit-5", "digit-6", "digit-7", "digit-8", "digit-9"],
+      
+      commonMistakes: [
+        "Forgetting to press a digit after STO",
+        "Confusing STO (store) with = (which doesn't exist in RPN)",
+        "Not realizing STO is non-destructive (X remains unchanged)"
+      ],
+      
+      expertTips: [
+        "Use STO + n to accumulate totals in register n",
+        "Store constants early: π, commonly used values",
+        "Registers .0-.9 are accessed with decimal: 'STO . 5' → R.5",
+        "Memory is preserved even after pressing ON (only cleared by specific clear operations)"
+      ]
+    },
+    
+    "rcl": {
+      id: "rcl",
+      dataKey: "rcl",
+      label: "RCL",
+      displayName: "Recall",
+      category: "memory",
+      type: "key",
+      
+      primaryFunction: {
+        title: "Recall from Memory",
+        description: "Recalls (copies) the value from a specified memory register (0-9 or .0-.9) to the X register. After pressing RCL, press a digit to specify which register. The stack lifts to make room for the recalled value.",
+        examples: [
+          "'RCL 0' → copies register 0 value to X",
+          "'RCL 5' → recalls register 5 to X",
+          "Stack lifts: old X→Y, Y→Z, Z→T"
+        ],
+        keystrokes: "RCL [digit]"
+      },
+      
+      shiftedFunctions: {
+        gold: [],
+        blue: []
+      },
+      
+      shortDescription: "Recalls value from memory register to X",
+      longDescription: "The RCL (Recall) key copies a value from one of the 20 memory registers (R0-R9 and R.0-R.9) to the X register. The stack automatically lifts to make room (X→Y, Y→Z, Z→T, T lost). The memory register itself is unchanged - RCL is a non-destructive read. You can also recall financial registers, statistical registers, and use RCL with arithmetic operations for memory-based calculations.",
+      
+      implementation: {
+        status: "partially-implemented",
+        note: "MemoryManager.recall() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the RCL key press.",
+        version: "1.0"
+      },
+      
+      originalHp12cBehavior: "Recalls value from specified memory register to X, with stack lift. Also supports arithmetic recall: 'RCL + n' adds register n to X, 'RCL - n' subtracts register n from X, 'RCL × n' multiplies X by register n, 'RCL ÷ n' divides X by register n.",
+      
+      simulatorBehavior: "Memory recall logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing RCL currently has no effect. This requires wiring the button handler to call calculator.memory.recall().",
+      
+      relatedTopics: [
+        "Memory Registers",
+        "Data Retrieval",
+        "Stack Lift",
+        "Memory Arithmetic"
+      ],
+      
+      relatedKeys: ["sto", "digit-0", "digit-1", "digit-2", "digit-3", "digit-4", "digit-5", "digit-6", "digit-7", "digit-8", "digit-9"],
+      
+      commonMistakes: [
+        "Forgetting to press a digit after RCL",
+        "Not realizing RCL causes stack lift",
+        "Confusing which register number was used for storage"
+      ],
+      
+      expertTips: [
+        "RCL + n performs X = X + Rn (useful for accumulating)",
+        "Use RCL to bring constants into calculations",
+        "Financial registers: RCL .1 (n), RCL .2 (i), RCL .3 (PV), etc.",
+        "RCL ENTER shows current date in date format"
       ]
     },
     
