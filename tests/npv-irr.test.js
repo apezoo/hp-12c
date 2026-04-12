@@ -16,8 +16,8 @@ describe('NPV - Net Present Value', () => {
     test('NPV - Multiple Cash Flows: CF0=-5000, CF1=1500, CF2=2000, CF3=2500 at 8%', () => {
         const fin = setupCashFlows([-5000, 1500, 2000, 2500]);
         const result = fin.calculateNPV(8);
-        // Expected: ~350
-        expect(result).toBeCloseTo(350, 10);
+        // Actual: -5000 + 1500/1.08 + 2000/1.08^2 + 2500/1.08^3 ≈ 88.15
+        expect(result).toBeCloseTo(88.15, 0.5);
     });
 
     test('NPV - Negative NPV Project', () => {
@@ -65,8 +65,8 @@ describe('IRR - Internal Rate of Return', () => {
     test('IRR - Multiple Years Investment: CF0=-1000, CF1=500, CF2=600', () => {
         const fin = setupCashFlows([-1000, 500, 600]);
         const result = fin.calculateIRR();
-        // Should be around 13-14%
-        expect(result).toBeBetween(13, 14);
+        // Actual IRR is around 6.4%
+        expect(result).toBeBetween(6, 7);
     });
 
     test('IRR - Real Estate Investment', () => {

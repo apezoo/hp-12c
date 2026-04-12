@@ -8,7 +8,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
-    "test:financial": "jest tests/financial.test.js",
+    "test:financial": "jest tests/financial-engine.test.js",
     "test:tvm": "jest tests/tvm.test.js",
     "test:percentage": "jest tests/percentage.test.js"
   },
@@ -24,18 +24,5 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^29.7.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "coverageDirectory": "coverage",
-    "collectCoverageFrom": [
-      "js/**/*.js",
-      "!js/keyboard.js",
-      "!js/key-info.js"
-    ],
-    "testMatch": [
-      "**/tests/**/*.test.js"
-    ],
-    "verbose": true
   }
 }
