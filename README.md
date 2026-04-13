@@ -48,7 +48,8 @@ An independent, educational web-based implementation inspired by the classic HP-
 - Basic arithmetic with RPN logic
 - **Memory operations (STO/RCL)** - Complete with 20 registers ⭐
 - **Percentage calculations** - %, Δ%, %T fully implemented ⭐
-- **Scientific functions** - y^x, 1/x, √x, e^x, LN, LOG fully implemented ⭐ NEW!
+- **Scientific functions** - y^x, 1/x, √x, e^x, LN, LOG fully implemented ⭐
+- **Statistics functions** - Σ+, Σ-, x̄, s, ŷ,r, x̂,r fully implemented ⭐ NEW!
 - Trigonometric functions - Planned
 
 ### 📚 Bilingual Examples

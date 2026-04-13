@@ -20,11 +20,19 @@ npm run test:watch
 
 ## Test Suite Overview
 
-The HP-12C test suite includes **153 automated tests** covering:
+The HP-12C test suite includes **193 automated tests** covering:
 
 ### Functions Tested
 
-#### ✅ Scientific Functions (Phase 6) ⭐ NEW!
+#### ✅ Statistics Functions (Phase 7) ⭐ NEW!
+- **Σ+** (Sigma Plus): Data accumulation into statistical registers
+- **Σ-** (Sigma Minus): Data point removal for error correction
+- **x̄** (Mean): Arithmetic mean calculation
+- **s** (Standard Deviation): Sample standard deviation
+- **ŷ,r** (Y-Estimate, Correlation): Linear regression y from x
+- **x̂,r** (X-Estimate, Correlation): Linear regression x from y
+
+#### ✅ Scientific Functions (Phase 6)
 - **y^x** (Power): Integer, fractional, and negative exponents
 - **1/x** (Reciprocal): Fast reciprocal calculations
 - **√x** (Square Root): Perfect and non-perfect squares
@@ -60,7 +68,21 @@ The HP-12C test suite includes **153 automated tests** covering:
 
 ## Test Statistics
 
-**Phase 6 Test Coverage (Current):**
+**Phase 7 Test Coverage (Current):**
+
+| Category | Tests | Coverage | Status |
+|----------|-------|----------|--------|
+| **Statistics Functions** | **40** | **100%** | **✅ Pass** |
+| Σ+ (Sigma Plus) | 6 | 100% | ✅ Pass |
+| Σ- (Sigma Minus) | 6 | 100% | ✅ Pass |
+| x̄ (Mean) | 6 | 100% | ✅ Pass |
+| s (Standard Deviation) | 6 | 100% | ✅ Pass |
+| ŷ,r (Y-Estimate) | 5 | 100% | ✅ Pass |
+| x̂,r (X-Estimate) | 4 | 100% | ✅ Pass |
+| Integration Tests | 4 | 100% | ✅ Pass |
+| Edge Cases | 5 | 100% | ✅ Pass |
+
+**Phase 6 Test Coverage:**
 
 | Category | Tests | Coverage | Status |
 |----------|-------|----------|--------|
@@ -95,7 +117,10 @@ The HP-12C test suite includes **153 automated tests** covering:
 
 **Total Phase 5: 81 test cases with 100% pass rate**
 
-**COMBINED TOTAL: 153 test cases with 100% pass rate** ⭐
+**COMBINED TOTAL: 193 test cases with 100% pass rate** ⭐
+- Phase 7 (Statistics): 40 tests
+- Phase 6 (Scientific): 72 tests
+- Phase 5 (Financial): 81 tests
 
 ## Running Tests
 
