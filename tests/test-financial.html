@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP-12C Financial Functions Test Suite</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fafafa;
+        }
+        
+        .test-section h2 {
+            color: #444;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-case {
+            background: white;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .test-case:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .test-case.pass {
+            border-left-color: #4caf50;
+            background: #f1f8f4;
+        }
+        
+        .test-case.fail {
+            border-left-color: #f44336;
+            background: #fef5f5;
+        }
+        
+        .test-case.pending {
+            border-left-color: #ff9800;
+            background: #fff8f0;
+        }
+        
+        .test-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        .test-description {
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+        
+        .test-details {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #555;
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+        
+        .test-result {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .status-icon.pass { background: #4caf50; }
+        .status-icon.fail { background: #f44336; }
+        .status-icon.pending { background: #ff9800; }
+        
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .summary-item {
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .run-tests-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .run-tests-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .run-tests-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-msg {
+            color: #d32f2f;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+        
+        .expected {
+            color: #1976d2;
+        }
+        
+        .actual {
+            color: #388e3c;
+        }
+        
+        .tolerance {
+            color: #f57c00;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧮 HP-12C Financial Functions Test Suite</h1>
+        <p class="subtitle">Comprehensive testing for Phase 5: TVM Solver, Percentage Functions & Memory Operations</p>
+        
+        <button class="run-tests-btn" onclick="runAllTests()">▶️ Run All Tests</button>
+        
+        <div id="summary" class="summary" style="display: none;">
+            <div class="summary-item">
+                <div class="summary-value" id="totalTests">0</div>
+                <div class="summary-label">Total Tests</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="passedTests">0</div>
+                <div class="summary-label">Passed</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="failedTests">0</div>
+                <div class="summary-label">Failed</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-value" id="passRate">0%</div>
+                <div class="summary-label">Pass Rate</div>
+            </div>
+        </div>
+        
+        <div id="testResults"></div>
+    </div>
+
+    <!-- Load calculator components -->
+    <script src="../js/rpn-stack.js"></script>
+    <script src="../js/display.js"></script>
+    <script src="../js/memory.js"></script>
+    <script src="../js/financial.js"></script>
+
+    <script>
+        // Test runner framework
+        class TestRunner {
+            constructor() {
+                this.tests = [];
+                this.results = [];
+                this.tolerance = 0.01; // Default tolerance for floating point comparisons
+            }
+
+            addTest(name, description, testFn, section = 'General') {
+                this.tests.push({ name, description, testFn, section });
+            }
+
+            async runAll() {
+                this.results = [];
+                
+                for (const test of this.tests) {
+                    try {
+                        const result = await test.testFn();
+                        this.results.push({
+                            ...test,
+                            status: result.pass ? 'pass' : 'fail',
+                            details: result
+                        });
+                    } catch (error) {
+                        this.results.push({
+                            ...test,
+                            status: 'fail',
+                            details: {
+                                pass: false,
+                                error: error.message,
+                                stack: error.stack
+                            }
+                        });
+                    }
+                }
+                
+                return this.results;
+            }
+
+            assertClose(actual, expected, tolerance = this.tolerance, message = '') {
+                const diff = Math.abs(actual - expected);
+                const pass = diff <= tolerance;
+                return {
+                    pass,
+                    actual,
+                    expected,
+                    difference: diff,
+                    tolerance,
+                    message: message || (pass ? 'Values match within tolerance' : `Difference ${diff.toFixed(6)} exceeds tolerance ${tolerance}`)
+                };
+            }
+
+            assertEqual(actual, expected, message = '') {
+                const pass = actual === expected;
+                return {
+                    pass,
+                    actual,
+                    expected,
+                    message: message || (pass ? 'Values are equal' : `Expected ${expected}, got ${actual}`)
+                };
+            }
+        }
+
+        const runner = new TestRunner();
+
+        // ========================================
+        // TVM TESTS - Basic Compound Interest
+        // ========================================
+        
+        runner.addTest(
+            'Simple Future Value',
+            'Calculate FV: PV=1000, i=5%, n=1, PMT=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -1000;
+                fin.i = 5;
+                fin.n = 1;
+                fin.pmt = 0;
+                const result = fin.solveFV();
+                return runner.assertClose(result, 1050, 0.01);
+            },
+            'TVM - Compound Interest'
+        );
+
+        runner.addTest(
+            '10-Year Compound Interest',
+            'Calculate FV: PV=1000, i=7%, n=10, PMT=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -1000;
+                fin.i = 7;
+                fin.n = 10;
+                fin.pmt = 0;
+                const result = fin.solveFV();
+                // Expected: 1000 * (1.07)^10 = 1967.15
+                return runner.assertClose(result, 1967.15, 0.5);
+            },
+            'TVM - Compound Interest'
+        );
+
+        runner.addTest(
+            'Solve for Present Value',
+            'Calculate PV: FV=2000, i=6%, n=5, PMT=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.fv = 2000;
+                fin.i = 6;
+                fin.n = 5;
+                fin.pmt = 0;
+                const result = fin.solvePV();
+                // Expected: 2000 / (1.06)^5 = -1494.52
+                return runner.assertClose(result, -1494.52, 0.5);
+            },
+            'TVM - Compound Interest'
+        );
+
+        runner.addTest(
+            'Solve for Interest Rate',
+            'Calculate i: PV=-1000, FV=1500, n=5, PMT=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -1000;
+                fin.fv = 1500;
+                fin.n = 5;
+                fin.pmt = 0;
+                const result = fin.solveI();
+                // Expected: ((1500/1000)^(1/5) - 1) * 100 = 8.45%
+                return runner.assertClose(result, 8.45, 0.1);
+            },
+            'TVM - Compound Interest'
+        );
+
+        runner.addTest(
+            'Solve for Number of Periods',
+            'Calculate n: PV=-1000, FV=2000, i=10%, PMT=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -1000;
+                fin.fv = 2000;
+                fin.i = 10;
+                fin.pmt = 0;
+                const result = fin.solveN();
+                // Expected: log(2000/1000) / log(1.10) = 7.27 periods
+                return runner.assertClose(result, 7.27, 0.1);
+            },
+            'TVM - Compound Interest'
+        );
+
+        // ========================================
+        // TVM TESTS - Annuities (with Payments)
+        // ========================================
+
+        runner.addTest(
+            'Monthly Payment on Loan',
+            'Calculate PMT: PV=200000, i=0.5% (6%/12), n=360 (30 years)',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = 200000;  // Loan amount (positive when receiving)
+                fin.fv = 0;
+                fin.i = 0.5;      // 6% annual = 0.5% monthly
+                fin.n = 360;      // 30 years * 12 months
+                const result = fin.solvePMT();
+                // Expected: ~-1199.10 (payment is negative)
+                return runner.assertClose(result, -1199.10, 5);
+            },
+            'TVM - Annuities'
+        );
+
+        runner.addTest(
+            'Savings Plan Future Value',
+            'Calculate FV: PMT=-100, i=0.5%, n=120 (10 years), PV=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = 0;
+                fin.pmt = -100;   // Monthly investment
+                fin.i = 0.5;      // 6% annual = 0.5% monthly
+                fin.n = 120;      // 10 years * 12 months
+                const result = fin.solveFV();
+                // Expected: ~16387.93
+                return runner.assertClose(result, 16387.93, 10);
+            },
+            'TVM - Annuities'
+        );
+
+        runner.addTest(
+            'Retirement Savings Present Value',
+            'Calculate PV: PMT=-5000, i=8%, n=30, FV=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pmt = -5000;  // Annual withdrawal
+                fin.i = 8;
+                fin.n = 30;
+                fin.fv = 0;
+                const result = fin.solvePV();
+                // Expected: ~56288.50
+                return runner.assertClose(result, 56288.50, 50);
+            },
+            'TVM - Annuities'
+        );
+
+        runner.addTest(
+            'Years to Reach Savings Goal',
+            'Calculate n: PV=0, PMT=-500, FV=100000, i=0.5%',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = 0;
+                fin.pmt = -500;
+                fin.fv = 100000;
+                fin.i = 0.5;
+                const result = fin.solveN();
+                // Expected: ~155 periods
+                return runner.assertClose(result, 155, 2);
+            },
+            'TVM - Annuities'
+        );
+
+        runner.addTest(
+            'Interest Rate on Investment',
+            'Calculate i: PV=-50000, PMT=-500, FV=100000, n=60',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -50000;
+                fin.pmt = -500;
+                fin.fv = 100000;
+                fin.n = 60;
+                const result = fin.solveI();
+                // This should converge to a positive interest rate
+                return {
+                    pass: result > 0 && result < 20,
+                    actual: result,
+                    expected: 'between 0 and 20',
+                    message: `Interest rate solved: ${result.toFixed(4)}%`
+                };
+            },
+            'TVM - Annuities'
+        );
+
+        // ========================================
+        // TVM TESTS - BEGIN Mode
+        // ========================================
+
+        runner.addTest(
+            'BEGIN Mode - Payment at Start',
+            'Calculate PMT with BEGIN mode: PV=10000, i=1%, n=12, FV=0',
+            () => {
+                const fin = new FinancialEngine();
+                fin.setBeginMode(true);
+                fin.pv = 10000;
+                fin.i = 1;
+                fin.n = 12;
+                fin.fv = 0;
+                const result = fin.solvePMT();
+                // BEGIN mode payment should be slightly less than END mode
+                return runner.assertClose(result, -879.83, 1);
+            },
+            'TVM - BEGIN Mode'
+        );
+
+        runner.addTest(
+            'BEGIN vs END Mode Comparison',
+            'Compare PMT in BEGIN vs END mode',
+            () => {
+                const finEnd = new FinancialEngine();
+                finEnd.setBeginMode(false);
+                finEnd.pv = 10000;
+                finEnd.i = 1;
+                finEnd.n = 12;
+                finEnd.fv = 0;
+                const pmtEnd = finEnd.solvePMT();
+
+                const finBegin = new FinancialEngine();
+                finBegin.setBeginMode(true);
+                finBegin.pv = 10000;
+                finBegin.i = 1;
+                finBegin.n = 12;
+                finBegin.fv = 0;
+                const pmtBegin = finBegin.solvePMT();
+
+                // BEGIN payment should be about 1% less than END payment
+                return {
+                    pass: Math.abs(pmtEnd - pmtBegin) > 5,
+                    actual: `END: ${pmtEnd.toFixed(2)}, BEGIN: ${pmtBegin.toFixed(2)}`,
+                    expected: 'BEGIN payment < END payment',
+                    message: `Difference: ${(pmtEnd - pmtBegin).toFixed(2)}`
+                };
+            },
+            'TVM - BEGIN Mode'
+        );
+
+        // ========================================
+        // PERCENTAGE FUNCTION TESTS
+        // ========================================
+
+        runner.addTest(
+            'Simple Percentage',
+            'Calculate 15% of 200',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculatePercent(200, 15);
+                return runner.assertClose(result, 30, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        runner.addTest(
+            'Percentage with Decimal',
+            'Calculate 7.5% of 1000',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculatePercent(1000, 7.5);
+                return runner.assertClose(result, 75, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        runner.addTest(
+            'Delta Percent - Increase',
+            'Calculate percent change: 100 → 150',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculateDeltaPercent(100, 150);
+                return runner.assertClose(result, 50, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        runner.addTest(
+            'Delta Percent - Decrease',
+            'Calculate percent change: 200 → 150',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculateDeltaPercent(200, 150);
+                return runner.assertClose(result, -25, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        runner.addTest(
+            'Percent of Total',
+            'Calculate 75 as % of 300',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculatePercentTotal(300, 75);
+                return runner.assertClose(result, 25, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        runner.addTest(
+            'Percent of Total - Large Numbers',
+            'Calculate 12500 as % of 50000',
+            () => {
+                const fin = new FinancialEngine();
+                const result = fin.calculatePercentTotal(50000, 12500);
+                return runner.assertClose(result, 25, 0.01);
+            },
+            'Percentage Functions'
+        );
+
+        // ========================================
+        // NPV/IRR TESTS
+        // ========================================
+
+        runner.addTest(
+            'NPV - Simple Cash Flow',
+            'Calculate NPV: CF0=-1000, CF1=1200 at 10%',
+            () => {
+                const fin = new FinancialEngine();
+                fin.addCashFlow(-1000);
+                fin.addCashFlow(1200);
+                const result = fin.calculateNPV(10);
+                // Expected: -1000 + 1200/1.10 = 90.91
+                return runner.assertClose(result, 90.91, 0.5);
+            },
+            'NPV/IRR'
+        );
+
+        runner.addTest(
+            'NPV - Multiple Cash Flows',
+            'Calculate NPV: CF0=-5000, CF1=1500, CF2=2000, CF3=2500 at 8%',
+            () => {
+                const fin = new FinancialEngine();
+                fin.addCashFlow(-5000);
+                fin.addCashFlow(1500);
+                fin.addCashFlow(2000);
+                fin.addCashFlow(2500);
+                const result = fin.calculateNPV(8);
+                return runner.assertClose(result, 350, 10);
+            },
+            'NPV/IRR'
+        );
+
+        runner.addTest(
+            'IRR - Simple Investment',
+            'Calculate IRR: CF0=-1000, CF1=1100',
+            () => {
+                const fin = new FinancialEngine();
+                fin.addCashFlow(-1000);
+                fin.addCashFlow(1100);
+                const result = fin.calculateIRR();
+                // Expected: 10% (1100/1000 - 1)
+                return runner.assertClose(result, 10, 0.1);
+            },
+            'NPV/IRR'
+        );
+
+        // ========================================
+        // EDGE CASE TESTS
+        // ========================================
+
+        runner.addTest(
+            'Zero Interest Rate',
+            'Calculate FV with i=0: PV=-1000, n=5, PMT=-100',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -1000;
+                fin.i = 0;
+                fin.n = 5;
+                fin.pmt = -100;
+                const result = fin.solveFV();
+                // Expected: 1000 + (100 * 5) = 1500
+                return runner.assertClose(result, 1500, 0.01);
+            },
+            'Edge Cases'
+        );
+
+        runner.addTest(
+            'Division by Zero Protection - Delta %',
+            'Attempt Δ% with zero old value',
+            () => {
+                const fin = new FinancialEngine();
+                try {
+                    fin.calculateDeltaPercent(0, 100);
+                    return { pass: false, message: 'Should have thrown error' };
+                } catch (error) {
+                    return { pass: true, message: 'Correctly threw error for division by zero' };
+                }
+            },
+            'Edge Cases'
+        );
+
+        runner.addTest(
+            'Division by Zero Protection - %T',
+            'Attempt %T with zero total',
+            () => {
+                const fin = new FinancialEngine();
+                try {
+                    fin.calculatePercentTotal(0, 50);
+                    return { pass: false, message: 'Should have thrown error' };
+                } catch (error) {
+                    return { pass: true, message: 'Correctly threw error for division by zero' };
+                }
+            },
+            'Edge Cases'
+        );
+
+        // ========================================
+        // REAL-WORLD EXAMPLES
+        // ========================================
+
+        runner.addTest(
+            'Real World - 30-Year Mortgage',
+            'Calculate monthly payment: $300,000 loan at 6.5% APR',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = 300000;
+                fin.i = 6.5 / 12;  // Monthly rate
+                fin.n = 360;       // 30 years
+                fin.fv = 0;
+                const result = fin.solvePMT();
+                // Expected: ~-1896.20
+                return runner.assertClose(result, -1896.20, 10);
+            },
+            'Real-World Examples'
+        );
+
+        runner.addTest(
+            'Real World - Retirement Savings',
+            'How much needed to withdraw $50,000/year for 25 years at 7%?',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pmt = -50000;
+                fin.i = 7;
+                fin.n = 25;
+                fin.fv = 0;
+                const result = fin.solvePV();
+                // Expected: ~582,430
+                return runner.assertClose(result, 582430, 1000);
+            },
+            'Real-World Examples'
+        );
+
+        runner.addTest(
+            'Real World - Investment Doubling Time',
+            'How long to double $10,000 at 9% with no payments?',
+            () => {
+                const fin = new FinancialEngine();
+                fin.pv = -10000;
+                fin.fv = 20000;
+                fin.i = 9;
+                fin.pmt = 0;
+                const result = fin.solveN();
+                // Expected: ~8.04 years (Rule of 72: 72/9 = 8)
+                return runner.assertClose(result, 8.04, 0.1);
+            },
+            'Real-World Examples'
+        );
+
+        // Display results
+        async function runAllTests() {
+            const resultsDiv = document.getElementById('testResults');
+            const summaryDiv = document.getElementById('summary');
+            
+            resultsDiv.innerHTML = '<div style="text-align: center; padding: 40px; color: #666;"><div style="font-size: 2em; margin-bottom: 10px;">⏳</div>Running tests...</div>';
+            summaryDiv.style.display = 'none';
+            
+            // Small delay to show loading
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            const results = await runner.runAll();
+            
+            // Calculate summary
+            const total = results.length;
+            const passed = results.filter(r => r.status === 'pass').length;
+            const failed = results.filter(r => r.status === 'fail').length;
+            const passRate = ((passed / total) * 100).toFixed(1);
+            
+            // Update summary
+            document.getElementById('totalTests').textContent = total;
+            document.getElementById('passedTests').textContent = passed;
+            document.getElementById('failedTests').textContent = failed;
+            document.getElementById('passRate').textContent = passRate + '%';
+            summaryDiv.style.display = 'grid';
+            
+            // Group by section
+            const sections = {};
+            results.forEach(result => {
+                if (!sections[result.section]) {
+                    sections[result.section] = [];
+                }
+                sections[result.section].push(result);
+            });
+            
+            // Display results by section
+            let html = '';
+            for (const [section, tests] of Object.entries(sections)) {
+                const sectionPassed = tests.filter(t => t.status === 'pass').length;
+                const sectionTotal = tests.length;
+                
+                html += `
+                    <div class="test-section">
+                        <h2>
+                            <span>${section}</span>
+                            <span style="margin-left: auto; font-size: 0.8em; font-weight: normal;">
+                                ${sectionPassed}/${sectionTotal} passed
+                            </span>
+                        </h2>
+                `;
+                
+                tests.forEach(test => {
+                    const statusIcon = test.status === 'pass' ? '✓' : '✗';
+                    
+                    html += `
+                        <div class="test-case ${test.status}">
+                            <div class="test-name">${test.name}</div>
+                            <div class="test-description">${test.description}</div>
+                            <div class="test-result">
+                                <div class="status-icon ${test.status}">${statusIcon}</div>
+                                <span style="color: ${test.status === 'pass' ? '#4caf50' : '#f44336'}">
+                                    ${test.status === 'pass' ? 'PASS' : 'FAIL'}
+                                </span>
+                            </div>
+                    `;
+                    
+                    if (test.details) {
+                        html += '<div class="test-details">';
+                        
+                        if (test.details.expected !== undefined) {
+                            html += `<div><span class="expected">Expected:</span> ${test.details.expected}</div>`;
+                        }
+                        if (test.details.actual !== undefined) {
+                            html += `<div><span class="actual">Actual:</span> ${test.details.actual}</div>`;
+                        }
+                        if (test.details.difference !== undefined) {
+                            html += `<div>Difference: ${test.details.difference.toFixed(6)}</div>`;
+                        }
+                        if (test.details.tolerance !== undefined) {
+                            html += `<div class="tolerance">Tolerance: ±${test.details.tolerance}</div>`;
+                        }
+                        if (test.details.message) {
+                            html += `<div style="margin-top: 5px; font-style: italic;">${test.details.message}</div>`;
+                        }
+                        if (test.details.error) {
+                            html += `<div class="error-msg">Error: ${test.details.error}</div>`;
+                        }
+                        
+                        html += '</div>';
+                    }
+                    
+                    html += '</div>';
+                });
+                
+                html += '</div>';
+            }
+            
+            resultsDiv.innerHTML = html;
+            
+            // Scroll to results
+            summaryDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Auto-run tests on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runAllTests, 500);
+        });
+    </script>
+</body>
+</html>

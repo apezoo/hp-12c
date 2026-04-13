@@ -1,0 +1,28 @@
+{
+  "name": "hp-12c-calculator",
+  "version": "1.5.0",
+  "description": "HP-12C Financial Calculator Web Implementation",
+  "main": "js/calculator.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:verbose": "jest --verbose",
+    "test:financial": "jest tests/financial-engine.test.js",
+    "test:tvm": "jest tests/tvm.test.js",
+    "test:percentage": "jest tests/percentage.test.js"
+  },
+  "keywords": [
+    "calculator",
+    "financial",
+    "hp-12c",
+    "tvm",
+    "npv",
+    "irr"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

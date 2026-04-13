@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Key Details - HP-12C Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --gold: #d4a574;
+            --gold-dark: #b8935f;
+            --blue: #4a90e2;
+            --blue-dark: #357abd;
+            --black: #1a1a1a;
+            --gray-dark: #2d3748;
+            --gray-medium: #4a5568;
+            --gray-light: #cbd5e0;
+            --gray-lighter: #e2e8f0;
+            --gray-lightest: #f7fafc;
+            --white: #ffffff;
+            --green: #48bb78;
+            --yellow: #f6ad55;
+            --orange: #ed8936;
+            --red: #f56565;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: var(--gray-dark);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--white);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-2px);
+        }
+
+        .header-content {
+            margin-top: 2rem;
+        }
+
+        .key-id {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .key-category {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-content {
+            background: var(--gray-lightest);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--blue);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge.implemented {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-badge.partially-implemented {
+            background: #feebc8;
+            color: #7c2d12;
+        }
+
+        .status-badge.planned {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.not-implemented {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .status-badge.informational-only {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        /* Function Cards */
+        .function-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .function-card {
+            background: var(--white);
+            border: 2px solid var(--gray-lighter);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .function-card:hover {
+            border-color: var(--blue);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.15);
+        }
+
+        .function-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .function-type {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .function-type.primary {
+            background: var(--blue);
+            color: var(--white);
+        }
+
+        .function-type.gold {
+            background: var(--gold);
+            color: var(--white);
+        }
+
+        .function-type.blue {
+            background: var(--blue-dark);
+            color: var(--white);
+        }
+
+        .function-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .function-description {
+            color: var(--gray-medium);
+            line-height: 1.6;
+        }
+
+        /* Details List */
+        .details-list {
+            list-style: none;
+        }
+
+        .details-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-lighter);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .details-list li:last-child {
+            border-bottom: none;
+        }
+
+        .details-label {
+            font-weight: 600;
+            color: var(--gray-dark);
+            min-width: 140px;
+        }
+
+        .details-value {
+            color: var(--gray-medium);
+            font-family: 'Courier New', monospace;
+            flex: 1;
+        }
+
+        /* Error State */
+        .error-container {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .error-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-dark);
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            color: var(--gray-medium);
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+        }
+
+        .error-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .error-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Key Visual */
+        .key-visual {
+            background: var(--gray-dark);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+        }
+
+        .key-label-display {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .key-sublabels {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .key-sublabel {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .key-sublabel-type {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .key-sublabel-text {
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .back-button {
+                position: static;
+                margin-bottom: 1rem;
+            }
+
+            .header-content {
+                margin-top: 1rem;
+            }
+
+            .key-title {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 1.5rem 1rem;
+            }
+
+            .key-label-display {
+                font-size: 2rem;
+            }
+
+            .key-sublabels {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-lighter);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--gray-medium);
+            font-size: 1.125rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="content">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Loading key details...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/key-metadata.js"></script>
+    <script>
+        // Parse URL parameter
+        function getKeyFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('key');
+        }
+
+        // Get status badge HTML
+        function getStatusBadgeHTML(status) {
+            const badges = {
+                'implemented': { icon: '✅', text: 'Implemented', class: 'implemented' },
+                'partially-implemented': { icon: '⚙️', text: 'Partially Implemented', class: 'partially-implemented' },
+                'planned': { icon: '📋', text: 'Planned', class: 'planned' },
+                'not-implemented': { icon: '❌', text: 'Not Implemented', class: 'not-implemented' },
+                'informational-only': { icon: 'ℹ️', text: 'Informational Only', class: 'informational-only' }
+            };
+
+            const badge = badges[status] || badges['not-implemented'];
+            return `<div class="status-badge ${badge.class}">
+                <span>${badge.icon}</span>
+                <span>${badge.text}</span>
+            </div>`;
+        }
+
+        // Get category display name
+        function getCategoryDisplay(category) {
+            const categories = {
+                'numeric-entry': { icon: '🔢', text: 'Numeric Entry' },
+                'arithmetic': { icon: '➕', text: 'Arithmetic' },
+                'stack': { icon: '📚', text: 'Stack Operations' },
+                'prefix': { icon: '🔤', text: 'Prefix Keys' },
+                'control': { icon: '⚙️', text: 'Control' },
+                'financial': { icon: '💰', text: 'Financial' },
+                'memory': { icon: '💾', text: 'Memory' },
+                'percentage': { icon: '％', text: 'Percentage' },
+                'power-log': { icon: '📐', text: 'Power & Logarithms' },
+                'programming': { icon: '⌨️', text: 'Programming' },
+                'statistics': { icon: '📊', text: 'Statistics' }
+            };
+
+            const cat = categories[category] || { icon: '❓', text: category };
+            return `<span>${cat.icon}</span><span>${cat.text}</span>`;
+        }
+
+        // Render key details
+        function renderKeyDetails(keyId, metadata) {
+            const content = document.getElementById('content');
+            
+            let functionsHTML = '';
+
+            // Primary function
+            if (metadata.functions.primary) {
+                functionsHTML += `
+                    <div class="function-card">
+                        <div class="function-header">
+                            <span class="function-type primary">Primary Function</span>
+                        </div>
+                        <div class="function-name">${metadata.functions.primary.name}</div>
+                        <div class="function-description">${metadata.functions.primary.description}</div>
+                    </div>
+                `;
+            }
+
+            // Gold (f-prefix) function
+            if (metadata.functions.gold) {
+                functionsHTML += `
+                    <div class="function-card">
+                        <div class="function-header">
+                            <span class="function-type gold">🟡 Gold Function (f)</span>
+                        </div>
+                        <div class="function-name">${metadata.functions.gold.name}</div>
+                        <div class="function-description">${metadata.functions.gold.description}</div>
+                    </div>
+                `;
+            }
+
+            // Blue (g-prefix) function
+            if (metadata.functions.blue) {
+                functionsHTML += `
+                    <div class="function-card">
+                        <div class="function-header">
+                            <span class="function-type blue">🔵 Blue Function (g)</span>
+                        </div>
+                        <div class="function-name">${metadata.functions.blue.name}</div>
+                        <div class="function-description">${metadata.functions.blue.description}</div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = `
+                <div class="header">
+                    <a href="../index.html" class="back-button">
+                        <span>←</span>
+                        <span>Back to Calculator</span>
+                    </a>
+                    <div class="header-content">
+                        <div class="key-id">data-key="${keyId}"</div>
+                        <h1 class="key-title">${metadata.displayName}</h1>
+                        <div class="key-category">${getCategoryDisplay(metadata.category)}</div>
+                    </div>
+                </div>
+
+                <div class="content">
+                    ${getStatusBadgeHTML(metadata.status)}
+
+                    <div class="section">
+                        <div class="key-visual">
+                            <div class="key-label-display">${metadata.label}</div>
+                            <div class="key-sublabels">
+                                ${metadata.goldLabel ? `
+                                    <div class="key-sublabel">
+                                        <div class="key-sublabel-type">Gold (f)</div>
+                                        <div class="key-sublabel-text">${metadata.goldLabel}</div>
+                                    </div>
+                                ` : ''}
+                                ${metadata.blueLabel ? `
+                                    <div class="key-sublabel">
+                                        <div class="key-sublabel-type">Blue (g)</div>
+                                        <div class="key-sublabel-text">${metadata.blueLabel}</div>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">
+                            <span>📖</span>
+                            <span>Functions</span>
+                        </h2>
+                        <div class="function-grid">
+                            ${functionsHTML}
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2 class="section-title">
+                            <span>ℹ️</span>
+                            <span>Technical Details</span>
+                        </h2>
+                        <div class="section-content">
+                            <ul class="details-list">
+                                <li>
+                                    <span class="details-label">Data Key:</span>
+                                    <span class="details-value">${keyId}</span>
+                                </li>
+                                <li>
+                                    <span class="details-label">Display Label:</span>
+                                    <span class="details-value">${metadata.label}</span>
+                                </li>
+                                <li>
+                                    <span class="details-label">Category:</span>
+                                    <span class="details-value">${metadata.category}</span>
+                                </li>
+                                <li>
+                                    <span class="details-label">Status:</span>
+                                    <span class="details-value">${metadata.status}</span>
+                                </li>
+                                ${metadata.goldLabel ? `
+                                <li>
+                                    <span class="details-label">Gold Label:</span>
+                                    <span class="details-value">${metadata.goldLabel}</span>
+                                </li>
+                                ` : ''}
+                                ${metadata.blueLabel ? `
+                                <li>
+                                    <span class="details-label">Blue Label:</span>
+                                    <span class="details-value">${metadata.blueLabel}</span>
+                                </li>
+                                ` : ''}
+                            </ul>
+                        </div>
+                    </div>
+
+                    ${metadata.notes ? `
+                    <div class="section">
+                        <h2 class="section-title">
+                            <span>📝</span>
+                            <span>Notes</span>
+                        </h2>
+                        <div class="section-content">
+                            <p style="color: var(--gray-medium); line-height: 1.6;">${metadata.notes}</p>
+                        </div>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Render error state
+        function renderError(keyId) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="header">
+                    <a href="../index.html" class="back-button">
+                        <span>←</span>
+                        <span>Back to Calculator</span>
+                    </a>
+                </div>
+                <div class="error-container">
+                    <div class="error-icon">❌</div>
+                    <h1 class="error-title">Key Not Found</h1>
+                    <p class="error-message">
+                        ${keyId ? `No information available for key "${keyId}".` : 'No key specified in URL.'}
+                    </p>
+                    <a href="../index.html" class="error-button">Return to Calculator</a>
+                </div>
+            `;
+        }
+
+        // Initialize page
+        function init() {
+            console.log('HP-12C Key Detail Page initialized');
+
+            // Check if metadata is loaded
+            if (typeof window.HP12C_KEY_METADATA === 'undefined') {
+                console.error('Key metadata not loaded!');
+                renderError(null);
+                return;
+            }
+
+            // Get key from URL
+            const keyId = getKeyFromURL();
+            console.log('Loading details for key:', keyId);
+
+            if (!keyId) {
+                console.warn('No key specified in URL');
+                renderError(null);
+                return;
+            }
+
+            // Get metadata for this key
+            const metadata = window.HP12C_KEY_METADATA[keyId];
+
+            if (!metadata) {
+                console.warn('Key not found in metadata:', keyId);
+                renderError(keyId);
+                return;
+            }
+
+            // Render key details
+            console.log('Rendering key details:', metadata);
+            renderKeyDetails(keyId, metadata);
+        }
+
+        // Run on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
