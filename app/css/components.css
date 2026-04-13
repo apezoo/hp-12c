@@ -1,0 +1,149 @@
+/* HP-12C Calculator - Component Styles */
+/* Extracted inline styles for cleaner HTML */
+
+/* Navigation and Controls */
+.nav-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.language-toggle {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+}
+
+.language-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.language-toggle:active {
+    transform: translateY(0);
+}
+
+.examples-link {
+    display: inline-block;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #d8942b, #1f97da);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+}
+
+.examples-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.examples-link:active {
+    transform: translateY(0);
+}
+
+/* Learn Mode Help Text */
+.learn-mode-help {
+    margin-top: 8px;
+    font-size: 0.85rem;
+    color: #666;
+    text-align: center;
+}
+
+/* Key Detail Modal */
+.key-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 20000;
+}
+
+.key-modal[aria-hidden="false"] {
+    display: block;
+}
+
+/* Grid positioning for calculator keys */
+.key[data-key="n"] { grid-column: 1; grid-row: 2; }
+.key[data-key="i"] { grid-column: 2; grid-row: 2; }
+.key[data-key="pv"] { grid-column: 3; grid-row: 2; }
+.key[data-key="pmt"] { grid-column: 4; grid-row: 2; }
+.key[data-key="fv"] { grid-column: 5; grid-row: 2; }
+.key[data-key="chs"] { grid-column: 6; grid-row: 2; }
+.key[data-key="digit-7"] { grid-column: 7; grid-row: 2; }
+.key[data-key="digit-8"] { grid-column: 8; grid-row: 2; }
+.key[data-key="digit-9"] { grid-column: 9; grid-row: 2; }
+.key[data-key="op-divide"] { grid-column: 10; grid-row: 2; }
+
+.key[data-key="power-yx"] { grid-column: 1; grid-row: 4; }
+.key[data-key="reciprocal"] { grid-column: 2; grid-row: 4; }
+.key[data-key="percent-total"] { grid-column: 3; grid-row: 4; }
+.key[data-key="delta-percent"] { grid-column: 4; grid-row: 4; }
+.key[data-key="percent"] { grid-column: 5; grid-row: 4; }
+.key[data-key="eex"] { grid-column: 6; grid-row: 4; }
+.key[data-key="digit-4"] { grid-column: 7; grid-row: 4; }
+.key[data-key="digit-5"] { grid-column: 8; grid-row: 4; }
+.key[data-key="digit-6"] { grid-column: 9; grid-row: 4; }
+.key[data-key="op-multiply"] { grid-column: 10; grid-row: 4; }
+
+.key[data-key="rs"] { grid-column: 1; grid-row: 6; }
+.key[data-key="sst"] { grid-column: 2; grid-row: 6; }
+.key[data-key="roll-down"] { grid-column: 3; grid-row: 6; }
+.key[data-key="swap-xy"] { grid-column: 4; grid-row: 6; }
+.key[data-key="clx"] { grid-column: 5; grid-row: 6; }
+.key[data-key="digit-1"] { grid-column: 7; grid-row: 6; }
+.key[data-key="digit-2"] { grid-column: 8; grid-row: 6; }
+.key[data-key="digit-3"] { grid-column: 9; grid-row: 6; }
+.key[data-key="op-subtract"] { grid-column: 10; grid-row: 6; }
+
+.key[data-key="on"] { grid-column: 1; grid-row: 7; }
+.key[data-key="prefix-f"] { grid-column: 2; grid-row: 7; }
+.key[data-key="prefix-g"] { grid-column: 3; grid-row: 7; }
+.key[data-key="sto"] { grid-column: 4; grid-row: 7; }
+.key[data-key="rcl"] { grid-column: 5; grid-row: 7; }
+.key[data-key="digit-0"] { grid-column: 7; grid-row: 7; }
+.key[data-key="decimal"] { grid-column: 8; grid-row: 7; }
+.key[data-key="sigma-plus"] { grid-column: 9; grid-row: 7; }
+.key[data-key="op-add"] { grid-column: 10; grid-row: 7; }
+
+/* Gold text labels */
+.gold-text[data-row="1"][data-col="1"] { grid-column: 1; grid-row: 1; }
+.gold-text[data-row="1"][data-col="2"] { grid-column: 2; grid-row: 1; }
+.gold-text[data-row="1"][data-col="3"] { grid-column: 3; grid-row: 1; }
+.gold-text[data-row="1"][data-col="4"] { grid-column: 4; grid-row: 1; }
+.gold-text[data-row="1"][data-col="5"] { grid-column: 5; grid-row: 1; }
+
+.gold-text[data-row="3"][data-col="1"] { grid-column: 1; grid-row: 5; }
+.gold-text[data-row="3"][data-col="2"] { grid-column: 2; grid-row: 5; }
+
+/* Group labels */
+.group-label[data-position="price-bond"] {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+}
+
+.group-label[data-position="depreciation"] {
+    grid-column: 3 / span 3;
+    grid-row: 3;
+}
+
+.group-program {
+    grid-column: 3 / span 4;
+    grid-row: 5;
+}
