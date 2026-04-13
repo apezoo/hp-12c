@@ -8,10 +8,13 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Navigation Link -->
-    <div style="position: fixed; top: 20px; right: 20px; z-index: 10000;">
+    <!-- Navigation and Language Toggle -->
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; gap: 10px; align-items: center;">
+        <button id="languageToggle" style="padding: 10px 20px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; transition: all 0.3s ease; font-family: Arial, sans-serif;">
+            🌐 DE/EN
+        </button>
         <a href="docs/examples.html" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #d8942b, #1f97da); color: white; text-decoration: none; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.3s ease; font-family: Arial, sans-serif;">
-            📚 Examples & Tutorials
+            <span data-i18n="examples">📚 Examples & Tutorials</span>
         </a>
     </div>
 
@@ -20,21 +23,24 @@
         <div class="learn-toggle-container">
             <label for="learnModeToggle" class="learn-toggle-label">
                 <span class="learn-icon">📚</span>
-                <span class="learn-label-text">Learn Mode</span>
+                <span class="learn-label-text" data-i18n="learnMode">Learn Mode</span>
             </label>
             <button
                 id="learnModeToggle"
                 class="learn-toggle-button"
                 role="switch"
                 aria-checked="false"
-                aria-label="Toggle Learn Mode - Enable to click keys for detailed information"
+                data-i18n-aria="learnModeToggleAria"
             >
                 <span class="toggle-slider"></span>
-                <span class="toggle-state-text" aria-live="polite">OFF</span>
+                <span class="toggle-state-text" aria-live="polite" data-i18n="off">OFF</span>
             </button>
             <p class="learn-mode-hint">
-                <span class="hint-default">Hover any key for quick info</span>
-                <span class="hint-active">Click any key to see detailed information</span>
+                <span class="hint-default" data-i18n="hoverHint">Hover any key for quick info</span>
+                <span class="hint-active" data-i18n="clickHint">✨ Click any key to see detailed information</span>
+            </p>
+            <p class="learn-mode-help" style="margin-top: 8px; font-size: 0.85rem; color: #666; text-align: center;">
+                <span data-i18n="exploreHint">💡 Toggle ON to explore key functions interactively</span>
             </p>
         </div>
     </div>
@@ -253,7 +259,25 @@
         </div>
     </div>
 
+    <!-- Key Detail Modal -->
+    <div id="keyDetailModal" class="key-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="modal-title">Key Details</h2>
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <div class="modal-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading key information...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Modules -->
+    <script src="js/i18n.js"></script>
     <script src="js/rpn-stack.js"></script>
     <script src="js/display.js"></script>
     <script src="js/memory.js"></script>

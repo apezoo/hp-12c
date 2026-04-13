@@ -132,10 +132,12 @@
         updateUI() {
             this.toggleButton.setAttribute('aria-checked', this.enabled);
             
-            // Update state text
+            // Update state text with translation
             const stateText = this.toggleButton.querySelector('.toggle-state-text');
             if (stateText) {
-                stateText.textContent = this.enabled ? 'ON' : 'OFF';
+                const i18n = window.HP12C_I18N;
+                const key = this.enabled ? 'on' : 'off';
+                stateText.textContent = i18n ? i18n.t(key) : (this.enabled ? 'ON' : 'OFF');
             }
             
             // Update container class
@@ -164,9 +166,10 @@
                 return;
             }
             
-            // Intercept the click
+            // Intercept the click - stop it from reaching other handlers
             event.stopPropagation();
             event.preventDefault();
+            event.stopImmediatePropagation(); // Prevent other listeners on the same element
             
             // Get the key ID
             const dataKey = keyButton.dataset.key;
@@ -175,16 +178,305 @@
                 return;
             }
             
+            console.log('Learn Mode: Opening detail page for key:', dataKey);
+            
             // Open detail page
             this.openKeyDetail(dataKey);
         }
         
         /**
-         * Open key detail page
+         * Open key detail modal
          * @param {string} dataKey - Key identifier
          */
         openKeyDetail(dataKey) {
-            window.location.href = `docs/key-detail.html?key=${dataKey}`;
+            console.log('Learn Mode: Opening modal for key:', dataKey);
+            
+            // Get metadata
+            const metadata = getKeyMetadata(dataKey);
+            if (!metadata) {
+                console.warn('No metadata found for key:', dataKey);
+                return;
+            }
+            
+            // Show modal
+            this.showModal(dataKey, metadata);
+        }
+        
+        /**
+         * Show modal with key details
+         * @param {string} keyId - Key identifier
+         * @param {object} metadata - Key metadata
+         */
+        showModal(keyId, metadata) {
+            const modal = document.getElementById('keyDetailModal');
+            const modalContent = document.getElementById('modalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            
+            if (!modal || !modalContent || !modalTitle) {
+                console.error('Modal elements not found in DOM');
+                return;
+            }
+            
+            // Set title - keep the key's actual name, just translate the modal header
+            modalTitle.textContent = metadata.displayName;
+            
+            // Generate content
+            modalContent.innerHTML = this.generateModalContent(keyId, metadata);
+            
+            // Show modal
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // Setup close handlers
+            this.setupModalHandlers(modal);
+        }
+        
+        /**
+         * Setup modal event handlers
+         * @param {HTMLElement} modal - Modal element
+         */
+        setupModalHandlers(modal) {
+            // Close button
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) {
+                closeBtn.onclick = () => this.closeModal();
+            }
+            
+            // Overlay click
+            const overlay = modal.querySelector('.modal-overlay');
+            if (overlay) {
+                overlay.onclick = () => this.closeModal();
+            }
+            
+            // Escape key
+            const escapeHandler = (e) => {
+                if (e.key === 'Escape') {
+                    this.closeModal();
+                    document.removeEventListener('keydown', escapeHandler);
+                }
+            };
+            document.addEventListener('keydown', escapeHandler);
+        }
+        
+        /**
+         * Close modal
+         */
+        closeModal() {
+            const modal = document.getElementById('keyDetailModal');
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        }
+        
+        /**
+         * Generate modal HTML content
+         * @param {string} keyId - Key identifier
+         * @param {object} metadata - Key metadata
+         * @returns {string} HTML content
+         */
+        generateModalContent(keyId, metadata) {
+            const i18n = window.HP12C_I18N;
+            const t = i18n ? (key) => i18n.t(key) : (key) => key;
+            
+            let html = '';
+            
+            // Status badge
+            if (metadata.implementation) {
+                html += `<div>${getStatusBadge(metadata.implementation.status)}</div>`;
+            }
+            
+            // Key visual
+            html += `
+                <div class="modal-key-visual">
+                    <div class="modal-key-label">${metadata.label}</div>
+                    <div class="modal-key-name">${metadata.displayName}</div>
+                    ${this.generateSublabels(metadata)}
+                </div>
+            `;
+            
+            // Description
+            if (metadata.shortDescription) {
+                html += `
+                    <div class="modal-section">
+                        <h2 class="modal-section-title">
+                            <span>📝</span>
+                            <span>${t('description')}</span>
+                        </h2>
+                        <p style="font-size: 1.1rem; line-height: 1.6; color: #4a5568;">${metadata.shortDescription}</p>
+                        ${metadata.longDescription ? `<p style="margin-top: 1rem; line-height: 1.6; color: #4a5568;">${metadata.longDescription}</p>` : ''}
+                    </div>
+                `;
+            }
+            
+            // Functions
+            html += `
+                <div class="modal-section">
+                    <h2 class="modal-section-title">
+                        <span>📖</span>
+                        <span>${t('functions')}</span>
+                    </h2>
+                    <div class="modal-function-grid">
+                        ${this.generateFunctions(metadata)}
+                    </div>
+                </div>
+            `;
+            
+            // Technical details
+            html += `
+                <div class="modal-section">
+                    <h2 class="modal-section-title">
+                        <span>ℹ️</span>
+                        <span>${t('technicalDetails')}</span>
+                    </h2>
+                    <ul class="modal-details-list">
+                        <li>
+                            <span class="modal-details-label">${t('dataKey')}</span>
+                            <span class="modal-details-value">${keyId}</span>
+                        </li>
+                        <li>
+                            <span class="modal-details-label">${t('category')}</span>
+                            <span class="modal-details-value">${t(metadata.category)}</span>
+                        </li>
+                        ${metadata.implementation ? `
+                            <li>
+                                <span class="modal-details-label">${t('status')}</span>
+                                <span class="modal-details-value">${metadata.implementation.status}</span>
+                            </li>
+                            ${metadata.implementation.note ? `
+                            <li>
+                                <span class="modal-details-label">${t('implementationNote')}</span>
+                                <span class="modal-details-value">${metadata.implementation.note}</span>
+                            </li>
+                            ` : ''}
+                        ` : ''}
+                    </ul>
+                </div>
+            `;
+            
+            return html;
+        }
+        
+        /**
+         * Generate sublabels HTML
+         * @param {object} metadata - Key metadata
+         * @returns {string} HTML for sublabels
+         */
+        generateSublabels(metadata) {
+            if (!metadata.shiftedFunctions ||
+                (!metadata.shiftedFunctions.gold && !metadata.shiftedFunctions.blue)) {
+                return '';
+            }
+            
+            let html = '<div class="modal-key-sublabels">';
+            
+            if (metadata.shiftedFunctions.gold) {
+                const labels = metadata.shiftedFunctions.gold.map(f => f.label).join(', ');
+                html += `
+                    <div class="modal-key-sublabel">
+                        <div class="modal-key-sublabel-type">Gold (f)</div>
+                        <div class="modal-key-sublabel-text">${labels}</div>
+                    </div>
+                `;
+            }
+            
+            if (metadata.shiftedFunctions.blue) {
+                const labels = metadata.shiftedFunctions.blue.map(f => f.label).join(', ');
+                html += `
+                    <div class="modal-key-sublabel">
+                        <div class="modal-key-sublabel-type">Blue (g)</div>
+                        <div class="modal-key-sublabel-text">${labels}</div>
+                    </div>
+                `;
+            }
+            
+            html += '</div>';
+            return html;
+        }
+        
+        /**
+         * Generate functions HTML
+         * @param {object} metadata - Key metadata
+         * @returns {string} HTML for functions
+         */
+        generateFunctions(metadata) {
+            const i18n = window.HP12C_I18N;
+            const t = i18n ? (key) => i18n.t(key) : (key) => key;
+            
+            let html = '';
+            
+            // Primary function
+            if (metadata.primaryFunction) {
+                html += `
+                    <div class="modal-function-card">
+                        <div class="modal-function-header">
+                            <span class="modal-function-type primary">${t('primaryFunction')}</span>
+                        </div>
+                        <div class="modal-function-name">${metadata.primaryFunction.title}</div>
+                        <div class="modal-function-description">${metadata.primaryFunction.description}</div>
+                        ${this.generateExamples(metadata.primaryFunction.examples)}
+                    </div>
+                `;
+            }
+            
+            // Gold functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.gold) {
+                metadata.shiftedFunctions.gold.forEach(func => {
+                    html += `
+                        <div class="modal-function-card">
+                            <div class="modal-function-header">
+                                <span class="modal-function-type gold">${t('goldFunction')}${metadata.label})</span>
+                                ${getStatusBadge(func.implementationStatus || 'not-implemented')}
+                            </div>
+                            <div class="modal-function-name">${func.title}</div>
+                            <div class="modal-function-description">${func.description}</div>
+                            ${this.generateExamples(func.examples)}
+                        </div>
+                    `;
+                });
+            }
+            
+            // Blue functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.blue) {
+                metadata.shiftedFunctions.blue.forEach(func => {
+                    html += `
+                        <div class="modal-function-card">
+                            <div class="modal-function-header">
+                                <span class="modal-function-type blue">${t('blueFunction')}${metadata.label})</span>
+                                ${getStatusBadge(func.implementationStatus || 'not-implemented')}
+                            </div>
+                            <div class="modal-function-name">${func.title}</div>
+                            <div class="modal-function-description">${func.description}</div>
+                            ${this.generateExamples(func.examples)}
+                        </div>
+                    `;
+                });
+            }
+            
+            return html;
+        }
+        
+        /**
+         * Generate examples HTML
+         * @param {array} examples - Array of example strings
+         * @returns {string} HTML for examples
+         */
+        generateExamples(examples) {
+            if (!examples || examples.length === 0) {
+                return '';
+            }
+            
+            const i18n = window.HP12C_I18N;
+            const t = i18n ? (key) => i18n.t(key) : (key) => key;
+            
+            return `
+                <div class="modal-function-examples">
+                    <strong>${t('examples')}</strong>
+                    <ul>
+                        ${examples.map(ex => `<li>${ex}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
         }
     }
     

@@ -80,6 +80,13 @@ class Calculator {
         
         this.buttons.forEach(button => {
             button.addEventListener('click', (e) => {
+                // Check if Learn Mode is active - if so, let it handle the click
+                if (window.HP12C_EDUCATIONAL &&
+                    window.HP12C_EDUCATIONAL.learnMode &&
+                    window.HP12C_EDUCATIONAL.learnMode.isEnabled()) {
+                    return; // Let Learn Mode handle it
+                }
+                
                 this.handleButtonClick(button);
                 
                 // Visual feedback

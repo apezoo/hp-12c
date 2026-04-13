@@ -297,6 +297,44 @@
             transform: translateY(-2px);
         }
 
+        /* Function Examples */
+        .function-examples {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-lightest);
+            border-left: 3px solid var(--blue);
+            border-radius: 4px;
+        }
+
+        .function-examples strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-dark);
+            font-size: 0.875rem;
+        }
+
+        .function-examples ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .function-examples li {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+            background: white;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            color: var(--gray-dark);
+        }
+
+        .function-examples li::before {
+            content: '▸ ';
+            color: var(--blue);
+            font-weight: bold;
+        }
+
         /* Key Visual */
         .key-visual {
             background: var(--gray-dark);
@@ -475,42 +513,72 @@
             let functionsHTML = '';
 
             // Primary function
-            if (metadata.functions.primary) {
+            if (metadata.primaryFunction) {
                 functionsHTML += `
                     <div class="function-card">
                         <div class="function-header">
                             <span class="function-type primary">Primary Function</span>
                         </div>
-                        <div class="function-name">${metadata.functions.primary.name}</div>
-                        <div class="function-description">${metadata.functions.primary.description}</div>
+                        <div class="function-name">${metadata.primaryFunction.title}</div>
+                        <div class="function-description">${metadata.primaryFunction.description}</div>
+                        ${metadata.primaryFunction.examples ? `
+                            <div class="function-examples">
+                                <strong>Examples:</strong>
+                                <ul>
+                                    ${metadata.primaryFunction.examples.map(ex => `<li>${ex}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             }
 
-            // Gold (f-prefix) function
-            if (metadata.functions.gold) {
-                functionsHTML += `
-                    <div class="function-card">
-                        <div class="function-header">
-                            <span class="function-type gold">🟡 Gold Function (f)</span>
+            // Gold (f-prefix) functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.gold) {
+                metadata.shiftedFunctions.gold.forEach(func => {
+                    functionsHTML += `
+                        <div class="function-card">
+                            <div class="function-header">
+                                <span class="function-type gold">🟡 Gold Function (f ${metadata.label})</span>
+                                ${getStatusBadgeHTML(func.implementationStatus || 'not-implemented')}
+                            </div>
+                            <div class="function-name">${func.title}</div>
+                            <div class="function-description">${func.description}</div>
+                            ${func.examples ? `
+                                <div class="function-examples">
+                                    <strong>Examples:</strong>
+                                    <ul>
+                                        ${func.examples.map(ex => `<li>${ex}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="function-name">${metadata.functions.gold.name}</div>
-                        <div class="function-description">${metadata.functions.gold.description}</div>
-                    </div>
-                `;
+                    `;
+                });
             }
 
-            // Blue (g-prefix) function
-            if (metadata.functions.blue) {
-                functionsHTML += `
-                    <div class="function-card">
-                        <div class="function-header">
-                            <span class="function-type blue">🔵 Blue Function (g)</span>
+            // Blue (g-prefix) functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.blue) {
+                metadata.shiftedFunctions.blue.forEach(func => {
+                    functionsHTML += `
+                        <div class="function-card">
+                            <div class="function-header">
+                                <span class="function-type blue">🔵 Blue Function (g ${metadata.label})</span>
+                                ${getStatusBadgeHTML(func.implementationStatus || 'not-implemented')}
+                            </div>
+                            <div class="function-name">${func.title}</div>
+                            <div class="function-description">${func.description}</div>
+                            ${func.examples ? `
+                                <div class="function-examples">
+                                    <strong>Examples:</strong>
+                                    <ul>
+                                        ${func.examples.map(ex => `<li>${ex}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="function-name">${metadata.functions.blue.name}</div>
-                        <div class="function-description">${metadata.functions.blue.description}</div>
-                    </div>
-                `;
+                    `;
+                });
             }
 
             content.innerHTML = `
@@ -527,27 +595,40 @@
                 </div>
 
                 <div class="content">
-                    ${getStatusBadgeHTML(metadata.status)}
+                    ${metadata.implementation ? getStatusBadgeHTML(metadata.implementation.status) : ''}
 
                     <div class="section">
                         <div class="key-visual">
                             <div class="key-label-display">${metadata.label}</div>
                             <div class="key-sublabels">
-                                ${metadata.goldLabel ? `
+                                ${metadata.shiftedFunctions && metadata.shiftedFunctions.gold ? `
                                     <div class="key-sublabel">
                                         <div class="key-sublabel-type">Gold (f)</div>
-                                        <div class="key-sublabel-text">${metadata.goldLabel}</div>
+                                        <div class="key-sublabel-text">${metadata.shiftedFunctions.gold.map(f => f.label).join(', ')}</div>
                                     </div>
                                 ` : ''}
-                                ${metadata.blueLabel ? `
+                                ${metadata.shiftedFunctions && metadata.shiftedFunctions.blue ? `
                                     <div class="key-sublabel">
                                         <div class="key-sublabel-type">Blue (g)</div>
-                                        <div class="key-sublabel-text">${metadata.blueLabel}</div>
+                                        <div class="key-sublabel-text">${metadata.shiftedFunctions.blue.map(f => f.label).join(', ')}</div>
                                     </div>
                                 ` : ''}
                             </div>
                         </div>
                     </div>
+
+                    ${metadata.shortDescription ? `
+                    <div class="section">
+                        <h2 class="section-title">
+                            <span>📝</span>
+                            <span>Description</span>
+                        </h2>
+                        <div class="section-content">
+                            <p style="font-size: 1.1rem; line-height: 1.6;">${metadata.shortDescription}</p>
+                            ${metadata.longDescription ? `<p style="margin-top: 1rem; line-height: 1.6;">${metadata.longDescription}</p>` : ''}
+                        </div>
+                    </div>
+                    ` : ''}
 
                     <div class="section">
                         <h2 class="section-title">
@@ -578,21 +659,17 @@
                                     <span class="details-label">Category:</span>
                                     <span class="details-value">${metadata.category}</span>
                                 </li>
+                                ${metadata.implementation ? `
                                 <li>
                                     <span class="details-label">Status:</span>
-                                    <span class="details-value">${metadata.status}</span>
+                                    <span class="details-value">${metadata.implementation.status}</span>
                                 </li>
-                                ${metadata.goldLabel ? `
+                                ${metadata.implementation.note ? `
                                 <li>
-                                    <span class="details-label">Gold Label:</span>
-                                    <span class="details-value">${metadata.goldLabel}</span>
+                                    <span class="details-label">Implementation Note:</span>
+                                    <span class="details-value">${metadata.implementation.note}</span>
                                 </li>
                                 ` : ''}
-                                ${metadata.blueLabel ? `
-                                <li>
-                                    <span class="details-label">Blue Label:</span>
-                                    <span class="details-value">${metadata.blueLabel}</span>
-                                </li>
                                 ` : ''}
                             </ul>
                         </div>

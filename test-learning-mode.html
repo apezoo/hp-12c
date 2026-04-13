@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Mode Test - HP-12C</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .test-button {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 15px 30px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        #console-output {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        .console-line {
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Learning Mode Redirect Test</h1>
+        
+        <div class="info">
+            <strong>Test Instructions:</strong>
+            <ol>
+                <li>Open the main calculator page: <a href="index.html" target="_blank">index.html</a></li>
+                <li>Toggle the "Learn Mode" switch to ON</li>
+                <li>Click any calculator key (e.g., the "7" key)</li>
+                <li>Verify that you are redirected to the key detail page</li>
+            </ol>
+        </div>
+
+        <h2>Quick Test Buttons</h2>
+        <button class="test-button" onclick="openCalculator()">Open Calculator</button>
+        <button class="test-button" onclick="testRedirect()">Test Direct Redirect</button>
+        <button class="test-button" onclick="clearConsole()">Clear Console</button>
+
+        <h2>Console Output</h2>
+        <div id="console-output">
+            <div class="console-line">[Ready] Waiting for test...</div>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <h2>Expected Behavior</h2>
+            <ul>
+                <li>✅ When Learn Mode is OFF: Clicking keys performs calculations</li>
+                <li>✅ When Learn Mode is ON: Clicking keys redirects to detail page</li>
+                <li>✅ Calculator handlers should NOT fire when Learn Mode is ON</li>
+                <li>✅ Redirect should happen immediately without delay</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
+            <strong>⚠️ Fix Applied:</strong>
+            <ul>
+                <li>Added check in calculator.js to skip processing when Learn Mode is active</li>
+                <li>Added stopImmediatePropagation() in learning mode handler</li>
+                <li>Enhanced logging for debugging</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const consoleOutput = document.getElementById('console-output');
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            line.style.color = type === 'error' ? '#ff6b6b' : 
+                              type === 'success' ? '#51cf66' : 
+                              type === 'warning' ? '#ffd43b' : '#00ff00';
+            line.textContent = `[${timestamp}] ${message}`;
+            consoleOutput.appendChild(line);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function openCalculator() {
+            log('Opening calculator...', 'info');
+            window.open('index.html', '_blank');
+            log('✓ Calculator opened in new tab', 'success');
+        }
+
+        function testRedirect() {
+            log('Testing redirect to key detail page...', 'info');
+            const testKey = 'digit-7';
+            const url = `docs/key-detail.html?key=${testKey}`;
+            log(`Redirecting to: ${url}`, 'info');
+            window.open(url, '_blank');
+            log('✓ Test redirect initiated', 'success');
+        }
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '<div class="console-line">[Ready] Console cleared</div>';
+        }
+
+        // Capture console.log from main window if testing here
+        const originalLog = console.log;
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            log(args.join(' '));
+        };
+
+        log('Test page loaded successfully', 'success');
+        log('Server should be running on http://localhost:8000', 'info');
+    </script>
+</body>
+</html>
