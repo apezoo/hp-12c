@@ -34,6 +34,31 @@
     transform: translateY(0);
 }
 
+.mobile-calc-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #48a8de, #2aa4e6);
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.mobile-calc-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #5bb8ee, #3ab4f6);
+}
+
+.mobile-calc-btn:active {
+    transform: translateY(0);
+}
+
 .examples-link {
     display: inline-block;
     padding: 12px 24px;
@@ -54,6 +79,44 @@
 
 .examples-link:active {
     transform: translateY(0);
+}
+
+/* Responsive navigation controls */
+@media (max-width: 768px) {
+    .nav-controls {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .language-toggle,
+    .mobile-calc-btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    .examples-link {
+        padding: 8px 16px;
+        font-size: 13px;
+        flex: 1 1 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-controls {
+        gap: 6px;
+    }
+    
+    .language-toggle,
+    .mobile-calc-btn,
+    .examples-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
 }
 
 /* Learn Mode Help Text */

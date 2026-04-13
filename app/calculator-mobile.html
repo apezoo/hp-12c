@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description" content="HP-12C Financial Calculator - Mobile Full-Screen Mode">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1f1f23">
+    
+    <title>HP-12C Calculator - Mobile</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="../manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
+    
+    <style>
+        /* Mobile-specific overrides */
+        body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            background: #dfe3e8;
+        }
+        
+        .mobile-container {
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+            overflow: auto;
+        }
+        
+        /* Mobile header controls */
+        .mobile-header {
+            position: fixed;
+            top: env(safe-area-inset-top, 0);
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: rgba(31, 31, 35, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-header button {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mobile-header button:active {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(0.95);
+        }
+        
+        .mobile-title {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        /* Calculator scaling for mobile */
+        .hp12c {
+            width: min(100vw, calc(100vh - 44px));
+            max-width: 980px;
+            margin-top: 44px;
+        }
+        
+        /* Landscape mode for phones */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .mobile-header {
+                height: 36px;
+            }
+            .hp12c {
+                width: min(95vw, calc(100vh - 36px));
+                margin-top: 36px;
+            }
+        }
+        
+        /* Portrait mode optimization */
+        @media (orientation: portrait) and (max-width: 600px) {
+            .hp12c {
+                width: 96vw;
+            }
+        }
+        
+        /* Tablet optimization */
+        @media (min-width: 601px) and (max-width: 1024px) {
+            .hp12c {
+                width: min(90vw, 800px);
+            }
+        }
+        
+        /* Large tablet landscape */
+        @media (min-width: 1024px) {
+            .hp12c {
+                width: min(85vw, 980px);
+            }
+        }
+        
+        /* Hide nav controls and learn mode in mobile view */
+        .nav-controls,
+        .learn-mode-control {
+            display: none;
+        }
+        
+        /* Touch optimization */
+        .key {
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Prevent pull-to-refresh on iOS */
+        body {
+            overscroll-behavior-y: contain;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-container">
+        <!-- Mobile Header Controls -->
+        <div class="mobile-header">
+            <button id="backToMainBtn" aria-label="Back to main page">
+                ← Back
+            </button>
+            <div class="mobile-title">HP-12C Calculator</div>
+            <button id="fullscreenBtn" aria-label="Toggle fullscreen">
+                ⛶ Full
+            </button>
+            <button id="languageToggleMobile" aria-label="Toggle language">
+                🌐 <span id="langText">EN</span>
+            </button>
+        </div>
+        
+        <main class="hp12c" aria-label="HP-12C Financial Calculator">
+            <!-- Top Gold Plate -->
+            <div class="top-plate" aria-hidden="true"></div>
+
+            <!-- LCD Display -->
+            <div class="display" role="status" aria-live="polite" aria-atomic="true">
+                <div class="digits">
+                    <span id="displayValue">0.</span>
+                </div>
+            </div>
+
+            <!-- Logo Badge -->
+            <div class="logo" aria-hidden="true">
+                <div class="hp">hp</div>
+                <div class="model">12c</div>
+            </div>
+
+            <!-- Keyboard Shell -->
+            <div class="keyboard-shell">
+                <div class="keyboard-border" aria-hidden="true"></div>
+
+                <div class="key-area" role="group" aria-label="Calculator keys">
+                    <!-- Gold Label Row 1 -->
+                    <div class="gold-text" data-row="1" data-col="1" aria-hidden="true">AMORT</div>
+                    <div class="gold-text" data-row="1" data-col="2" aria-hidden="true">INT</div>
+                    <div class="gold-text" data-row="1" data-col="3" aria-hidden="true">NPV</div>
+                    <div class="gold-text" data-row="1" data-col="4" aria-hidden="true">RND</div>
+                    <div class="gold-text" data-row="1" data-col="5" aria-hidden="true">IRR</div>
+
+                    <!-- Row 1: Financial Keys -->
+                    <button class="key fn" data-key="n" aria-label="n - number of periods">
+                        <span class="main">n</span>
+                        <span class="blue">12×</span>
+                    </button>
+                    <button class="key fn" data-key="i" aria-label="i - interest rate">
+                        <span class="main">i</span>
+                        <span class="blue">12÷</span>
+                    </button>
+                    <button class="key medium" data-key="pv" aria-label="PV - present value">
+                        <span class="main">PV</span>
+                        <span class="blue">CFo</span>
+                    </button>
+                    <button class="key medium" data-key="pmt" aria-label="PMT - payment">
+                        <span class="main">PMT</span>
+                        <span class="blue">CFj</span>
+                    </button>
+                    <button class="key medium" data-key="fv" aria-label="FV - future value">
+                        <span class="main">FV</span>
+                        <span class="blue">Nj</span>
+                    </button>
+                    <button class="key medium" data-key="chs" aria-label="CHS - change sign">
+                        <span class="main">CHS</span>
+                        <span class="blue">DATE</span>
+                    </button>
+                    <button class="key" data-key="digit-7" aria-label="7">
+                        <span class="main">7</span>
+                        <span class="blue">BEG</span>
+                    </button>
+                    <button class="key" data-key="digit-8" aria-label="8">
+                        <span class="main">8</span>
+                        <span class="blue">END</span>
+                    </button>
+                    <button class="key" data-key="digit-9" aria-label="9">
+                        <span class="main">9</span>
+                        <span class="blue">MEM</span>
+                    </button>
+                    <button class="key small" data-key="op-divide" aria-label="Divide">
+                        <span class="main">÷</span>
+                    </button>
+
+                    <!-- Gold Label Row 2: PRICE/BOND/YTM and SL/DEPRECIATION/SOYD/DB -->
+                    <div class="group-label" data-position="price-bond" aria-hidden="true">
+                        <span>PRICE</span>
+                        <span>BOND</span>
+                        <span>YTM</span>
+                    </div>
+                    <div class="group-label" data-position="depreciation" aria-hidden="true">
+                        <span>SL</span>
+                        <span class="center-stack"><span>DEPRECIATION</span><span>SOYD</span></span>
+                        <span>DB</span>
+                    </div>
+
+                    <!-- Row 2: Scientific Keys -->
+                    <button class="key medium" data-key="power-yx" aria-label="y to the power of x">
+                        <span class="main">yˣ</span>
+                        <span class="blue">√x</span>
+                    </button>
+                    <button class="key medium" data-key="reciprocal" aria-label="1 divided by x">
+                        <span class="main">1/x</span>
+                        <span class="blue">eˣ</span>
+                    </button>
+                    <button class="key medium" data-key="percent-total" aria-label="Percent of total">
+                        <span class="main">%T</span>
+                        <span class="blue">LN</span>
+                    </button>
+                    <button class="key medium" data-key="delta-percent" aria-label="Delta percent">
+                        <span class="main">Δ%</span>
+                        <span class="blue">FRAC</span>
+                    </button>
+                    <button class="key medium" data-key="percent" aria-label="Percent">
+                        <span class="main">%</span>
+                        <span class="blue">INTG</span>
+                    </button>
+                    <button class="key medium" data-key="eex" aria-label="Enter exponent">
+                        <span class="main">EEX</span>
+                        <span class="blue">ΔDYS</span>
+                    </button>
+                    <button class="key" data-key="digit-4" aria-label="4">
+                        <span class="main">4</span>
+                        <span class="blue">D.MY</span>
+                    </button>
+                    <button class="key" data-key="digit-5" aria-label="5">
+                        <span class="main">5</span>
+                        <span class="blue">M.DY</span>
+                    </button>
+                    <button class="key" data-key="digit-6" aria-label="6">
+                        <span class="main">6</span>
+                        <span class="blue">x̄w</span>
+                    </button>
+                    <button class="key small" data-key="op-multiply" aria-label="Multiply">
+                        <span class="main">×</span>
+                    </button>
+
+                    <!-- Gold Label Row 3: P/R, Σ, PRGM/CLEAR/FIN/REG/PREFIX -->
+                    <div class="gold-text" data-row="3" data-col="1" aria-hidden="true">P/R</div>
+                    <div class="gold-text" data-row="3" data-col="2" aria-hidden="true">Σ</div>
+                    <div class="group-program" aria-hidden="true">
+                        <span>PRGM</span>
+                        <span class="stacked"><span>CLEAR</span><span>FIN</span></span>
+                        <span>REG</span>
+                        <span>PREFIX</span>
+                    </div>
+
+                    <!-- Row 3: Stack Operations -->
+                    <button class="key medium" data-key="rs" aria-label="Run/Stop">
+                        <span class="main">R/S</span>
+                        <span class="blue">PSE</span>
+                    </button>
+                    <button class="key medium" data-key="sst" aria-label="Single step">
+                        <span class="main">SST</span>
+                        <span class="blue">BST</span>
+                    </button>
+                    <button class="key medium" data-key="roll-down" aria-label="Roll down stack">
+                        <span class="main">R↓</span>
+                        <span class="blue">GTO</span>
+                    </button>
+                    <button class="key medium" data-key="swap-xy" aria-label="Swap X and Y registers">
+                        <span class="main">x↔y</span>
+                        <span class="blue">x&lt;&gt;y</span>
+                    </button>
+                    <button class="key medium" data-key="clx" aria-label="Clear X register">
+                        <span class="main">CLx</span>
+                        <span class="blue">x=0</span>
+                    </button>
+                    <button class="key enter" data-key="enter" aria-label="Enter">
+                        <span class="main">ENTER</span>
+                        <span class="blue">LSTx</span>
+                    </button>
+                    <button class="key" data-key="digit-1" aria-label="1">
+                        <span class="main">1</span>
+                        <span class="blue">ŷ,r</span>
+                    </button>
+                    <button class="key" data-key="digit-2" aria-label="2">
+                        <span class="main">2</span>
+                        <span class="blue">x̂,r</span>
+                    </button>
+                    <button class="key" data-key="digit-3" aria-label="3">
+                        <span class="main">3</span>
+                        <span class="blue">n!</span>
+                    </button>
+                    <button class="key small" data-key="op-subtract" aria-label="Subtract">
+                        <span class="main">−</span>
+                    </button>
+
+                    <!-- Row 4: Bottom Row -->
+                    <button class="key medium on" data-key="on" aria-label="Power on">
+                        <span class="main">ON</span>
+                    </button>
+                    <button class="key f fn" data-key="prefix-f" aria-label="f prefix key">
+                        <span class="main">f</span>
+                    </button>
+                    <button class="key g fn" data-key="prefix-g" aria-label="g prefix key">
+                        <span class="main">g</span>
+                    </button>
+                    <button class="key medium" data-key="sto" aria-label="Store to memory">
+                        <span class="main">STO</span>
+                    </button>
+                    <button class="key medium" data-key="rcl" aria-label="Recall from memory">
+                        <span class="main">RCL</span>
+                    </button>
+                    <button class="key" data-key="digit-0" aria-label="0">
+                        <span class="main">0</span>
+                        <span class="blue">x̄</span>
+                    </button>
+                    <button class="key" data-key="decimal" aria-label="Decimal point">
+                        <span class="main">.</span>
+                        <span class="blue">s</span>
+                    </button>
+                    <button class="key medium" data-key="sigma-plus" aria-label="Sigma plus">
+                        <span class="main">Σ+</span>
+                        <span class="blue">Σ−</span>
+                    </button>
+                    <button class="key small" data-key="op-add" aria-label="Add">
+                        <span class="main">+</span>
+                    </button>
+                </div>
+
+                <!-- Brand Strip -->
+                <div class="brand-strip" aria-hidden="true">
+                    <div class="brand">HEWLETT·PACKARD</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/i18n.js"></script>
+    <script src="js/rpn-stack.js"></script>
+    <script src="js/display.js"></script>
+    <script src="js/memory.js"></script>
+    <script src="js/financial.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/date-functions.js"></script>
+    <script src="js/depreciation.js"></script>
+    <script src="js/keyboard.js"></script>
+    <script src="js/key-metadata.js"></script>
+    <script src="js/key-info.js"></script>
+    <script src="js/calculator.js"></script>
+    
+    <!-- Mobile-specific scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('HP-12C Mobile Calculator loaded');
+            
+            // Back to Main functionality
+            const backToMainBtn = document.getElementById('backToMainBtn');
+            backToMainBtn.addEventListener('click', () => {
+                window.location.href = 'index.html';
+            });
+            
+            // Fullscreen functionality
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            
+            fullscreenBtn.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log('Fullscreen request failed:', err);
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            });
+            
+            // Update button text based on fullscreen state
+            document.addEventListener('fullscreenchange', () => {
+                if (document.fullscreenElement) {
+                    fullscreenBtn.textContent = '⛶ Exit Fullscreen';
+                } else {
+                    fullscreenBtn.textContent = '⛶ Fullscreen';
+                }
+            });
+            
+            // Language toggle for mobile
+            const langToggle = document.getElementById('languageToggleMobile');
+            const langText = document.getElementById('langText');
+            
+            langToggle.addEventListener('click', () => {
+                if (typeof toggleLanguage === 'function') {
+                    toggleLanguage();
+                    // Update display text
+                    const currentLang = getCurrentLanguage ? getCurrentLanguage() : 'en';
+                    langText.textContent = currentLang.toUpperCase();
+                }
+            });
+            
+            // Prevent zoom on double-tap for iOS
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', (event) => {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Lock orientation to portrait on phones (optional)
+            if (screen.orientation && screen.orientation.lock && window.innerWidth < 600) {
+                screen.orientation.lock('portrait').catch(err => {
+                    console.log('Orientation lock not supported:', err);
+                });
+            }
+            
+            // PWA standalone detection
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || 
+                                window.navigator.standalone || 
+                                document.referrer.includes('android-app://');
+            
+            if (isStandalone) {
+                console.log('Running as PWA standalone app');
+                // Hide fullscreen button in PWA mode
+                fullscreenBtn.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

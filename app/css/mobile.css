@@ -1,0 +1,79 @@
+/* HP-12C Mobile/Tablet Optimizations */
+
+/* Base mobile optimizations */
+@media (max-width: 600px) {
+    /* Improve touch targets */
+    .key {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Better text scaling */
+    .key .main {
+        font-size: max(14px, 2.8vw);
+    }
+    
+    .key .blue {
+        font-size: max(10px, 2vw);
+    }
+}
+
+/* Tablet optimizations */
+@media (min-width: 601px) and (max-width: 1024px) {
+    .hp12c {
+        width: min(90vw, 800px);
+    }
+}
+
+/* Landscape phone optimizations */
+@media (max-width: 900px) and (orientation: landscape) {
+    body {
+        padding: 8px;
+    }
+    
+    .hp12c {
+        width: min(98vw, calc(100vh - 16px));
+    }
+}
+
+/* iPad specific */
+@media only screen 
+    and (min-device-width: 768px) 
+    and (max-device-width: 1024px) {
+    .hp12c {
+        width: min(85vw, 900px);
+    }
+}
+
+/* iPad Pro specific */
+@media only screen 
+    and (min-device-width: 1024px) 
+    and (max-device-width: 1366px) {
+    .hp12c {
+        width: min(80vw, 980px);
+    }
+}
+
+/* Improve button feedback on touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .key {
+        transition: transform 0.1s, box-shadow 0.1s;
+    }
+    
+    .key:active {
+        transform: translateY(2px);
+        box-shadow: 
+            0 2px 4px rgba(0,0,0,.4),
+            0 1px 0 rgba(255,255,255,.08) inset;
+    }
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+}
