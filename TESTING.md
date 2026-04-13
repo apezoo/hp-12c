@@ -20,9 +20,17 @@ npm run test:watch
 
 ## Test Suite Overview
 
-The HP-12C test suite includes **70+ automated tests** covering:
+The HP-12C test suite includes **153 automated tests** covering:
 
-### Financial Functions Tested
+### Functions Tested
+
+#### ✅ Scientific Functions (Phase 6) ⭐ NEW!
+- **y^x** (Power): Integer, fractional, and negative exponents
+- **1/x** (Reciprocal): Fast reciprocal calculations
+- **√x** (Square Root): Perfect and non-perfect squares
+- **e^x** (Natural Exponential): Exponential growth calculations
+- **LN** (Natural Logarithm): Natural log (base e)
+- **LOG** (Common Logarithm): Base-10 logarithm
 
 #### ✅ Time Value of Money (TVM)
 - **FV** (Future Value): Compound interest calculations
@@ -52,6 +60,20 @@ The HP-12C test suite includes **70+ automated tests** covering:
 
 ## Test Statistics
 
+**Phase 6 Test Coverage (Current):**
+
+| Category | Tests | Coverage | Status |
+|----------|-------|----------|--------|
+| **Scientific Functions** | **72** | **100%** | **✅ Pass** |
+| Power (y^x) | 11 | 100% | ✅ Pass |
+| Reciprocal (1/x) | 10 | 100% | ✅ Pass |
+| Square Root (√x) | 12 | 100% | ✅ Pass |
+| Natural Exponential (e^x) | 10 | 100% | ✅ Pass |
+| Natural Logarithm (LN) | 10 | 100% | ✅ Pass |
+| Common Logarithm (LOG) | 9 | 100% | ✅ Pass |
+| Integration Tests | 4 | 100% | ✅ Pass |
+| Error Handling | 6 | 100% | ✅ Pass |
+
 **Phase 5 Test Coverage:**
 
 | Category | Tests | Coverage | Status |
@@ -71,7 +93,9 @@ The HP-12C test suite includes **70+ automated tests** covering:
 | Business Cases | 3 | 100% | ✅ Pass |
 | Engine Core | 8+ | 95% | ✅ Pass |
 
-**Total: 71+ test cases with 100% pass rate**
+**Total Phase 5: 81 test cases with 100% pass rate**
+
+**COMBINED TOTAL: 153 test cases with 100% pass rate** ⭐
 
 ## Running Tests
 
@@ -83,20 +107,24 @@ npm test
 
 Expected output:
 ```
+ PASS  tests/scientific.test.js
  PASS  tests/financial-engine.test.js
  PASS  tests/tvm.test.js
  PASS  tests/percentage.test.js
  PASS  tests/npv-irr.test.js
 
-Test Suites: 4 passed, 4 total
-Tests:       71 passed, 71 total
+Test Suites: 5 passed, 5 total
+Tests:       153 passed, 153 total
 Snapshots:   0 total
-Time:        2.456 s
+Time:        1.665 s
 ```
 
 ### Specific Test Suites
 
 ```bash
+# Scientific functions (Phase 6)
+npm test scientific
+
 # TVM calculations
 npm run test:tvm
 

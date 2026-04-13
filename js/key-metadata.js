@@ -2151,7 +2151,7 @@
             label: "eˣ",
             title: "e to the x",
             description: "Raises mathematical constant e (2.71828...) to the power in X register. Natural exponential function.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'1 g 1/x' → displays 2.7183 (e¹)",
               "'2 g 1/x' → displays 7.3891 (e²)"
@@ -2165,9 +2165,9 @@
       longDescription: "The reciprocal function calculates 1/X, replacing X with the result. This is faster than entering '1 ENTER X ÷' and is commonly used in engineering, physics, and financial calculations. Division by zero produces an error.",
       
       implementation: {
-        status: "planned",
-        note: "Requires implementation of reciprocal calculation with division-by-zero error handling.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 6: Reciprocal function with division-by-zero error handling.",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Calculates 1/X immediately. Division by zero displays 'Error 0'. Does not affect stack (no stack drop).",
@@ -2288,9 +2288,9 @@
             label: "LN",
             title: "Natural Logarithm",
             description: "Calculates the natural logarithm (base e) of X.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
-              "'  2.7183 g %T' → displays 1 (ln(e) = 1)",
+              "'2.7183 g %T' → displays 1 (ln(e) = 1)",
               "'10 g %T' → displays 2.3026"
             ],
             keystrokes: "g %T"
@@ -2302,9 +2302,9 @@
       longDescription: "The %T key answers 'what is X% of Y?' by calculating (X/100) × Y. This is the complement to the % key. Use it when you know the percentage and want the actual amount.",
       
       implementation: {
-        status: "planned",
-        note: "Requires percentage calculation. Formula: (X / 100) × Y",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 5: Percentage calculation implemented. Formula: (X / 100) × Y",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Calculates (X/100) × Y. Both X and Y remain on stack after calculation.",
@@ -2448,7 +2448,7 @@
             label: "√x",
             title: "Square Root",
             description: "Calculates the square root of X.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'16 g yˣ' → displays 4",
               "'2 g yˣ' → displays 1.4142"
@@ -2462,9 +2462,9 @@
       longDescription: "The yˣ key performs exponentiation: Y to the power of X. This is fundamental for compound growth, scientific calculations, and many engineering formulas. For square roots, use 0.5 as the exponent, or use the dedicated √x function (g yˣ).",
       
       implementation: {
-        status: "planned",
-        note: "Requires power function implementation with proper handling of negative bases, fractional exponents, and overflow.",
-        version: "1.0"
+        status: "implemented",
+        note: "Phase 6: Power function with proper handling of negative bases, fractional exponents, and overflow using Math.pow().",
+        version: "2.0"
       },
       
       originalHp12cBehavior: "Calculates Y^X with stack drop. Handles integer and fractional exponents. Negative bases with fractional exponents may produce errors.",

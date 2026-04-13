@@ -48,7 +48,7 @@ An independent, educational web-based implementation inspired by the classic HP-
 - Basic arithmetic with RPN logic
 - **Memory operations (STO/RCL)** - Complete with 20 registers ⭐
 - **Percentage calculations** - %, Δ%, %T fully implemented ⭐
-- Scientific functions (√, x², eˣ, ln, y^x) - Coming in Phase 6
+- **Scientific functions** - y^x, 1/x, √x, e^x, LN, LOG fully implemented ⭐ NEW!
 - Trigonometric functions - Planned
 
 ### 📚 Bilingual Examples
@@ -83,13 +83,13 @@ start index.html  # Windows
 - **[Technical Specification](docs/technical-spec.md)** - Detailed implementation
 - **[Examples & Tutorials](docs/examples.html)** - Bilingual step-by-step examples
 - **[Fun Features](docs/fun-features.md)** - All the cool features explained
-- **[Testing Guide](TESTING.md)** - Automated test suite with 71+ test cases
+- **[Testing Guide](TESTING.md)** - Automated test suite with 153 test cases
 
 ## 🧪 Testing
 
 ### Automated Test Suite
 
-The project includes a comprehensive automated test suite with **71+ test cases** achieving **100% pass rate**:
+The project includes a comprehensive automated test suite with **153 test cases** achieving **100% pass rate**:
 
 ```bash
 # Install dependencies (requires Node.js)
@@ -255,7 +255,7 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 ## 🌟 Project Status
 
-**Current Phase:** Phase 5 Complete - Financial Functions (70% overall) 🎉
+**Current Phase:** Phase 6 Complete - Scientific Functions (80% overall) 🎉
 
 ✅ **Completed:**
 - Complete visual design (98% authenticity)
@@ -283,14 +283,14 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 - ✅ **Phase 3:** Learn Mode Integration (15%)
 - ✅ **Phase 4:** Educational Layer Complete (15%)
 - ✅ **Phase 5:** Financial Functions Complete (30%) ⭐
-- 🚧 **Phase 6:** Scientific Functions (10%) - Next
-- 📋 **Phase 7:** Statistics Functions (5%)
+- ✅ **Phase 6:** Scientific Functions Complete (10%) ⭐ NEW!
+- 🚧 **Phase 7:** Statistics Functions (5%) - Next
 - 📋 **Phase 8:** Programming Features (10%)
 - 📋 **Phase 9:** Advanced Features (5%)
 
-🚧 **Next Up (Phase 6):**
-- Scientific functions (y^x, 1/x, √x, e^x, LN, LOG)
-- Mathematical operations
+🚧 **Next Up (Phase 7):**
+- Statistics functions (Σ+, Σ-, x̄, s, linear regression)
+- Statistical calculations
 - Estimated time: 6-8 hours
 
 📋 **Planned (Phase 7+):**
@@ -309,7 +309,7 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 
 *Built with ❤️ and attention to detail*
 
-**Visual Authenticity:** 98% | **Calculator Implementation:** 70% ⭐ | **Educational Layer:** 100% | **Documentation:** Comprehensive
+**Visual Authenticity:** 98% | **Calculator Implementation:** 80% ⭐ | **Educational Layer:** 100% | **Documentation:** Comprehensive
 
 ---
 

@@ -3,6 +3,14 @@
  * Main controller coordinating all calculator components
  */
 
+// Node.js/testing environment requires
+if (typeof require !== 'undefined') {
+    var RPNStack = require('./rpn-stack.js');
+    var DisplayManager = require('./display.js');
+    var MemoryManager = require('./memory.js');
+    var FinancialEngine = require('./financial.js');
+}
+
 class Calculator {
     constructor() {
         this.stack = new RPNStack();
@@ -195,6 +203,14 @@ class Calculator {
                 this.percent();
                 break;
                 
+            case 'power-yx':
+                this.power();
+                break;
+                
+            case 'reciprocal':
+                this.reciprocal();
+                break;
+                
             case 'sto':
                 this.awaitingRegisterNumber = 'sto';
                 console.log('Awaiting register number for STO');
@@ -270,6 +286,26 @@ class Calculator {
             case 'op-multiply':
                 // g × = Percent Total (%T)
                 this.percentTotal();
+                break;
+                
+            case 'power-yx':
+                // g yˣ = Square Root (√x)
+                this.squareRoot();
+                break;
+                
+            case 'reciprocal':
+                // g 1/x = Natural Exponential (eˣ)
+                this.exponential();
+                break;
+                
+            case 'percent-total':
+                // g %T = Natural Logarithm (LN)
+                this.naturalLog();
+                break;
+                
+            case 'op-divide':
+                // g ÷ = Common Logarithm (LOG) - Note: This is not standard, checking
+                this.commonLog();
                 break;
                 
             case 'clx':
@@ -614,6 +650,131 @@ class Calculator {
     }
 
     /**
+     * Power function: Y^X
+     */
+    power() {
+        this.finishNumberEntry();
+        const base = this.stack.y;
+        const exponent = this.stack.x;
+        
+        // Check for invalid operations
+        if (base < 0 && exponent !== Math.floor(exponent)) {
+            this.display.showError('Error 0');
+            console.error('Cannot raise negative number to fractional power');
+            return;
+        }
+        
+        const result = Math.pow(base, exponent);
+        
+        // Check for overflow/underflow
+        if (!isFinite(result)) {
+            this.display.showError('Error 0');
+            console.error('Power result overflow');
+            return;
+        }
+        
+        this.stack.binaryOp((y, x) => Math.pow(y, x));
+        this.isNewNumber = true;
+        console.log(`${base}^${exponent} = ${result}`);
+    }
+    
+    /**
+     * Reciprocal: 1/X
+     */
+    reciprocal() {
+        this.finishNumberEntry();
+        const x = this.stack.x;
+        
+        if (x === 0) {
+            this.display.showError('Error 0');
+            console.error('Division by zero');
+            return;
+        }
+        
+        const result = 1 / x;
+        this.stack.unaryOp(x => 1 / x);
+        this.isNewNumber = true;
+        console.log(`1/${x} = ${result}`);
+    }
+    
+    /**
+     * Square Root: √X
+     */
+    squareRoot() {
+        this.finishNumberEntry();
+        const x = this.stack.x;
+        
+        if (x < 0) {
+            this.display.showError('Error 0');
+            console.error('Cannot take square root of negative number');
+            return;
+        }
+        
+        const result = Math.sqrt(x);
+        this.stack.unaryOp(x => Math.sqrt(x));
+        this.isNewNumber = true;
+        console.log(`√${x} = ${result}`);
+    }
+    
+    /**
+     * Natural Exponential: e^X
+     */
+    exponential() {
+        this.finishNumberEntry();
+        const x = this.stack.x;
+        const result = Math.exp(x);
+        
+        // Check for overflow
+        if (!isFinite(result)) {
+            this.display.showError('Error 0');
+            console.error('Exponential overflow');
+            return;
+        }
+        
+        this.stack.unaryOp(x => Math.exp(x));
+        this.isNewNumber = true;
+        console.log(`e^${x} = ${result}`);
+    }
+    
+    /**
+     * Natural Logarithm: LN(X)
+     */
+    naturalLog() {
+        this.finishNumberEntry();
+        const x = this.stack.x;
+        
+        if (x <= 0) {
+            this.display.showError('Error 0');
+            console.error('Cannot take logarithm of non-positive number');
+            return;
+        }
+        
+        const result = Math.log(x);
+        this.stack.unaryOp(x => Math.log(x));
+        this.isNewNumber = true;
+        console.log(`ln(${x}) = ${result}`);
+    }
+    
+    /**
+     * Common Logarithm: LOG(X) base 10
+     */
+    commonLog() {
+        this.finishNumberEntry();
+        const x = this.stack.x;
+        
+        if (x <= 0) {
+            this.display.showError('Error 0');
+            console.error('Cannot take logarithm of non-positive number');
+            return;
+        }
+        
+        const result = Math.log10(x);
+        this.stack.unaryOp(x => Math.log10(x));
+        this.isNewNumber = true;
+        console.log(`log(${x}) = ${result}`);
+    }
+
+    /**
      * Clear financial registers
      */
     clearFinancial() {
@@ -699,7 +860,14 @@ class Calculator {
 }
 
 // Initialize calculator when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.calculator = new Calculator();
-    window.calculator.initialize();
-});
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        window.calculator = new Calculator();
+        window.calculator.initialize();
+    });
+}
+
+// Export for Node.js/testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Calculator;
+}

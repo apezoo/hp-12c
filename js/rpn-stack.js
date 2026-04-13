@@ -185,3 +185,8 @@ class RPNStack {
         this.stackLift = true;
     }
 }
+
+// Export for Node.js/Jest
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = RPNStack;
+}

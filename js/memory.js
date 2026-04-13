@@ -241,3 +241,8 @@ class MemoryManager {
         return { newX: xValue, success: false };
     }
 }
+
+// Export for Node.js/Jest
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = MemoryManager;
+}
