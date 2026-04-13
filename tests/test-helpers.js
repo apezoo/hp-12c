@@ -53,7 +53,7 @@ expect.extend({
  * @returns {FinancialEngine} New financial engine
  */
 function createFinancialEngine() {
-    const FinancialEngine = require('../js/financial.js');
+    const FinancialEngine = require('../app/js/financial.js');
     return new FinancialEngine();
 }
 

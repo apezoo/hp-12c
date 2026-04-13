@@ -3,7 +3,7 @@
  * Tests for FIX n and SCI n display modes
  */
 
-const Calculator = require('../js/calculator.js');
+const Calculator = require('../app/js/calculator.js');
 
 describe('Display Format Modes', () => {
     let calc;

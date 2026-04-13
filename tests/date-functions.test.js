@@ -3,8 +3,8 @@
  * Comprehensive test suite for date calculations
  */
 
-const Calculator = require('../js/calculator.js');
-const DateFunctions = require('../js/date-functions.js');
+const Calculator = require('../app/js/calculator.js');
+const DateFunctions = require('../app/js/date-functions.js');
 
 describe('Date Functions - Format Modes', () => {
     let calc, dates;

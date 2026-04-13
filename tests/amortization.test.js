@@ -3,7 +3,7 @@
  * Tests AMORT and INT functions
  */
 
-const FinancialEngine = require('../js/financial.js');
+const FinancialEngine = require('../app/js/financial.js');
 
 describe('Amortization Functions', () => {
     let financial;

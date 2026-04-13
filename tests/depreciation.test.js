@@ -3,7 +3,7 @@
  * Tests SL, DB, and SOYD depreciation methods
  */
 
-const DepreciationEngine = require('../js/depreciation.js');
+const DepreciationEngine = require('../app/js/depreciation.js');
 
 describe('Depreciation Functions', () => {
     let depreciation;

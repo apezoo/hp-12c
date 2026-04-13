@@ -3,7 +3,7 @@
  * Tests for time conversion (12×, 12÷) and number manipulation (INTG, FRAC)
  */
 
-const Calculator = require('../js/calculator.js');
+const Calculator = require('../app/js/calculator.js');
 
 describe('Utility Functions', () => {
     let calc;

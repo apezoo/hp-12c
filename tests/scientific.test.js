@@ -17,7 +17,7 @@ global.document = {
     addEventListener: () => {}
 };
 
-const Calculator = require('../js/calculator.js');
+const Calculator = require('../app/js/calculator.js');
 
 describe('Scientific Functions', () => {
     let calc;
