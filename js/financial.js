@@ -439,6 +439,135 @@ class FinancialEngine {
     }
 
     /**
+     * Amortization state storage
+     */
+    amortizationState = {
+        lastPrincipal: 0,
+        lastInterest: 0,
+        remainingBalance: 0,
+        startPeriod: 0,
+        endPeriod: 0
+    };
+
+    /**
+     * Calculate amortization for a range of periods
+     * @param {number} startPeriod - Starting period (1-based)
+     * @param {number} endPeriod - Ending period (1-based)
+     * @returns {object} Amortization results { principal, interest, balance }
+     */
+    calculateAmortization(startPeriod, endPeriod) {
+        // Validation
+        if (this.n === 0) {
+            throw new Error('Error 5: n must be set');
+        }
+        if (this.i === 0) {
+            throw new Error('Error 5: i must be non-zero for amortization');
+        }
+        if (this.pv === 0) {
+            throw new Error('Error 5: PV must be set');
+        }
+        
+        // Calculate PMT if not already set
+        if (this.pmt === 0) {
+            this.solvePMT();
+        }
+        
+        // Validate period range
+        if (startPeriod < 1) {
+            throw new Error('Error 3: Start period must be >= 1');
+        }
+        if (endPeriod > this.n) {
+            throw new Error('Error 3: End period exceeds total periods');
+        }
+        if (startPeriod > endPeriod) {
+            throw new Error('Error 3: Start period must be <= end period');
+        }
+        
+        const i_decimal = this.i / 100;
+        const payment = Math.abs(this.pmt); // Always work with positive payment amount
+        
+        // Start with the loan balance (PV - positive for money borrowed)
+        // Need to calculate balance at start of startPeriod
+        let balance = Math.abs(this.pv);
+        
+        // Fast-forward to start period if not period 1
+        if (startPeriod > 1) {
+            // Calculate balance at start of startPeriod
+            for (let p = 1; p < startPeriod; p++) {
+                let interestAmount, principalAmount;
+                
+                if (this.beginMode) {
+                    // BEGIN mode: payment at start of period, then interest accrues
+                    interestAmount = (balance - payment) * i_decimal;
+                    principalAmount = payment - interestAmount;
+                } else {
+                    // END mode: interest accrues, then payment at end
+                    interestAmount = balance * i_decimal;
+                    principalAmount = payment - interestAmount;
+                }
+                
+                balance = balance - principalAmount; // Reduce balance by principal paid
+            }
+        }
+        
+        // Now calculate amortization for the specified range
+        let totalPrincipal = 0;
+        let totalInterest = 0;
+        
+        for (let period = startPeriod; period <= endPeriod; period++) {
+            let interestAmount, principalAmount;
+            
+            if (this.beginMode) {
+                // BEGIN mode: payment at beginning, interest on remaining balance
+                interestAmount = (balance - payment) * i_decimal;
+                principalAmount = payment - interestAmount;
+            } else {
+                // END mode: interest accrues on current balance
+                interestAmount = balance * i_decimal;
+                principalAmount = payment - interestAmount;
+            }
+            
+            totalInterest += interestAmount;
+            totalPrincipal += principalAmount;
+            balance = balance - principalAmount; // Reduce balance
+        }
+        
+        // Store state for INT function
+        this.amortizationState = {
+            lastPrincipal: -totalPrincipal, // Negative (money paid out)
+            lastInterest: -totalInterest,   // Negative (money paid out)
+            remainingBalance: balance,       // Positive (money still owed)
+            startPeriod: startPeriod,
+            endPeriod: endPeriod
+        };
+        
+        // Update PV to remaining balance (positive)
+        this.pv = balance;
+        
+        return {
+            principal: -totalPrincipal,  // Return as negative (money paid out)
+            interest: -totalInterest,    // Return as negative (money paid out)
+            balance: balance             // Return as positive (money still owed)
+        };
+    }
+
+    /**
+     * Get last amortization interest (for INT function)
+     * @returns {number} Interest from last amortization
+     */
+    getAmortizationInterest() {
+        return this.amortizationState.lastInterest;
+    }
+
+    /**
+     * Get last amortization state
+     * @returns {object} Amortization state
+     */
+    getAmortizationState() {
+        return { ...this.amortizationState };
+    }
+
+    /**
      * Clear all financial registers
      */
     clear() {
@@ -448,6 +577,13 @@ class FinancialEngine {
         this.pmt = 0;
         this.fv = 0;
         this.clearCashFlows();
+        this.amortizationState = {
+            lastPrincipal: 0,
+            lastInterest: 0,
+            remainingBalance: 0,
+            startPeriod: 0,
+            endPeriod: 0
+        };
     }
 
     /**

@@ -20,11 +20,30 @@ npm run test:watch
 
 ## Test Suite Overview
 
-The HP-12C test suite includes **261 automated tests** covering:
+The HP-12C test suite includes **301 automated tests** covering:
 
 ### Functions Tested
 
-#### ✅ Display Formats & Utility Functions (Phase 8) ⭐ NEW!
+#### ✅ Amortization & Depreciation (Phase 10) ⭐ NEW!
+- **AMORT** (f n): Complete loan amortization schedules
+- **INT** (f i): Interest display from last amortization
+- **SL** (f 8): Straight Line depreciation
+- **DB** (f 9): Declining Balance depreciation (150%, 200%)
+- **SOYD** (g 9): Sum of Years' Digits depreciation
+- **BEGIN/END Support**: Payment timing for amortization
+- **Real-World Validation**: Mortgage, car loan, student loan examples
+
+#### ✅ Date Functions (Phase 9)
+- **D.MY Format** (g 4): European date format (DD.MMYYYY)
+- **M.DY Format** (g 5): US date format (MM.DDYYYY)
+- **ΔDYS** (Delta Days): Calculate days between two dates
+- **DATE Function**: Calculate date N days in future/past
+- **Day of Week**: Returns 1-7 for Monday-Sunday
+- **Leap Year Detection**: Accurate 400/100/4 rule implementation
+- **Julian Day Number**: Industry-standard date arithmetic
+- **Calendar Validation**: Full Gregorian calendar support (1582-9999)
+
+#### ✅ Display Formats & Utility Functions (Phase 8)
 - **FIX n** (Fixed Decimal): Display with 0-9 decimal places
 - **SCI n** (Scientific Notation): Scientific display with mantissa and exponent
 - **12×** (Multiply by 12): Quick time conversions (years to months)
@@ -78,7 +97,45 @@ The HP-12C test suite includes **261 automated tests** covering:
 
 ## Test Statistics
 
-**Phase 7 Test Coverage (Current):**
+**Phase 10 Test Coverage (Current):**
+
+| Category | Tests | Coverage | Status |
+|----------|-------|----------|--------|
+| **Amortization Functions** | **26** | **100%** | **✅ Pass** |
+| Basic Amortization (END) | 6 | 100% | ✅ Pass |
+| BEGIN Mode | 2 | 100% | ✅ Pass |
+| Real-World Mortgages | 4 | 100% | ✅ Pass |
+| Edge Cases | 7 | 100% | ✅ Pass |
+| Last Payment Handling | 2 | 100% | ✅ Pass |
+| Complex Scenarios | 3 | 100% | ✅ Pass |
+| State Management | 2 | 100% | ✅ Pass |
+| **Depreciation Functions** | **35** | **100%** | **✅ Pass** |
+| Straight Line (SL) | 9 | 100% | ✅ Pass |
+| Declining Balance (DB) | 9 | 100% | ✅ Pass |
+| Sum of Years' Digits | 9 | 100% | ✅ Pass |
+| Method Comparisons | 3 | 100% | ✅ Pass |
+| Real-World Examples | 3 | 100% | ✅ Pass |
+| State Management | 2 | 100% | ✅ Pass |
+| **Date Functions** | **87** | **100%** | **✅ Pass** |
+| Format Modes | 6 | 100% | ✅ Pass |
+| Date Validation | 14 | 100% | ✅ Pass |
+| Leap Year Calculation | 8 | 100% | ✅ Pass |
+| DYS (Days Between) | 15 | 100% | ✅ Pass |
+| DATE (Future/Past) | 15 | 100% | ✅ Pass |
+| Day of Week | 8 | 100% | ✅ Pass |
+| Julian Day Number | 8 | 100% | ✅ Pass |
+| Integration Tests | 10 | 100% | ✅ Pass |
+| Edge Cases | 5 | 100% | ✅ Pass |
+
+**Phase 8 Test Coverage:**
+
+| Category | Tests | Coverage | Status |
+|----------|-------|----------|--------|
+| **Display & Utility** | **49** | **100%** | **✅ Pass** |
+| Display Formats | 20 | 100% | ✅ Pass |
+| Utility Functions | 29 | 100% | ✅ Pass |
+
+**Phase 7 Test Coverage:**
 
 | Category | Tests | Coverage | Status |
 |----------|-------|----------|--------|

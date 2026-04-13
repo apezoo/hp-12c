@@ -722,7 +722,7 @@
             label: "D.MY",
             title: "Day.Month.Year Format",
             description: "Sets the calculator to interpret dates in Day.Month.Year format (European/International standard).",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "g 4 (set D.MY mode)",
               "25.12.2024 represents December 25, 2024"
@@ -788,7 +788,7 @@
             label: "M.DY",
             title: "Month.Day.Year Format",
             description: "Sets the calculator to interpret dates in Month.Day.Year format (US standard).",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "g 5 (set M.DY mode)",
               "12.25.2024 represents December 25, 2024"
@@ -1448,11 +1448,11 @@
           {
             label: "DATE",
             title: "Date",
-            description: "Displays current date stored in calculator or calculates date arithmetic. Used with calendar functions.",
-            implementationStatus: "planned",
+            description: "Calculates a date N days in the future or past from a given date. Stack: Y=start_date, X=days → X=new_date, Y=day_of_week (1=Monday, 7=Sunday).",
+            implementationStatus: "implemented",
             examples: [
-              "Calculate days between dates",
-              "Find date N days in future/past"
+              "1.012024 ENTER 90 g CHS → 31.032024 (90 days from Jan 1, 2024)",
+              "15.072024 ENTER 30 CHS g CHS → 15.062024 (30 days before July 15)"
             ],
             keystrokes: "g CHS"
           }
@@ -2517,10 +2517,11 @@
           {
             label: "ΔDYS",
             title: "Delta Days",
-            description: "Calculates the number of days between two dates.",
-            implementationStatus: "planned",
+            description: "Calculates the number of days between two dates. Stack: Y=date1, X=date2 → X=days (positive if date2 > date1).",
+            implementationStatus: "implemented",
             examples: [
-              "Enter two dates, press 'g EEX' for days between"
+              "1.012024 ENTER 31.122024 g EEX → 365 (days from Jan 1 to Dec 31, 2024)",
+              "15.072024 ENTER 15.072023 g EEX → -366 (negative for past dates)"
             ],
             keystrokes: "g EEX"
           }

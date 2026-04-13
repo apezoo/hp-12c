@@ -10,6 +10,8 @@ if (typeof require !== 'undefined') {
     var MemoryManager = require('./memory.js');
     var FinancialEngine = require('./financial.js');
     var StatisticsEngine = require('./statistics.js');
+    var DateFunctions = require('./date-functions.js');
+    var DepreciationEngine = require('./depreciation.js');
 }
 
 class Calculator {
@@ -19,6 +21,8 @@ class Calculator {
         this.memory = new MemoryManager();
         this.financial = new FinancialEngine();
         this.statistics = new StatisticsEngine(this.memory);
+        this.dates = new DateFunctions();
+        this.depreciation = new DepreciationEngine();
         
         // Input state
         this.currentInput = '';
@@ -312,6 +316,14 @@ class Calculator {
                 // g 2 = X-estimate, Correlation (x̂,r)
                 this.estimateX();
                 return;
+            } else if (digit === 4) {
+                // g 4 = D.MY date format
+                this.setDateFormat('DMY');
+                return;
+            } else if (digit === 5) {
+                // g 5 = M.DY date format
+                this.setDateFormat('MDY');
+                return;
             } else if (digit === 9) {
                 // g 9 = INTG (Integer part)
                 this.integerPart();
@@ -378,6 +390,16 @@ class Calculator {
             case 'pmt':
                 // g PMT = FRAC (Fractional part)
                 this.fractionalPart();
+                break;
+                
+            case 'eex':
+                // g EEX = ΔDYS (days between dates)
+                this.calculateDYS();
+                break;
+                
+            case 'chs':
+                // g CHS = DATE (future/past date)
+                this.calculateDATE();
                 break;
                 
             default:
@@ -1097,6 +1119,74 @@ class Calculator {
         }
     }
 
+    // ==================== Date Functions ====================
+    
+    /**
+     * Set date format mode
+     * @param {string} format - 'DMY' or 'MDY'
+     */
+    setDateFormat(format) {
+        this.dates.setFormat(format);
+        console.log(`Date format set to ${format === 'DMY' ? 'D.MY' : 'M.DY'}`);
+        this.updateDisplay();
+    }
+    
+    /**
+     * Calculate days between two dates (ΔDYS function)
+     * HP-12C: g EEX
+     * Stack: Y=date1, X=date2 → X=days
+     */
+    calculateDYS() {
+        this.finishNumberEntry();
+        
+        const date2 = this.stack.x;
+        const date1 = this.stack.y;
+        
+        const result = this.dates.daysBetween(date1, date2);
+        
+        if (result.error) {
+            this.display.showError(result.error);
+            console.error('DYS error:', result.error);
+            return;
+        }
+        
+        // Binary operation: replace X and Y with result
+        this.stack.binaryOp(() => result.days);
+        
+        console.log(`Days between dates: ${result.days}`);
+        this.updateDisplay();
+    }
+    
+    /**
+     * Calculate future/past date (DATE function)
+     * HP-12C: g CHS
+     * Stack: Y=start_date, X=days → X=new_date, Y=day_of_week
+     */
+    calculateDATE() {
+        this.finishNumberEntry();
+        
+        const days = this.stack.x;
+        const startDate = this.stack.y;
+        
+        const result = this.dates.addDays(startDate, days);
+        
+        if (result.error) {
+            this.display.showError(result.error);
+            console.error('DATE error:', result.error);
+            return;
+        }
+        
+        // Drop stack and set X to new date, Y to day of week
+        this.stack.saveLastX();
+        this.stack.drop();
+        this.stack.x = result.date;
+        this.stack.y = result.dayOfWeek;
+        this.stack.enableStackLift();
+        
+        console.log(`New date: ${result.date}, Day of week: ${result.dayOfWeek}`);
+        this.updateDisplay();
+    }
+
     /**
      * Reset calculator
      */
@@ -1124,10 +1214,12 @@ class Calculator {
     updateDisplay() {
         this.display.show(this.stack.x);
         
-        // Update stack display if visible
-        const stackDisplay = document.getElementById('stackDisplay');
-        if (stackDisplay && stackDisplay.style.display !== 'none') {
-            this.display.updateStackDisplay(this.stack.getState());
+        // Update stack display if visible (only in browser environment)
+        if (typeof document !== 'undefined') {
+            const stackDisplay = document.getElementById('stackDisplay');
+            if (stackDisplay && stackDisplay.style.display !== 'none') {
+                this.display.updateStackDisplay(this.stack.getState());
+            }
         }
     }
 

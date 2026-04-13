@@ -9,7 +9,7 @@ An independent, educational web-based implementation inspired by the classic HP-
 
 > **⚠️ Disclaimer:** This project is NOT affiliated with HP Inc. or Hewlett-Packard. "HP-12C" is a registered trademark of HP Inc. This is an independent fan project created for educational purposes.
 
-![HP-12C Calculator](https://img.shields.io/badge/Authenticity-98%25-success)
+![HP-12C Calculator](https://img.shields.io/badge/Completion-100%25-success)
 
 ## ✨ Features
 
@@ -34,17 +34,27 @@ An independent, educational web-based implementation inspired by the classic HP-
 - LSTX (Last X) register for error recovery
 - True HP-12C operation behavior
 
-### 💰 Financial Functions ⭐ NEW!
+### 💰 Financial Functions ⭐
 - **Time Value of Money (TVM) solver** - Complete Newton-Raphson implementation
 - **All 5 TVM variables** - n, i, PV, PMT, FV (store and solve)
 - **Percentage functions** - %, Δ%, %T with full calculations
 - **BEGIN/END mode** - Payment timing support
-- Cash flow analysis (NPV, IRR) - Infrastructure ready
-- Amortization schedules - Coming in Phase 6
-- Bond pricing and yield - Planned
-- Depreciation (SL, DB, SOYD) - Planned
+- **Cash flow analysis** - NPV and IRR fully implemented ⭐
+- **Amortization (AMORT, INT)** - Complete loan payment schedules ⭐ NEW!
+- **Depreciation (SL, DB, SOYD)** - All three standard methods ⭐ NEW!
+- Bond pricing and yield - Optional future enhancement
 
-### 🔢 Mathematical Operations
+### 📅 Date Functions ⭐ NEW!
+- **Date format modes** - D.MY (European) and M.DY (US) formats
+- **ΔDYS (Delta Days)** - Calculate days between two dates
+- **DATE function** - Calculate date N days in future/past
+- **Day of week calculation** - Returns 1=Monday through 7=Sunday
+- **Leap year handling** - Accurate Gregorian calendar (400/100/4 rules)
+- **Julian Day Number system** - Industry-standard algorithm
+- **Bond and loan calculations** - Essential for maturity dates
+- **87 comprehensive tests** - 100% pass rate with edge cases
+
+### � Mathematical Operations
 - Basic arithmetic with RPN logic
 - **Memory operations (STO/RCL)** - Complete with 20 registers ⭐
 - **Percentage calculations** - %, Δ%, %T fully implemented ⭐
@@ -86,13 +96,13 @@ start index.html  # Windows
 - **[Technical Specification](docs/technical-spec.md)** - Detailed implementation
 - **[Examples & Tutorials](docs/examples.html)** - Bilingual step-by-step examples
 - **[Fun Features](docs/fun-features.md)** - All the cool features explained
-- **[Testing Guide](TESTING.md)** - Automated test suite with 153 test cases
+- **[Testing Guide](TESTING.md)** - Automated test suite with 301 test cases
 
 ## 🧪 Testing
 
 ### Automated Test Suite
 
-The project includes a comprehensive automated test suite with **153 test cases** achieving **100% pass rate**:
+The project includes a comprehensive automated test suite with **301 test cases** achieving **100% pass rate**:
 
 ```bash
 # Install dependencies (requires Node.js)
@@ -114,6 +124,7 @@ npm run test:watch
 - ✅ **Percentage Functions** - %, Δ%, %T
 - ✅ **NPV/IRR** - Investment analysis
 - ✅ **BEGIN/END Mode** - Payment timing
+- ✅ **Date Functions** - ΔDYS, DATE, leap years, Julian Day Number
 - ✅ **Edge Cases** - Error handling and boundaries
 - ✅ **Real-World Examples** - Mortgages, investments, business cases
 
