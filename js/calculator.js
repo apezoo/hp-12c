@@ -9,6 +9,7 @@ if (typeof require !== 'undefined') {
     var DisplayManager = require('./display.js');
     var MemoryManager = require('./memory.js');
     var FinancialEngine = require('./financial.js');
+    var StatisticsEngine = require('./statistics.js');
 }
 
 class Calculator {
@@ -17,6 +18,7 @@ class Calculator {
         this.display = new DisplayManager();
         this.memory = new MemoryManager();
         this.financial = new FinancialEngine();
+        this.statistics = new StatisticsEngine(this.memory);
         
         // Input state
         this.currentInput = '';
@@ -211,6 +213,10 @@ class Calculator {
                 this.reciprocal();
                 break;
                 
+            case 'sigma-plus':
+                this.sigmaPlus();
+                break;
+                
             case 'sto':
                 this.awaitingRegisterNumber = 'sto';
                 console.log('Awaiting register number for STO');
@@ -312,6 +318,31 @@ class Calculator {
                 // g CLX = Clear LSTX
                 this.stack.lstx = 0;
                 console.log('Last X cleared');
+                break;
+                
+            case 'sigma-plus':
+                // g Σ+ = Sigma Minus (Σ-)
+                this.sigmaMinus();
+                break;
+                
+            case 'digit-0':
+                // g 0 = Mean (x̄)
+                this.meanX();
+                break;
+                
+            case 'decimal':
+                // g . = Standard Deviation (s)
+                this.standardDeviationX();
+                break;
+                
+            case 'digit-1':
+                // g 1 = Y-estimate, Correlation (ŷ,r)
+                this.estimateY();
+                break;
+                
+            case 'digit-2':
+                // g 2 = X-estimate, Correlation (x̂,r)
+                this.estimateX();
                 break;
                 
             default:
@@ -772,6 +803,151 @@ class Calculator {
         this.stack.unaryOp(x => Math.log10(x));
         this.isNewNumber = true;
         console.log(`log(${x}) = ${result}`);
+    }
+
+    /**
+     * ==========================================
+     * STATISTICS FUNCTIONS
+     * ==========================================
+     */
+
+    /**
+     * Σ+ (Sigma Plus) - Add data point to statistical registers
+     * For single-variable: uses X register
+     * For two-variable: uses Y and X registers (x=X, y=Y)
+     */
+    sigmaPlus() {
+        this.finishNumberEntry();
+        
+        try {
+            const x = this.stack.x;
+            const y = this.stack.y;
+            
+            // Add data point to statistics
+            const n = this.statistics.sigmaPlus(x, y);
+            
+            // Display new count
+            this.stack.x = n;
+            this.isNewNumber = true;
+            
+            console.log(`Σ+ added: x=${x}, y=${y}, n=${n}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Σ- (Sigma Minus) - Remove data point from statistical registers
+     * Removes the values currently in X and Y from statistics
+     */
+    sigmaMinus() {
+        this.finishNumberEntry();
+        
+        try {
+            const x = this.stack.x;
+            const y = this.stack.y;
+            
+            // Remove data point from statistics
+            const n = this.statistics.sigmaMinus(x, y);
+            
+            // Display new count
+            this.stack.x = n;
+            this.isNewNumber = true;
+            
+            console.log(`Σ- removed: x=${x}, y=${y}, n=${n}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * x̄ (Mean) - Calculate mean of x values
+     * Also places mean of y values in Y register
+     */
+    meanX() {
+        this.finishNumberEntry();
+        
+        try {
+            const xMean = this.statistics.mean();
+            const yMean = this.statistics.meanY();
+            
+            // HP-12C behavior: place results directly in X and Y without stack lift
+            this.stack.y = yMean;
+            this.stack.x = xMean;
+            this.isNewNumber = true;
+            
+            console.log(`Mean: x̄=${xMean}, ȳ=${yMean}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * s (Standard Deviation) - Calculate sample standard deviation
+     * Also places standard deviation of y values in Y register
+     */
+    standardDeviationX() {
+        this.finishNumberEntry();
+        
+        try {
+            const sX = this.statistics.standardDeviation();
+            const sY = this.statistics.standardDeviationY();
+            
+            // HP-12C behavior: place results directly in X and Y without stack lift
+            this.stack.y = sY;
+            this.stack.x = sX;
+            this.isNewNumber = true;
+            
+            console.log(`Standard Deviation: sx=${sX}, sy=${sY}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * ŷ,r (Y-estimate, Correlation) - Linear regression: estimate y from x
+     * Uses x value in X register to estimate y
+     * Returns estimated y in X and correlation coefficient r in Y
+     */
+    estimateY() {
+        this.finishNumberEntry();
+        
+        try {
+            const x = this.stack.x;
+            const { yEstimate, correlation } = this.statistics.estimateY(x);
+            
+            // HP-12C behavior: place results directly in X and Y without stack lift
+            this.stack.y = correlation;
+            this.stack.x = yEstimate;
+            this.isNewNumber = true;
+            
+            console.log(`Y-estimate: x=${x}, ŷ=${yEstimate}, r=${correlation}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * x̂,r (X-estimate, Correlation) - Linear regression: estimate x from y
+     * Uses y value in X register to estimate x
+     * Returns estimated x in X and correlation coefficient r in Y
+     */
+    estimateX() {
+        this.finishNumberEntry();
+        
+        try {
+            const y = this.stack.x;
+            const { xEstimate, correlation } = this.statistics.estimateX(y);
+            
+            // HP-12C behavior: place results directly in X and Y without stack lift
+            this.stack.y = correlation;
+            this.stack.x = xEstimate;
+            this.isNewNumber = true;
+            
+            console.log(`X-estimate: y=${y}, x̂=${xEstimate}, r=${correlation}`);
+        } catch (error) {
+            this.display.showError(error.message);
+        }
     }
 
     /**

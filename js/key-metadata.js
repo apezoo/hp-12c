@@ -454,7 +454,7 @@
             label: "x̄",
             title: "Mean (Average)",
             description: "Calculates the arithmetic mean (average) of accumulated statistical data. Uses values stored via Σ+ key.",
-            implementationStatus: "planned",
+            implementationStatus: "complete",
             examples: [
               "Enter data: 5 Σ+, 10 Σ+, 15 Σ+",
               "Calculate mean: g 0 → displays 10"
@@ -525,7 +525,7 @@
             label: "ŷ,r",
             title: "Y-Estimate and Correlation",
             description: "Calculates the estimated y-value for a given x using linear regression, and provides the correlation coefficient r.",
-            implementationStatus: "planned",
+            implementationStatus: "complete",
             examples: [
               "Enter x,y pairs with Σ+",
               "Enter x value, press g 1 to get estimated y"
@@ -591,7 +591,7 @@
             label: "x̂,r",
             title: "X-Estimate and Correlation",
             description: "Calculates the estimated x-value for a given y using linear regression, and provides the correlation coefficient r.",
-            implementationStatus: "planned",
+            implementationStatus: "complete",
             examples: [
               "Enter x,y pairs with Σ+",
               "Enter y value, press g 2 to get estimated x"
@@ -1126,7 +1126,7 @@
             label: "s",
             title: "Standard Deviation",
             description: "Calculates the sample standard deviation of accumulated statistical data. Measures the amount of variation or dispersion in a data set.",
-            implementationStatus: "planned",
+            implementationStatus: "complete",
             examples: [
               "Enter data: 10 Σ+, 20 Σ+, 30 Σ+",
               "Calculate: g . → standard deviation"
@@ -2754,7 +2754,7 @@
             label: "Σ−",
             title: "Sigma Minus",
             description: "Removes the last data point added with Σ+. Useful for correcting data entry mistakes.",
-            implementationStatus: "planned",
+            implementationStatus: "complete",
             examples: [
               "After incorrect Σ+: 'RCL X, g Σ+' removes that point"
             ],
@@ -2767,14 +2767,14 @@
       longDescription: "Σ+ is the foundation of statistical calculations on the HP-12C. Each press accumulates data into the statistical registers (R1-R6). For single-variable statistics, it uses X. For two-variable (regression), it uses both X and Y. After accumulating data, you can calculate mean, standard deviation, correlation, linear regression, and more.",
       
       implementation: {
-        status: "planned",
-        note: "Requires statistical register allocation (R1-R6) and accumulation formulas for sum(x), sum(x²), sum(y), sum(y²), sum(xy), and n.",
-        version: "1.0"
+        status: "complete",
+        note: "Full statistics engine implemented with all 6 functions: Σ+, Σ-, x̄, s, ŷ,r, x̂,r. Uses R1-R6 for statistical registers.",
+        version: "1.7.0"
       },
       
       originalHp12cBehavior: "Adds X to R1 (n), X to R2 (Σx), X² to R3 (Σx²). For two-variable: Y to R4 (Σy), Y² to R5 (Σy²), X×Y to R6 (Σxy). Increments n counter.",
       
-      simulatorBehavior: "Currently not implemented.",
+      simulatorBehavior: "Fully implemented. Statistics engine manages all statistical registers and calculations with comprehensive error handling.",
       
       relatedTopics: [
         "Statistics",
