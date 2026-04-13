@@ -104,7 +104,7 @@ class DisplayManager {
     /**
      * Format number in scientific notation
      * @param {number} value - Number to format
-     * @returns {string} Formatted string (e.g., "1.234567890 -12")
+     * @returns {string} Formatted string (e.g., "1.23 -12")
      */
     formatScientific(value) {
         if (value === 0) return '0.';
@@ -112,11 +112,8 @@ class DisplayManager {
         const exp = Math.floor(Math.log10(Math.abs(value)));
         const mantissa = value / Math.pow(10, exp);
 
-        // Format mantissa with up to 9 decimal places
-        let mantissaStr = mantissa.toFixed(9);
-        
-        // Remove trailing zeros after decimal point
-        mantissaStr = mantissaStr.replace(/\.?0+$/, '');
+        // Format mantissa with specified decimal places
+        let mantissaStr = mantissa.toFixed(this.decimals);
         
         // Ensure decimal point
         if (!mantissaStr.includes('.')) {
@@ -141,8 +138,8 @@ class DisplayManager {
         const engExp = Math.floor(exp / 3) * 3;
         const mantissa = value / Math.pow(10, engExp);
 
-        let mantissaStr = mantissa.toFixed(9);
-        mantissaStr = mantissaStr.replace(/\.?0+$/, '');
+        // Format mantissa with specified decimal places
+        let mantissaStr = mantissa.toFixed(this.decimals);
         
         if (!mantissaStr.includes('.')) {
             mantissaStr += '.';
@@ -156,11 +153,11 @@ class DisplayManager {
     /**
      * Set display format
      * @param {string} format - 'fixed', 'sci', or 'eng'
-     * @param {number} decimals - Number of decimal places (for fixed)
+     * @param {number} decimals - Number of decimal places
      */
     setFormat(format, decimals = null) {
         this.format = format;
-        if (decimals !== null && format === 'fixed') {
+        if (decimals !== null) {
             this.decimals = Math.max(0, Math.min(9, decimals));
         }
     }

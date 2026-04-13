@@ -20,11 +20,21 @@ npm run test:watch
 
 ## Test Suite Overview
 
-The HP-12C test suite includes **193 automated tests** covering:
+The HP-12C test suite includes **261 automated tests** covering:
 
 ### Functions Tested
 
-#### ✅ Statistics Functions (Phase 7) ⭐ NEW!
+#### ✅ Display Formats & Utility Functions (Phase 8) ⭐ NEW!
+- **FIX n** (Fixed Decimal): Display with 0-9 decimal places
+- **SCI n** (Scientific Notation): Scientific display with mantissa and exponent
+- **12×** (Multiply by 12): Quick time conversions (years to months)
+- **12÷** (Divide by 12): Quick rate conversions (annual to monthly)
+- **INTG** (Integer Part): Extract whole number portion
+- **FRAC** (Fractional Part): Extract decimal portion
+- **BEGIN/END Toggle**: Payment timing mode control
+- **Clear Operations**: Selective register clearing
+
+#### ✅ Statistics Functions (Phase 7)
 - **Σ+** (Sigma Plus): Data accumulation into statistical registers
 - **Σ-** (Sigma Minus): Data point removal for error correction
 - **x̄** (Mean): Arithmetic mean calculation

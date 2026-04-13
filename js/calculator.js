@@ -243,6 +243,13 @@ class Calculator {
      * @param {string} key - Button key
      */
     handleGoldFunction(key) {
+        // Check for digit keys (FIX mode)
+        if (key.startsWith('digit-')) {
+            const digit = parseInt(key.replace('digit-', ''));
+            this.setFixMode(digit);
+            return;
+        }
+        
         switch(key) {
             case 'pmt':
                 // f PMT = BEGIN/END mode toggle
@@ -273,6 +280,11 @@ class Calculator {
                 // f ENTER = Clear PREFIX (already handled)
                 break;
                 
+            case 'sigma-plus':
+                // f Σ+ = Clear Statistics
+                this.clearStatistics();
+                break;
+                
             default:
                 console.log('Gold function:', key);
         }
@@ -283,7 +295,45 @@ class Calculator {
      * @param {string} key - Button key
      */
     handleBlueFunction(key) {
+        // Check for digit keys (SCI mode)
+        if (key.startsWith('digit-')) {
+            const digit = parseInt(key.replace('digit-', ''));
+            
+            // Special cases for specific functions
+            if (digit === 0) {
+                // g 0 = Mean (x̄) - already implemented
+                this.meanX();
+                return;
+            } else if (digit === 1) {
+                // g 1 = Y-estimate, Correlation (ŷ,r)
+                this.estimateY();
+                return;
+            } else if (digit === 2) {
+                // g 2 = X-estimate, Correlation (x̂,r)
+                this.estimateX();
+                return;
+            } else if (digit === 9) {
+                // g 9 = INTG (Integer part)
+                this.integerPart();
+                return;
+            }
+            
+            // Otherwise, set SCI mode
+            this.setSciMode(digit);
+            return;
+        }
+        
         switch(key) {
+            case 'n':
+                // g n = 12× (multiply by 12)
+                this.multiply12();
+                break;
+                
+            case 'i':
+                // g i = 12÷ (divide by 12)
+                this.divide12();
+                break;
+                
             case 'op-divide':
                 // g ÷ = Delta % (Δ%)
                 this.deltaPercent();
@@ -309,11 +359,6 @@ class Calculator {
                 this.naturalLog();
                 break;
                 
-            case 'op-divide':
-                // g ÷ = Common Logarithm (LOG) - Note: This is not standard, checking
-                this.commonLog();
-                break;
-                
             case 'clx':
                 // g CLX = Clear LSTX
                 this.stack.lstx = 0;
@@ -325,24 +370,14 @@ class Calculator {
                 this.sigmaMinus();
                 break;
                 
-            case 'digit-0':
-                // g 0 = Mean (x̄)
-                this.meanX();
-                break;
-                
             case 'decimal':
                 // g . = Standard Deviation (s)
                 this.standardDeviationX();
                 break;
                 
-            case 'digit-1':
-                // g 1 = Y-estimate, Correlation (ŷ,r)
-                this.estimateY();
-                break;
-                
-            case 'digit-2':
-                // g 2 = X-estimate, Correlation (x̂,r)
-                this.estimateX();
+            case 'pmt':
+                // g PMT = FRAC (Fractional part)
+                this.fractionalPart();
                 break;
                 
             default:
@@ -948,6 +983,82 @@ class Calculator {
         } catch (error) {
             this.display.showError(error.message);
         }
+    }
+
+    /**
+     * Set FIX mode (f followed by digit 0-9)
+     * @param {number} decimals - Number of decimal places (0-9)
+     */
+    setFixMode(decimals) {
+        this.display.setFormat('fixed', decimals);
+        console.log(`Display format set to FIX ${decimals}`);
+    }
+
+    /**
+     * Set SCI mode (g followed by digit 0-9, but not 0,1,2,9)
+     * @param {number} decimals - Number of decimal places (0-9)
+     */
+    setSciMode(decimals) {
+        this.display.setFormat('sci', decimals);
+        console.log(`Display format set to SCI ${decimals}`);
+    }
+
+    /**
+     * Multiply X by 12 (g n)
+     * Time conversion utility: years to months, etc.
+     */
+    multiply12() {
+        this.stack.lstx = this.stack.x;
+        this.stack.x = this.stack.x * 12;
+        console.log('Multiplied by 12:', this.stack.x);
+    }
+
+    /**
+     * Divide X by 12 (g i)
+     * Time conversion utility: annual to monthly rate, etc.
+     */
+    divide12() {
+        this.stack.lstx = this.stack.x;
+        this.stack.x = this.stack.x / 12;
+        console.log('Divided by 12:', this.stack.x);
+    }
+
+    /**
+     * Get integer part of X (g 9)
+     * Discards fractional part, preserves sign
+     */
+    integerPart() {
+        this.stack.lstx = this.stack.x;
+        this.stack.x = Math.trunc(this.stack.x);
+        console.log('Integer part:', this.stack.x);
+    }
+
+    /**
+     * Get fractional part of X (g PMT)
+     * Returns only decimal portion, always positive
+     */
+    fractionalPart() {
+        this.stack.lstx = this.stack.x;
+        const intPart = Math.trunc(this.stack.x);
+        this.stack.x = Math.abs(this.stack.x - intPart);
+        console.log('Fractional part:', this.stack.x);
+    }
+
+    /**
+     * Toggle BEGIN/END mode (f PMT)
+     */
+    toggleBeginMode() {
+        this.financial.beginMode = !this.financial.beginMode;
+        this.display.setIndicator('begin', this.financial.beginMode);
+        console.log(`Payment mode: ${this.financial.beginMode ? 'BEGIN' : 'END'}`);
+    }
+
+    /**
+     * Clear statistics registers (f Σ+)
+     */
+    clearStatistics() {
+        this.statistics.clear();
+        console.log('Statistics registers cleared');
     }
 
     /**

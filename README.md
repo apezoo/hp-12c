@@ -49,7 +49,9 @@ An independent, educational web-based implementation inspired by the classic HP-
 - **Memory operations (STO/RCL)** - Complete with 20 registers ⭐
 - **Percentage calculations** - %, Δ%, %T fully implemented ⭐
 - **Scientific functions** - y^x, 1/x, √x, e^x, LN, LOG fully implemented ⭐
-- **Statistics functions** - Σ+, Σ-, x̄, s, ŷ,r, x̂,r fully implemented ⭐ NEW!
+- **Statistics functions** - Σ+, Σ-, x̄, s, ŷ,r, x̂,r fully implemented ⭐
+- **Display formats** - FIX n (0-9 decimals), SCI n (scientific notation) ⭐ NEW!
+- **Utility functions** - 12×, 12÷ (time conversions), INTG, FRAC ⭐ NEW!
 - Trigonometric functions - Planned
 
 ### 📚 Bilingual Examples
