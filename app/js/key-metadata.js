@@ -46,7 +46,7 @@
             label: "AMORT",
             title: "Amortization",
             description: "Calculates amortization for a range of loan payment periods. Shows how much goes to principal vs. interest, and remaining balance.",
-            implementationStatus: "implemented",
+            implementationStatus: "planned",
             examples: [
               "Amortize first year: '1 ENTER 12 f AMORT' shows payments 1-12",
               "Press 'x↔y' to see interest paid",
@@ -133,7 +133,7 @@
             label: "INT",
             title: "Interest Amount",
             description: "After AMORT calculation, displays the total interest paid during the amortized period.",
-            implementationStatus: "implemented",
+            implementationStatus: "planned",
             examples: [
               "After 'f AMORT', press 'f i' to see interest"
             ],
@@ -986,18 +986,7 @@
       },
       
       shiftedFunctions: {
-        gold: [
-          {
-            label: "SL",
-            title: "Straight Line Depreciation",
-            description: "Calculates straight-line depreciation for an asset. Depreciates evenly over the useful life.",
-            implementationStatus: "implemented",
-            examples: [
-              "50000 ENTER 5000 ENTER 10 ENTER 1 f 8 → calculates year 1 SL depreciation"
-            ],
-            keystrokes: "f 8"
-          }
-        ],
+        gold: [],
         blue: [
           {
             label: "END",
@@ -1065,18 +1054,7 @@
       },
       
       shiftedFunctions: {
-        gold: [
-          {
-            label: "DB",
-            title: "Declining Balance Depreciation",
-            description: "Calculates declining balance depreciation for an asset. Accelerated depreciation method that depreciates more in early years.",
-            implementationStatus: "implemented",
-            examples: [
-              "50000 ENTER 5000 ENTER 10 ENTER 1 ENTER 2 f 9 → calculates year 1 DB depreciation (200%)"
-            ],
-            keystrokes: "f 9"
-          }
-        ],
+        gold: [],
         blue: [
           {
             label: "MEM",

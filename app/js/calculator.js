@@ -254,37 +254,14 @@ class Calculator {
      * @param {string} key - Button key
      */
     handleGoldFunction(key) {
-        // Check for digit keys (FIX mode and depreciation)
+        // Check for digit keys (FIX mode)
         if (key.startsWith('digit-')) {
             const digit = parseInt(key.replace('digit-', ''));
-            
-            // Special cases for depreciation functions
-            if (digit === 8) {
-                // f 8 = SL (Straight Line depreciation)
-                this.straightLineDepreciation();
-                return;
-            } else if (digit === 9) {
-                // f 9 = DB (Declining Balance depreciation)
-                this.decliningBalanceDepreciation();
-                return;
-            }
-            
-            // Otherwise, set FIX mode
             this.setFixMode(digit);
             return;
         }
         
         switch(key) {
-            case 'n':
-                // f n = AMORT (Amortization)
-                this.calculateAmort();
-                break;
-                
-            case 'i':
-                // f i = INT (Interest display from last amortization)
-                this.displayInterest();
-                break;
-                
             case 'pmt':
                 // f PMT = BEGIN/END mode toggle
                 this.toggleBeginMode();
@@ -762,118 +739,6 @@ class Calculator {
             this.stack.push(irr);
             this.isNewNumber = true;
             console.log(`IRR = ${irr}%`);
-        } catch (error) {
-            this.display.showError(error.message);
-        }
-    }
-
-    /**
-     * Calculate amortization (f n - AMORT)
-     * Y register: Start period (m)
-     * X register: End period (n)
-     * Output: X = Principal paid, Y = Interest paid (via x↔y)
-     * PV register updated with remaining balance
-     */
-    calculateAmort() {
-        this.finishNumberEntry();
-        try {
-            const startPeriod = Math.floor(this.stack.y);
-            const endPeriod = Math.floor(this.stack.x);
-            
-            const result = this.financial.calculateAmortization(startPeriod, endPeriod);
-            
-            // Put principal in X, interest in Y (accessible via x↔y)
-            this.stack.x = result.principal;
-            this.stack.y = result.interest;
-            this.stack.z = result.interest; // Keep interest available
-            this.stack.t = this.stack.z;
-            
-            this.isNewNumber = true;
-            console.log(`AMORT: periods ${startPeriod}-${endPeriod}`);
-            console.log(`Principal: ${result.principal}, Interest: ${result.interest}, Balance: ${result.balance}`);
-        } catch (error) {
-            this.display.showError(error.message);
-        }
-    }
-
-    /**
-     * Display interest from last amortization (f i - INT)
-     * Shows total interest paid during last AMORT calculation
-     */
-    displayInterest() {
-        try {
-            const interest = this.financial.getAmortizationInterest();
-            this.stack.push(interest);
-            this.isNewNumber = true;
-            console.log(`Interest from last amortization: ${interest}`);
-        } catch (error) {
-            this.display.showError(error.message);
-        }
-    }
-
-    /**
-     * Straight Line Depreciation (f 8 - SL)
-     * Stack input: Cost, Salvage, Life, Period
-     * Output: Annual depreciation amount
-     */
-    straightLineDepreciation() {
-        this.finishNumberEntry();
-        try {
-            // Stack: T=Cost, Z=Salvage, Y=Life, X=Period
-            const cost = this.stack.t;
-            const salvage = this.stack.z;
-            const life = this.stack.y;
-            const period = Math.floor(this.stack.x);
-            
-            const result = this.depreciation.straightLine(cost, salvage, life, period);
-            
-            // Put depreciation in X, remaining value accessible
-            this.stack.x = result.depreciation;
-            this.stack.y = result.remainingValue;
-            
-            this.isNewNumber = true;
-            console.log(`SL Depreciation (period ${period}): ${result.depreciation}, Remaining: ${result.remainingValue}`);
-        } catch (error) {
-            this.display.showError(error.message);
-        }
-    }
-
-    /**
-     * Declining Balance Depreciation (f 9 - DB)
-     * Stack input: Cost, Salvage, Life, Period, Factor
-     * Output: Depreciation for that period
-     */
-    decliningBalanceDepreciation() {
-        this.finishNumberEntry();
-        try {
-            // Need 5 values: Cost, Salvage, Life, Period, Factor
-            // This is complex - let's use a simplified approach
-            // Expecting: Enter values then use registers or sequential entry
-            
-            // For now, assume stack has: cost(deep), salvage, life, period, factor(X)
-            // This needs more sophisticated input handling
-            // Simplified: Assume we get the values from stack in order
-            
-            const factor = this.stack.x;
-            const period = Math.floor(this.stack.y);
-            const life = this.stack.z;
-            const salvage = this.stack.t;
-            
-            // Cost would need to be stored somewhere - use LSTX or require pre-storage
-            // For a proper implementation, we'd need the user to ENTER cost first
-            // Let's assume cost was in a register or we use a simpler stack layout
-            
-            // Temporarily get cost from memory R5 (convention for depreciation)
-            const cost = this.memory.recall(5) || 50000; // fallback for testing
-            
-            const result = this.depreciation.decliningBalance(cost, salvage, life, period, factor);
-            
-            // Put depreciation in X, book value accessible
-            this.stack.x = result.depreciation;
-            this.stack.y = result.bookValue;
-            
-            this.isNewNumber = true;
-            console.log(`DB Depreciation (period ${period}, factor ${factor}): ${result.depreciation}, Book Value: ${result.bookValue}`);
         } catch (error) {
             this.display.showError(error.message);
         }
