@@ -605,42 +605,46 @@
             let functionsHTML = '';
 
             // Primary function
-            if (metadata.functions.primary) {
+            if (metadata.primaryFunction) {
                 functionsHTML += `
                     <div class="function-card">
                         <div class="function-header">
                             <span class="function-type primary">${t('primaryFunction')}</span>
                         </div>
-                        <div class="function-name">${metadata.functions.primary.name}</div>
-                        <div class="function-description">${metadata.functions.primary.description}</div>
+                        <div class="function-name">${metadata.primaryFunction.title}</div>
+                        <div class="function-description">${metadata.primaryFunction.description}</div>
                     </div>
                 `;
             }
 
-            // Gold (f-prefix) function
-            if (metadata.functions.gold) {
-                functionsHTML += `
-                    <div class="function-card">
-                        <div class="function-header">
-                            <span class="function-type gold">${t('goldFunction')}</span>
+            // Gold (f-prefix) functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.gold && metadata.shiftedFunctions.gold.length > 0) {
+                metadata.shiftedFunctions.gold.forEach(func => {
+                    functionsHTML += `
+                        <div class="function-card">
+                            <div class="function-header">
+                                <span class="function-type gold">${t('goldFunction')}</span>
+                            </div>
+                            <div class="function-name">${func.title}</div>
+                            <div class="function-description">${func.description}</div>
                         </div>
-                        <div class="function-name">${metadata.functions.gold.name}</div>
-                        <div class="function-description">${metadata.functions.gold.description}</div>
-                    </div>
-                `;
+                    `;
+                });
             }
 
-            // Blue (g-prefix) function
-            if (metadata.functions.blue) {
-                functionsHTML += `
-                    <div class="function-card">
-                        <div class="function-header">
-                            <span class="function-type blue">${t('blueFunction')}</span>
+            // Blue (g-prefix) functions
+            if (metadata.shiftedFunctions && metadata.shiftedFunctions.blue && metadata.shiftedFunctions.blue.length > 0) {
+                metadata.shiftedFunctions.blue.forEach(func => {
+                    functionsHTML += `
+                        <div class="function-card">
+                            <div class="function-header">
+                                <span class="function-type blue">${t('blueFunction')}</span>
+                            </div>
+                            <div class="function-name">${func.title}</div>
+                            <div class="function-description">${func.description}</div>
                         </div>
-                        <div class="function-name">${metadata.functions.blue.name}</div>
-                        <div class="function-description">${metadata.functions.blue.description}</div>
-                    </div>
-                `;
+                    `;
+                });
             }
 
             content.innerHTML = `
@@ -660,22 +664,22 @@
                 </div>
 
                 <div class="content">
-                    ${getStatusBadgeHTML(metadata.status)}
+                    ${getStatusBadgeHTML(metadata.implementation ? metadata.implementation.status : 'not-implemented')}
 
                     <div class="section">
                         <div class="key-visual">
                             <div class="key-label-display">${metadata.label}</div>
                             <div class="key-sublabels">
-                                ${metadata.goldLabel ? `
+                                ${(metadata.shiftedFunctions && metadata.shiftedFunctions.gold && metadata.shiftedFunctions.gold.length > 0) ? `
                                     <div class="key-sublabel">
                                         <div class="key-sublabel-type">Gold (f)</div>
-                                        <div class="key-sublabel-text">${metadata.goldLabel}</div>
+                                        <div class="key-sublabel-text">${metadata.shiftedFunctions.gold[0].label}</div>
                                     </div>
                                 ` : ''}
-                                ${metadata.blueLabel ? `
+                                ${(metadata.shiftedFunctions && metadata.shiftedFunctions.blue && metadata.shiftedFunctions.blue.length > 0) ? `
                                     <div class="key-sublabel">
                                         <div class="key-sublabel-type">Blue (g)</div>
-                                        <div class="key-sublabel-text">${metadata.blueLabel}</div>
+                                        <div class="key-sublabel-text">${metadata.shiftedFunctions.blue[0].label}</div>
                                     </div>
                                 ` : ''}
                             </div>
@@ -713,32 +717,43 @@
                                 </li>
                                 <li>
                                     <span class="details-label">${t('status')}:</span>
-                                    <span class="details-value">${metadata.status}</span>
+                                    <span class="details-value">${metadata.implementation ? metadata.implementation.status : 'not-implemented'}</span>
                                 </li>
-                                ${metadata.goldLabel ? `
+                                ${(metadata.shiftedFunctions && metadata.shiftedFunctions.gold && metadata.shiftedFunctions.gold.length > 0) ? `
                                 <li>
                                     <span class="details-label">${t('goldLabel')}:</span>
-                                    <span class="details-value">${metadata.goldLabel}</span>
+                                    <span class="details-value">${metadata.shiftedFunctions.gold[0].label}</span>
                                 </li>
                                 ` : ''}
-                                ${metadata.blueLabel ? `
+                                ${(metadata.shiftedFunctions && metadata.shiftedFunctions.blue && metadata.shiftedFunctions.blue.length > 0) ? `
                                 <li>
                                     <span class="details-label">${t('blueLabel')}:</span>
-                                    <span class="details-value">${metadata.blueLabel}</span>
+                                    <span class="details-value">${metadata.shiftedFunctions.blue[0].label}</span>
                                 </li>
                                 ` : ''}
                             </ul>
                         </div>
                     </div>
 
-                    ${metadata.notes ? `
+                    ${metadata.longDescription ? `
                     <div class="section">
                         <h2 class="section-title">
                             <span>📝</span>
                             <span>${t('notes')}</span>
                         </h2>
                         <div class="section-content">
-                            <p style="color: var(--gray-medium); line-height: 1.6;">${metadata.notes}</p>
+                            <p style="color: var(--gray-medium); line-height: 1.6;">${metadata.longDescription}</p>
+                        </div>
+                    </div>
+                    ` : ''}
+                    ${(metadata.implementation && metadata.implementation.note) ? `
+                    <div class="section">
+                        <h2 class="section-title">
+                            <span>⚙️</span>
+                            <span>Implementation Notes</span>
+                        </h2>
+                        <div class="section-content">
+                            <p style="color: var(--gray-medium); line-height: 1.6;">${metadata.implementation.note}</p>
                         </div>
                     </div>
                     ` : ''}
@@ -772,37 +787,56 @@
 
         // Initialize page
         function init() {
-            console.log('HP-12C Key Detail Page initialized (Lang:', currentLang, ')');
+            try {
+                console.log('HP-12C Key Detail Page initialized (Lang:', currentLang, ')');
+                console.log('window.HP12C_KEY_METADATA type:', typeof window.HP12C_KEY_METADATA);
 
-            // Check if metadata is loaded
-            if (typeof window.HP12C_KEY_METADATA === 'undefined') {
-                console.error('Key metadata not loaded!');
-                renderError(null);
-                return;
+                // Check if metadata is loaded
+                if (typeof window.HP12C_KEY_METADATA === 'undefined') {
+                    console.error('Key metadata not loaded!');
+                    renderError(null);
+                    return;
+                }
+                
+                console.log('Metadata keys available:', Object.keys(window.HP12C_KEY_METADATA).length);
+
+                // Get key from URL
+                const keyId = getKeyFromURL();
+                console.log('Loading details for key:', keyId);
+
+                if (!keyId) {
+                    console.warn('No key specified in URL');
+                    renderError(null);
+                    return;
+                }
+
+                // Get metadata for this key
+                const metadata = window.HP12C_KEY_METADATA[keyId];
+                console.log('Metadata found:', !!metadata);
+
+                if (!metadata) {
+                    console.warn('Key not found in metadata:', keyId);
+                    console.log('Available keys:', Object.keys(window.HP12C_KEY_METADATA).slice(0, 10));
+                    renderError(keyId);
+                    return;
+                }
+
+                // Render key details
+                console.log('Rendering key details for:', keyId);
+                console.log('Metadata structure:', {
+                    hasLabel: !!metadata.label,
+                    hasDisplayName: !!metadata.displayName,
+                    hasPrimaryFunction: !!metadata.primaryFunction,
+                    hasShiftedFunctions: !!metadata.shiftedFunctions,
+                    hasImplementation: !!metadata.implementation
+                });
+                renderKeyDetails(keyId, metadata);
+                console.log('Render complete');
+            } catch (error) {
+                console.error('Error in init():', error);
+                console.error('Stack:', error.stack);
+                document.getElementById('content').innerHTML = '<div class="error-container"><h1>JavaScript Error</h1><pre>' + error.message + '\n\n' + error.stack + '</pre></div>';
             }
-
-            // Get key from URL
-            const keyId = getKeyFromURL();
-            console.log('Loading details for key:', keyId);
-
-            if (!keyId) {
-                console.warn('No key specified in URL');
-                renderError(null);
-                return;
-            }
-
-            // Get metadata for this key
-            const metadata = window.HP12C_KEY_METADATA[keyId];
-
-            if (!metadata) {
-                console.warn('Key not found in metadata:', keyId);
-                renderError(keyId);
-                return;
-            }
-
-            // Render key details
-            console.log('Rendering key details:', metadata);
-            renderKeyDetails(keyId, metadata);
         }
 
         // Run on page load
