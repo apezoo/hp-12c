@@ -4,12 +4,15 @@
 [![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/CSS)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+![Completion](https://img.shields.io/badge/Completion-68%25-blue)
+![Version](https://img.shields.io/badge/Version-0.68-green)
 
-An independent, educational web-based implementation inspired by the classic HP-12C Financial Calculator, featuring authentic design, RPN logic, and financial functions.
+An independent, educational web-based implementation inspired by the classic HP-12C Financial Calculator, featuring authentic design, RPN logic, and comprehensive financial functions.
 
 > **⚠️ Disclaimer:** This project is NOT affiliated with HP Inc. or Hewlett-Packard. "HP-12C" is a registered trademark of HP Inc. This is an independent fan project created for educational purposes.
 
 ![HP-12C Calculator](https://img.shields.io/badge/Authenticity-98%25-success)
+![Test Coverage](https://img.shields.io/badge/Tests-86%2B%20passing-success)
 
 ## ✨ Features
 
@@ -34,20 +37,21 @@ An independent, educational web-based implementation inspired by the classic HP-
 - LSTX (Last X) register for error recovery
 - True HP-12C operation behavior
 
-### 💰 Financial Functions
-- Time Value of Money (TVM) calculations
-- Cash flow analysis (NPV, IRR)
-- Amortization schedules
-- Bond pricing and yield
-- Depreciation (SL, DB, SOYD)
-- Interest conversions
+### 💰 Financial Functions ✅ **PRODUCTION READY**
+- ✅ **Time Value of Money (TVM)** - All 5 solvers (n, i, PV, PMT, FV)
+- ✅ **Amortization (AMORT)** - Complete period-by-period analysis
+- ✅ **BEGIN/END Payment Modes** - Ordinary and annuity due
+- ⚠️ Cash flow analysis (NPV, IRR) - Planned
+- ⚠️ Bond pricing and yield - Planned
+- ⚠️ Depreciation (SL, DB, SOYD) - Planned
 
-### 🔢 Mathematical Operations
-- Basic arithmetic with RPN logic
-- Scientific functions (√, x², eˣ, ln, y^x)
-- Trigonometric functions
-- Percentages and percent changes
-- Memory registers (20 storage registers)
+### 🔢 Mathematical Operations ✅ **PRODUCTION READY**
+- ✅ Basic arithmetic with RPN logic
+- ✅ 13 mathematical functions (√, eˣ, ln, yˣ, n!, %, 1/x, etc.)
+- ✅ Percentages and percent changes (%, %T, Δ%)
+- ✅ Memory registers (R0-R9 accessible, R0-R19 available)
+- ⚠️ Statistics (Σ+, mean, regression) - Planned
+- ⚠️ Extended memory arithmetic (STO+, STO-) - Engine ready, not wired
 
 ### 📚 Bilingual Examples
 - **German/English** toggle for international users
@@ -77,11 +81,36 @@ start index.html  # Windows
 
 ## 📖 Documentation
 
-- **[Quick Start Guide](docs/quick-start-guide.md)** - Get started in 5 minutes
-- **[Technical Specification](docs/technical-spec.md)** - Detailed implementation
-- **[Examples & Tutorials](docs/examples.html)** - Bilingual step-by-step examples
+### 🎯 For Users
+- **[Quick Start Guide](docs/quick-start-guide.md)** - Get started in 5  minutes
+- **[Examples & Tutorials](docs/examples.html)** - 48 bilingual step-by-step examples (EN/DE)
 - **[Fun Features](docs/fun-features.md)** - All the cool features explained
-- **[Testing Guide](TESTING.md)** - Test cases and validation
+- **[Key Detail Pages](docs/key-detail.html)** - Interactive documentation for every key
+
+### 🧪 For Testers
+- **[Testing Guide](docs/TESTING-GUIDE.md)** ⭐ - Comprehensive testing checklist
+- **[Test Suite Overview](tests/README.md)** - All automated tests (86+ passing)
+- **[Math Functions Tests](tests/test-math-functions.html)** - 50+ automated tests
+- **[TVM Tests](tests/test-financial-tvm.html)** - 20+ automated tests
+- **[AMORT Tests](tests/test-financial-amort.html)** - 16 automated tests
+
+### 👨‍💻 For Developers
+- **[Architecture](plans/ARCHITECTURE.md)** - System design and structure
+- **[Technical Specification](docs/technical-spec.md)** - Detailed implementation
+- **[Strategic Assessment](docs/STRATEGIC-ASSESSMENT.md)** ⭐ - Strategic roadmap and priorities
+- **[Future Work](docs/FUTURE-WORK.md)** ⭐ - Missing features and improvements roadmap
+- **[Next Steps](NEXT-STEPS.md)** - Detailed phase-by-phase plan
+
+### 📊 Implementation Summaries
+- **[Math Functions](docs/summaries/MATH-FUNCTIONS-COMPLETE.md)** - 13 functions implemented
+- **[TVM Phase 1](docs/summaries/FINANCIAL-TVM-PHASE1-COMPLETE.md)** - Complete TVM engine
+- **[AMORT Phase 2](docs/summaries/AMORT-PHASE2-SUMMARY.md)** - Amortization complete
+- **[Project Status](docs/summaries/PROJECT-STATUS-SUMMARY.md)** - Overall status
+
+### 🗺️ Planning Documents
+- **[TVM Architecture](plans/financial-tvm-architecture.md)** - TVM design
+- **[AMORT Architecture](plans/financial-amort-architecture.md)** - AMORT design
+- **[Educational Layer](plans/educational-layer-summary.md)** - Learn Mode design
 
 ## 🎯 Usage Examples
 
@@ -101,15 +130,24 @@ start index.html  # Windows
 10 ENTER 20 %   → 2
 ```
 
-### Financial Calculation
+### Financial TVM Calculation
 ```
-Calculate present value:
-n=12, i=5, PMT=100, FV=0
-12 n
-5 i
-100 PMT
-0 FV
-PV → -1,126.74
+30-year mortgage: $200,000 at 6% APR
+360 n                # 30 years × 12 months
+0.5 i                # 6% ÷ 12 = 0.5% monthly
+200000 PV            # Loan amount
+0 FV                 # Pay off completely
+PMT → -1,199.10      # Monthly payment
+```
+
+### Amortization Analysis
+```
+Analyze first year of mortgage:
+1 ENTER 12           # Periods 1 through 12
+f AMORT              # Calculate amortization
+→ -11,933.00         # Interest paid
+x↔y → -2,456.00      # Principal paid
+RCL PV → -197,544    # Remaining balance
 ```
 
 ## 📁 Project Structure
@@ -120,23 +158,32 @@ HP-12C/
 ├── css/
 │   └── styles.css         # Authentic HP-12C styling + educational layer
 ├── js/
-│   ├── calculator.js      # Main controller
+│   ├── calculator.js      # Main controller (~880 lines)
 │   ├── rpn-stack.js       # RPN stack engine
 │   ├── display.js         # Display manager
-│   ├── memory.js          # Memory registers
-│   ├── financial.js       # Financial calculations
+│   ├── memory.js          # Memory registers (R0-R19)
+│   ├── financial.js       # ⭐ TVM & AMORT engine (~1000 lines)
+│   ├── math-functions.js  # ⭐ 13 mathematical functions
 │   ├── keyboard.js        # Keyboard handler
-│   ├── key-metadata.js    # 🆕 Key documentation metadata (39 keys)
-│   └── key-info.js        # 🆕 Learn Mode & tooltip system
+│   ├── key-metadata.js    # Key documentation (39 keys)
+│   └── key-info.js        # Learn Mode system
 ├── docs/
-│   ├── key-detail.html    # 🆕 Individual key detail page
-│   ├── examples.html      # Bilingual examples page
-│   ├── examples.md        # Examples documentation
-│   └── *.md              # Additional documentation
-└── tests/
-    ├── test-cases.md      # Test scenarios
-    ├── test-metadata.html # 🆕 Metadata validation tests
-    └── test-integration.html # 🆕 Integration tests
+│   ├── STRATEGIC-ASSESSMENT.md  # ⭐ Strategic roadmap
+│   ├── FUTURE-WORK.md          # ⭐ Missing features & improvements
+│   ├── TESTING-GUIDE.md        # ⭐ Comprehensive testing procedures
+│   ├── key-detail.html         # Interactive key documentation
+│   ├── examples.html           # 48 bilingual examples
+│   └── summaries/              # Implementation summaries
+├── tests/
+│   ├── README.md                    # Test suite overview
+│   ├── test-math-functions.html     # 50+ automated tests
+│   ├── test-financial-tvm.html      # 20+ TVM tests
+│   ├── test-financial-amort.html    # 16 AMORT tests
+│   └── test-integration.html        # Integration tests
+└── plans/
+    ├── ARCHITECTURE.md              # System architecture
+    ├── financial-tvm-architecture.md # TVM design
+    └── financial-amort-architecture.md # AMORT design
 ```
 
 ## 🛠️ Technology Stack
@@ -164,23 +211,77 @@ HP-12C/
 
 ## 🧪 Testing
 
-Run the test suite by following [`TESTING.md`](TESTING.md):
-- Basic arithmetic operations
-- RPN stack behavior
-- Memory operations
-- Financial calculations
-- Display formatting
-- Keyboard input
+### Automated Test Suites (86+ Tests)
+Open in browser with server running (`python3 -m http.server 8080`):
+- **[Math Tests](tests/test-math-functions.html)** - 50+ tests, 100% passing
+- **[TVM Tests](tests/test-financial-tvm.html)** - 20+ tests, 100% passing
+- **[AMORT Tests](tests/test-financial-amort.html)** - 16 tests, 100% passing
+
+### Comprehensive Testing Guide
+Follow **[`docs/TESTING-GUIDE.md`](docs/TESTING-GUIDE.md)** for:
+- Manual TVM testing procedures (1-2 hours)
+- Manual AMORT testing (1 hour)
+- Edge case scenarios
+- Cross-browser validation
+- HP-12C accuracy comparison
+
+**⚠️ Important:** Test TVM/AMORT thoroughly before adding new features (see Strategic Assessment)
+
+## 📈 Project Status (v0.68 - April 2026)
+
+### ✅ Fully Implemented (68%)
+- ✅ Core RPN engine (95%)
+- ✅ Mathematical functions (95% - 13 functions)
+- ✅ Memory system (70% - basic STO/RCL)
+- ✅ Financial TVM (100% - all 5 solvers)
+- ✅ Financial AMORT (100% - complete)
+- ✅ Educational layer (90% - Learn Mode)
+
+### 📋 Planned Features (32%)
+See **[`docs/FUTURE-WORK.md`](docs/FUTURE-WORK.md)** for complete details:
+- 📅 **Date Functions** (1 week) - RECOMMENDED NEXT
+- 📊 **Statistics** (2-3 weeks) - Σ+, mean, regression
+- ⚠️ **NPV/IRR** (2-3 weeks) - After thorough testing
+- 🎨 **UI/UX** (1-2 weeks) - Mobile, accessibility
+- ⌨️ **Programming** (2-4 weeks) - Low priority
+
+### 🎯 Next Recommended Actions
+Per **[`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md)**:
+1. ⭐ **Test TVM/AMORT** (1-2 weeks) - CRITICAL
+2. 📅 **Date Functions** (1 week) - Simple, high value
+3. 🎨 **UI Improvements** (1-2 weeks) - User benefit
+4. ⚠️ **NPV/IRR** - Only after solid testing
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes:
+Contributions are welcome! For guidance:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Read First:**
+   - [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) - Strategic priorities
+   - [`docs/FUTURE-WORK.md`](docs/FUTURE-WORK.md) - What needs doing
+   - [`plans/ARCHITECTURE.md`](plans/ARCHITECTURE.md) - System design
+
+2. **Pick a Task:**
+   - Easy: Memory arithmetic wiring (4 hours)
+   - Medium: Date functions (1 week)
+   - Hard: Statistics or NPV/IRR (2-3 weeks)
+
+3. **Development Process:**
+   ```bash
+   git checkout -b feature/AmazingFeature
+   # Implement with tests
+   # Update documentation
+   git commit -m 'feat: Add AmazingFeature'
+   git push origin feature/AmazingFeature
+   # Open Pull Request
+   ```
+
+4. **Quality Standards:**
+   - Write automated tests
+   - Update JSDoc comments
+   - Follow existing code style
+   - Test across browsers
+   - Update relevant documentation
 
 ## 📝 License
 
@@ -203,68 +304,41 @@ If you are a representative of HP Inc. and have concerns about this project, ple
 - RPN logic inspired by classic HP calculator behavior
 - This is an independent implementation - not an official HP product
 - Created as an educational project and tribute to the legendary HP-12C
+- Special thanks to all contributors and testers
 
-## 🌟 Project Status
+## 📞 Support & Contact
 
-**Current Phase:** Phase 4 Complete - Educational Layer (40% overall)
+**Repository:** [github.com/yourusername/HP-12C](https://github.com/yourusername/HP-12C)
 
-✅ **Completed:**
-- Complete visual design (98% authenticity)
-- RPN stack engine
-- Display manager with multiple formats
-- Memory registers (20 registers)
-- Basic arithmetic operations
-- **Learn Mode with interactive key documentation (39 keys)**
-- **Hover tooltips with quick info**
-- **Detailed key information pages**
-- Bilingual examples page
-- Comprehensive documentation
+**Issues:** Report bugs and feature requests via [GitHub Issues](https://github.com/yourusername/HP-12C/issues)
 
-### Implementation Status by Key Type
-- ✅ **22 keys fully implemented** (digits, arithmetic, stack, control)
-- ⚙️ **3 keys partially implemented** (CHS, STO, RCL)
-- 📋 **14 keys planned** (financial, scientific, statistics)
+**Questions:** Check the documentation first, especially:
+- [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) for strategic direction
+- [`docs/FUTURE-WORK.md`](docs/FUTURE-WORK.md) for planned features
+- [`docs/TESTING-GUIDE.md`](docs/TESTING-GUIDE.md) for testing procedures
 
-🚧 **In Progress:**
-- Financial functions implementation
-- Keyboard input handling
-- Advanced display modes
-- Program memory
+---
 
-📋 **Planned (Phase 5+):**
-- Complete TVM solver (n, i, PV, PMT, FV)
-- Statistical functions
-- Date calculations
-- Additional display formats
-- Mobile app wrapper
+## 🎓 For AI Assistants & Future Contributors
 
-## 📫 Contact
+**Start Here:**
+1. Read [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) - Understand strategic priorities
+2. Review [`docs/FUTURE-WORK.md`](docs/FUTURE-WORK.md) - See what needs implementation
+3. Check [`plans/ARCHITECTURE.md`](plans/ARCHITECTURE.md) - Understand system design
+4. Follow [`docs/TESTING-GUIDE.md`](docs/TESTING-GUIDE.md) - Test before adding features
 
-**Repository:** https://github.com/apezoo/hp-12c
+**Current Priority:** Test TVM/AMORT thoroughly (1-2 weeks) before implementing new features.
 
-**Issues:** Please report bugs and feature requests via GitHub Issues
+**Next Recommended Features:**
+1. Date Functions (1 week, simple, high value)
+2. UI/UX improvements (incremental)
+3. Statistics (2 weeks, moderate complexity)
+4. NPV/IRR (2-3 weeks, only after thorough testing)
+
+**Quick Wins:** Memory arithmetic wiring (STO+, STO-) - 4 hours, engine ready
 
 ---
 
 *Built with ❤️ and attention to detail*
 
-**Visual Authenticity:** 98% | **Calculator Implementation:** 30% | **Educational Layer:** 100% | **Documentation:** Comprehensive
-
----
-
-## 💡 About Learn Mode
-
-The **Learn Mode** is a unique educational feature that helps users understand every key on the HP-12C:
-
-- **All 39 keys documented** with primary, gold (f), and blue (g) functions
-- **Implementation status badges** show which functions are currently working
-- **Clear descriptions** explain what each key does
-- **Hover tooltips** provide quick reference without leaving the calculator
-- **Detailed pages** offer comprehensive information, examples, and technical details
-
-**Important:** Learn Mode shows documentation for ALL keys, including those not yet implemented in the calculator. Check the status badge on each key's detail page:
-- ✅ **Implemented** - Fully working in calculator
-- ⚙️ **Partially Implemented** - Basic functionality working
-- 📋 **Planned** - Documentation ready, calculator function coming soon
-
-This allows you to learn about ALL HP-12C functions, even those we're still implementing!
+**Visual Authenticity:** 98% | **Feature Completion:** 68% | **Test Coverage:** 86+ tests passing | **Production Ready:** TVM & AMORT
