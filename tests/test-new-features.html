@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test New Features - HP-12C</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        .test-case.pending {
+            border-left-color: #FFC107;
+        }
+        .test-case.pass {
+            border-left-color: #4CAF50;
+        }
+        .test-case.fail {
+            border-left-color: #F44336;
+        }
+        code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 HP-12C New Features Test</h1>
+    
+    <div class="test-section">
+        <h2>✅ Test Plan</h2>
+        <p>These features were just implemented and need testing:</p>
+        <ul>
+            <li><strong>CHS (Change Sign)</strong> - Negate values</li>
+            <li><strong>STO (Store)</strong> - Store to memory registers</li>
+            <li><strong>RCL (Recall)</strong> - Recall from memory registers</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h2>Test Cases</h2>
+        
+        <div class="test-case">
+            <h3>1. CHS - Change Sign</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Enter <code>5</code></li>
+                <li>Press <code>CHS</code></li>
+                <li>Display should show <code>-5</code></li>
+                <li>Press <code>CHS</code> again</li>
+                <li>Display should show <code>5</code></li>
+            </ol>
+            <p><strong>Expected:</strong> Sign toggles between positive and negative</p>
+        </div>
+
+        <div class="test-case">
+            <h3>2. CHS During Entry</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Enter <code>1 2 3</code></li>
+                <li>Press <code>CHS</code></li>
+                <li>Display should show <code>-123</code></li>
+            </ol>
+            <p><strong>Expected:</strong> Sign changes during digit entry</p>
+        </div>
+
+        <div class="test-case">
+            <h3>3. STO - Store to Memory</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Enter <code>42</code></li>
+                <li>Press <code>STO</code></li>
+                <li>Press <code>5</code></li>
+                <li>Console should log: "Stored 42 to R5"</li>
+                <li>Display should still show <code>42</code> (non-destructive)</li>
+            </ol>
+            <p><strong>Expected:</strong> Value stored in register 5, X unchanged</p>
+        </div>
+
+        <div class="test-case">
+            <h3>4. RCL - Recall from Memory</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>With 42 in R5 from previous test</li>
+                <li>Enter <code>0</code> (to see it's different)</li>
+                <li>Press <code>RCL</code></li>
+                <li>Press <code>5</code></li>
+                <li>Display should show <code>42</code></li>
+                <li>Console should log: "Recalled 42 from R5"</li>
+            </ol>
+            <p><strong>Expected:</strong> Value recalled to X with stack lift</p>
+        </div>
+
+        <div class="test-case">
+            <h3>5. STO + RCL Combo</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Enter <code>100</code></li>
+                <li>Press <code>STO 0</code></li>
+                <li>Enter <code>200</code></li>
+                <li>Press <code>STO 1</code></li>
+                <li>Press <code>CLx</code> (clear display to 0)</li>
+                <li>Press <code>RCL 0</code> → should show <code>100</code></li>
+                <li>Press <code>RCL 1</code> → should show <code>200</code></li>
+                <li>Press <code>+</code> → should show <code>300</code></li>
+            </ol>
+            <p><strong>Expected:</strong> Memory system enables complex calculations</p>
+        </div>
+
+        <div class="test-case">
+            <h3>6. Stack Lift with RCL</h3>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Clear and enter <code>10 ENTER 20 ENTER 30</code></li>
+                <li>Stack: T=10, Z=20, Y=30, X=30</li>
+                <li>Store something: <code>99 STO 9</code></li>
+                <li>Then: <code>RCL 9</code></li>
+                <li>Stack should lift: T=20, Z=30, Y=30, X=99</li>
+            </ol>
+            <p><strong>Expected:</strong> RCL causes proper stack lift</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 Test Links</h2>
+        <p>
+            <a href="../index.html" target="_blank">Open Calculator</a> to perform manual tests<br>
+            <small>Open browser console (F12) to see debug messages</small>
+        </p>
+    </div>
+
+    <div class="test-section">
+        <h2>📋 Test Results</h2>
+        <p><em>Mark test results here after manual testing:</em></p>
+        <ul>
+            <li>[ ] Test 1: CHS - Change Sign</li>
+            <li>[ ] Test 2: CHS During Entry</li>
+            <li>[ ] Test 3: STO - Store to Memory</li>
+            <li>[ ] Test 4: RCL - Recall from Memory</li>
+            <li>[ ] Test 5: STO + RCL Combo</li>
+            <li>[ ] Test 6: Stack Lift with RCL</li>
+        </ul>
+    </div>
+</body>
+</html>

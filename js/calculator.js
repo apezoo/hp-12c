@@ -20,6 +20,9 @@ class Calculator {
         this.prefixF = false;
         this.prefixG = false;
         
+        // Pending operation state (for STO, RCL requiring register number)
+        this.pendingOperation = null;
+        
         // References to DOM elements
         this.displayElement = null;
         this.buttons = [];
@@ -143,6 +146,10 @@ class Calculator {
                 this.swapXY();
                 break;
                 
+            case 'chs':
+                this.changeSign();
+                break;
+                
             case 'op-add':
                 this.add();
                 break;
@@ -157,6 +164,18 @@ class Calculator {
                 
             case 'op-divide':
                 this.divide();
+                break;
+                
+            case 'sto':
+                // STO requires a following digit - enter pending state
+                this.pendingOperation = 'sto';
+                console.log('STO: Waiting for register number...');
+                break;
+                
+            case 'rcl':
+                // RCL requires a following digit - enter pending state
+                this.pendingOperation = 'rcl';
+                console.log('RCL: Waiting for register number...');
                 break;
                 
             case 'on':
@@ -191,6 +210,22 @@ class Calculator {
      * @param {string} digit - Digit to enter (0-9)
      */
     enterDigit(digit) {
+        // Handle pending operations (STO/RCL)
+        if (this.pendingOperation === 'sto') {
+            const registerNum = parseInt(digit);
+            this.storeRegister(registerNum);
+            this.pendingOperation = null;
+            return;
+        }
+        
+        if (this.pendingOperation === 'rcl') {
+            const registerNum = parseInt(digit);
+            this.recallRegister(registerNum);
+            this.pendingOperation = null;
+            return;
+        }
+        
+        // Normal digit entry
         if (this.isNewNumber) {
             this.currentInput = digit;
             this.isNewNumber = false;

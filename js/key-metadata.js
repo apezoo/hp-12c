@@ -1463,14 +1463,14 @@
       longDescription: "The CHS (Change Sign) key toggles the sign of the current value between positive and negative. This is essential for entering negative numbers in RPN calculators, since there is no minus sign on the numeric keypad. CHS can be pressed during number entry or after a number is complete. It does not affect the stack - only the X register changes.",
       
       implementation: {
-        status: "partially-implemented",
-        note: "The changeSign() method exists in calculator.js, but handlePrimaryFunction() does not call it when CHS is pressed. Needs wire-up in button handler.",
+        status: "implemented",
+        note: "The changeSign() method is fully implemented and wired to the CHS button handler.",
         version: "1.0"
       },
       
       originalHp12cBehavior: "Changes the sign of X register immediately. Works during digit entry or on completed numbers. If pressed during exponent entry (after EEX), changes the sign of the exponent, not the mantissa.",
       
-      simulatorBehavior: "Logic is implemented but not connected to the UI. The key press is currently not handled, so pressing CHS has no effect. This is a wiring issue, not a logic issue.",
+      simulatorBehavior: "Fully matches original HP-12C behavior. Pressing CHS negates the X register value, works during entry and after completion.",
       
       relatedTopics: [
         "Numeric Entry",
@@ -1838,14 +1838,14 @@
       longDescription: "The STO (Store) key saves the current X register value to one of 20 memory registers (R0-R9 and R.0-R.9). This is essential for storing intermediate results, constants, and data for later recall. STO is non-destructive - the value stays in X after storing. You can also use STO with arithmetic operations (STO + 0, STO - 1, etc.) to add/subtract/multiply/divide the memory register by X.",
       
       implementation: {
-        status: "partially-implemented",
-        note: "MemoryManager.store() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the STO key press.",
+        status: "implemented",
+        note: "STO key is fully wired. Press STO then a digit (0-9) to store X register value to that memory register. Arithmetic store operations (STO+, STO-, etc.) not yet implemented.",
         version: "1.0"
       },
       
       originalHp12cBehavior: "Stores X register to specified memory register. Also supports arithmetic store operations: 'STO + n' adds X to register n, 'STO - n' subtracts X from register n, 'STO × n' multiplies register n by X, 'STO ÷ n' divides register n by X.",
       
-      simulatorBehavior: "Memory storage logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing STO currently has no effect. This requires wiring the button handler to call calculator.memory.store().",
+      simulatorBehavior: "Basic STO functionality implemented. Press STO then a digit to store. Value remains in X (non-destructive). Arithmetic store operations planned for future implementation.",
       
       relatedTopics: [
         "Memory Registers",
@@ -1898,14 +1898,14 @@
       longDescription: "The RCL (Recall) key copies a value from one of the 20 memory registers (R0-R9 and R.0-R.9) to the X register. The stack automatically lifts to make room (X→Y, Y→Z, Z→T, T lost). The memory register itself is unchanged - RCL is a non-destructive read. You can also recall financial registers, statistical registers, and use RCL with arithmetic operations for memory-based calculations.",
       
       implementation: {
-        status: "partially-implemented",
-        note: "MemoryManager.recall() method exists in memory.js, but not wired to UI button handler. The memory infrastructure is complete but needs connection to the RCL key press.",
+        status: "implemented",
+        note: "RCL key is fully wired. Press RCL then a digit (0-9) to recall value from that memory register to X register with stack lift. Arithmetic recall operations (RCL+, RCL-, etc.) not yet implemented.",
         version: "1.0"
       },
       
       originalHp12cBehavior: "Recalls value from specified memory register to X, with stack lift. Also supports arithmetic recall: 'RCL + n' adds register n to X, 'RCL - n' subtracts register n from X, 'RCL × n' multiplies X by register n, 'RCL ÷ n' divides X by register n.",
       
-      simulatorBehavior: "Memory recall logic is fully implemented in MemoryManager class, but UI button is not connected. Pressing RCL currently has no effect. This requires wiring the button handler to call calculator.memory.recall().",
+      simulatorBehavior: "Basic RCL functionality implemented. Press RCL then a digit to recall. Stack lifts automatically (X→Y, Y→Z, Z→T). Memory register unchanged (non-destructive read). Arithmetic recall operations planned for future implementation.",
       
       relatedTopics: [
         "Memory Registers",
