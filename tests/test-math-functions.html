@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Functions Test - HP-12C</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 { color: #333; }
+        h2 { color: #555; margin-top: 30px; }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 10px 0;
+            padding: 12px;
+            background: #f9f9f9;
+            border-left: 4px solid #2196F3;
+            display: grid;
+            grid-template-columns: 250px 1fr 100px;
+            gap: 15px;
+            align-items: center;
+        }
+        .test-case.pass {
+            border-left-color: #4CAF50;
+            background: #f1f8f4;
+        }
+        .test-case.fail {
+            border-left-color: #F44336;
+            background: #fef1f0;
+        }
+        .test-input {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        .test-expected {
+            color: #666;
+        }
+        .test-result {
+            font-weight: bold;
+            text-align: right;
+        }
+        .test-result.pass { color: #4CAF50; }
+        .test-result.fail { color: #F44336; }
+        code {
+            background: #e0e0e0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .summary {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .summary.all-pass {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .summary.some-fail {
+            background: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 HP-12C Mathematical Functions Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>Test Instructions</h2>
+        <p>This test suite validates all newly implemented mathematical functions.</p>
+        <p>Click "Run All Tests" to automatically execute all test cases.</p>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="location.href='../index.html'">Open Calculator</button>
+    </div>
+
+    <div id="summary" class="summary" style="display:none;"></div>
+
+    <div class="test-section">
+        <h2>1. Reciprocal (1/x)</h2>
+        <div id="reciprocal-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Percentage (%)</h2>
+        <div id="percent-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Percent Total (%T)</h2>
+        <div id="percent-total-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Delta Percent (Δ%)</h2>
+        <div id="delta-percent-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Power (yˣ)</h2>
+        <div id="power-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Square Root (√x) - g yˣ</h2>
+        <div id="sqrt-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>7. Natural Logarithm (LN) - g %T</h2>
+        <div id="ln-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>8. Exponential (eˣ) - g 1/x</h2>
+        <div id="exp-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>9. Integer Part (INTG) - g %</h2>
+        <div id="intg-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>10. Fractional Part (FRAC) - g Δ%</h2>
+        <div id="frac-tests"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>11. Helper Functions (12× and 12÷)</h2>
+        <div id="helper-tests"></div>
+    </div>
+
+    <script src="../js/rpn-stack.js"></script>
+    <script src="../js/display.js"></script>
+    <script src="../js/memory.js"></script>
+    <script src="../js/financial.js"></script>
+    <script src="../js/math-functions.js"></script>
+    <script>
+        // Test framework
+        const tests = {
+            reciprocal: [
+                { input: [4], expected: 0.25, desc: "1/4 = 0.25" },
+                { input: [0.5], expected: 2, desc: "1/0.5 = 2" },
+                { input: [2], expected: 0.5, desc: "1/2 = 0.5" },
+                { input: [-1], expected: -1, desc: "1/(-1) = -1" },
+                { input: [0.1], expected: 10, desc: "1/0.1 = 10" }
+            ],
+            percent: [
+                { input: [25, 100], expected: 25, desc: "25 is 25% of 100" },
+                { input: [50, 200], expected: 25, desc: "50 is 25% of 200" },
+                { input: [75, 150], expected: 50, desc: "75 is 50% of 150" },
+                { input: [10, 40], expected: 25, desc: "10 is 25% of 40" }
+            ],
+            percentTotal: [
+                { input: [25, 100], expected: 25, desc: "25% of 100 = 25" },
+                { input: [10, 50], expected: 5, desc: "10% of 50 = 5" },
+                { input: [50, 80], expected: 40, desc: "50% of 80 = 40" },
+                { input: [15, 200], expected: 30, desc: "15% of 200 = 30" }
+            ],
+            deltaPercent: [
+                { input: [110, 100], expected: 10, desc: "100→110 is +10%" },
+                { input: [90, 100], expected: -10, desc: "100→90 is -10%" },
+                { input: [150, 100], expected: 50, desc: "100→150 is +50%" },
+                { input: [50, 100], expected: -50, desc: "100→50 is -50%" }
+            ],
+            power: [
+                { input: [2, 3], expected: 8, desc: "2³ = 8" },
+                { input: [5, 2], expected: 25, desc: "5² = 25" },
+                { input: [10, 3], expected: 1000, desc: "10³ = 1000" },
+                { input: [2, 0], expected: 1, desc: "2⁰ = 1" },
+                { input: [3, -2], expected: 0.1111, desc: "3⁻² ≈ 0.1111", tolerance: 0.001 }
+            ],
+            sqrt: [
+                { input: [16], expected: 4, desc: "√16 = 4" },
+                { input: [25], expected: 5, desc: "√25 = 5" },
+                { input: [2], expected: 1.4142, desc: "√2 ≈ 1.4142", tolerance: 0.001 },
+                { input: [100], expected: 10, desc: "√100 = 10" }
+            ],
+            ln: [
+                { input: [Math.E], expected: 1, desc: "ln(e) = 1", tolerance: 0.001 },
+                { input: [1], expected: 0, desc: "ln(1) = 0" },
+                { input: [10], expected: 2.3026, desc: "ln(10) ≈ 2.3026", tolerance: 0.001 },
+                { input: [Math.E * Math.E], expected: 2, desc: "ln(e²) = 2", tolerance: 0.001 }
+            ],
+            exp: [
+                { input: [0], expected: 1, desc: "e⁰ = 1" },
+                { input: [1], expected: 2.7183, desc: "e¹ ≈ 2.7183", tolerance: 0.001 },
+                { input: [2], expected: 7.3891, desc: "e² ≈ 7.3891", tolerance: 0.01 },
+                { input: [-1], expected: 0.3679, desc: "e⁻¹ ≈ 0.3679", tolerance: 0.001 }
+            ],
+            intg: [
+                { input: [3.75], expected: 3, desc: "INTG(3.75) = 3" },
+                { input: [-2.9], expected: -2, desc: "INTG(-2.9) = -2" },
+                { input: [5.1], expected: 5, desc: "INTG(5.1) = 5" },
+                { input: [7], expected: 7, desc: "INTG(7) = 7" }
+            ],
+            frac: [
+                { input: [3.75], expected: 0.75, desc: "FRAC(3.75) = 0.75" },
+                { input: [-2.3], expected: -0.3, desc: "FRAC(-2.3) = -0.3", tolerance: 0.001 },
+                { input: [5.5], expected: 0.5, desc: "FRAC(5.5) = 0.5" },
+                { input: [7], expected: 0, desc: "FRAC(7) = 0" }
+            ],
+            helper: [
+                { input: [5, '12×'], expected: 60, desc: "5 × 12 = 60" },
+                { input: [6, '12÷'], expected: 0.5, desc: "6 ÷ 12 = 0.5" },
+                { input: [10, '12×'], expected: 120, desc: "10 × 12 = 120" },
+                { input: [12, '12÷'], expected: 1, desc: "12 ÷ 12 = 1" }
+            ]
+        };
+
+        let totalTests = 0;
+        let passedTests = 0;
+
+        function runTest(testFunc, input, expected, tolerance = 0.0001) {
+            try {
+                const result = testFunc(...input);
+                const diff = Math.abs(result - expected);
+                return diff <= tolerance;
+            } catch (error) {
+                console.error('Test error:', error);
+                return false;
+            }
+        }
+
+        function displayTest(container, desc, input, expected, actual, passed) {
+            const div = document.createElement('div');
+            div.className = `test-case ${passed ? 'pass' : 'fail'}`;
+            div.innerHTML = `
+                <div class="test-input">${desc}</div>
+                <div class="test-expected">Expected: ${expected}</div>
+                <div class="test-result ${passed ? 'pass' : 'fail'}">${passed ? '✓ PASS' : '✗ FAIL (got ' + actual.toFixed(4) + ')'}</div>
+            `;
+            container.appendChild(div);
+            
+            totalTests++;
+            if (passed) passedTests++;
+        }
+
+        function runAllTests() {
+            totalTests = 0;
+            passedTests = 0;
+
+            const math = new MathEngine();
+
+            // Reciprocal tests
+            const reciprocalContainer = document.getElementById('reciprocal-tests');
+            reciprocalContainer.innerHTML = '';
+            tests.reciprocal.forEach(test => {
+                const actual = math.reciprocal(test.input[0]);
+                const passed = Math.abs(actual - test.expected) < 0.0001;
+                displayTest(reciprocalContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Percentage tests
+            const percentContainer = document.getElementById('percent-tests');
+            percentContainer.innerHTML = '';
+            tests.percent.forEach(test => {
+                const actual = math.percent(test.input[0], test.input[1]);
+                const passed = Math.abs(actual - test.expected) < 0.0001;
+                displayTest(percentContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Percent Total tests
+            const percentTotalContainer = document.getElementById('percent-total-tests');
+            percentTotalContainer.innerHTML = '';
+            tests.percentTotal.forEach(test => {
+                const actual = math.percentTotal(test.input[0], test.input[1]);
+                const passed = Math.abs(actual - test.expected) < 0.0001;
+                displayTest(percentTotalContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Delta Percent tests
+            const deltaPercentContainer = document.getElementById('delta-percent-tests');
+            deltaPercentContainer.innerHTML = '';
+            tests.deltaPercent.forEach(test => {
+                const actual = math.deltaPercent(test.input[0], test.input[1]);
+                const passed = Math.abs(actual - test.expected) < 0.0001;
+                displayTest(deltaPercentContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Power tests
+            const powerContainer = document.getElementById('power-tests');
+            powerContainer.innerHTML = '';
+            tests.power.forEach(test => {
+                const actual = math.power(test.input[0], test.input[1]);
+                const tolerance = test.tolerance || 0.0001;
+                const passed = Math.abs(actual - test.expected) < tolerance;
+                displayTest(powerContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Square root tests
+            const sqrtContainer = document.getElementById('sqrt-tests');
+            sqrtContainer.innerHTML = '';
+            tests.sqrt.forEach(test => {
+                const actual = math.sqrt(test.input[0]);
+                const tolerance = test.tolerance || 0.0001;
+                const passed = Math.abs(actual - test.expected) < tolerance;
+                displayTest(sqrtContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Natural log tests
+            const lnContainer = document.getElementById('ln-tests');
+            lnContainer.innerHTML = '';
+            tests.ln.forEach(test => {
+                const actual = math.ln(test.input[0]);
+                const tolerance = test.tolerance || 0.0001;
+                const passed = Math.abs(actual - test.expected) < tolerance;
+                displayTest(lnContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Exponential tests
+            const expContainer = document.getElementById('exp-tests');
+            expContainer.innerHTML = '';
+            tests.exp.forEach(test => {
+                const actual = math.exp(test.input[0]);
+                const tolerance = test.tolerance || 0.0001;
+                const passed = Math.abs(actual - test.expected) < tolerance;
+                displayTest(expContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Integer part tests
+            const intgContainer = document.getElementById('intg-tests');
+            intgContainer.innerHTML = '';
+            tests.intg.forEach(test => {
+                const actual = math.integerPart(test.input[0]);
+                const passed = actual === test.expected;
+                displayTest(intgContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Fractional part tests
+            const fracContainer = document.getElementById('frac-tests');
+            fracContainer.innerHTML = '';
+            tests.frac.forEach(test => {
+                const actual = math.fractionalPart(test.input[0]);
+                const tolerance = test.tolerance || 0.0001;
+                const passed = Math.abs(actual - test.expected) < tolerance;
+                displayTest(fracContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Helper function tests
+            const helperContainer = document.getElementById('helper-tests');
+            helperContainer.innerHTML = '';
+            tests.helper.forEach(test => {
+                let actual;
+                if (test.input[1] === '12×') {
+                    actual = math.multiply12(test.input[0]);
+                } else {
+                    actual = math.divide12(test.input[0]);
+                }
+                const passed = Math.abs(actual - test.expected) < 0.0001;
+                displayTest(helperContainer, test.desc, test.input, test.expected, actual, passed);
+            });
+
+            // Display summary
+            const summary = document.getElementById('summary');
+            summary.style.display = 'block';
+            summary.className = passedTests === totalTests ? 'summary all-pass' : 'summary some-fail';
+            summary.innerHTML = `
+                <h3>Test Results Summary</h3>
+                <p>Total: ${totalTests} tests | Passed: ${passedTests} | Failed: ${totalTests - passedTests}</p>
+                <p>${passedTests === totalTests ? '🎉 All tests passed!' : '⚠️ Some tests failed'}</p>
+            `;
+            
+            // Scroll to summary
+            summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>

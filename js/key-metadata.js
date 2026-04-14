@@ -60,7 +60,7 @@
             label: "12×",
             title: "Multiply by 12",
             description: "Multiplies the number in X register by 12. Commonly used to convert annual periods to monthly periods.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "Convert years to months: '5 g n' → displays 60",
               "Convert annual rate: for use with monthly i"
@@ -145,7 +145,7 @@
             label: "12÷",
             title: "Divide by 12",
             description: "Divides the number in X register by 12. Commonly used to convert annual rates to monthly rates.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "Convert 6% annual to monthly: '6 g i' → displays 0.5"
             ],
@@ -2151,7 +2151,7 @@
             label: "eˣ",
             title: "e to the x",
             description: "Raises mathematical constant e (2.71828...) to the power in X register. Natural exponential function.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'1 g 1/x' → displays 2.7183 (e¹)",
               "'2 g 1/x' → displays 7.3891 (e²)"
@@ -2165,14 +2165,14 @@
       longDescription: "The reciprocal function calculates 1/X, replacing X with the result. This is faster than entering '1 ENTER X ÷' and is commonly used in engineering, physics, and financial calculations. Division by zero produces an error.",
       
       implementation: {
-        status: "planned",
-        note: "Requires implementation of reciprocal calculation with division-by-zero error handling.",
+        status: "implemented",
+        note: "Reciprocal function (1/x) fully implemented with proper error handling for division by zero.",
         version: "1.0"
       },
       
       originalHp12cBehavior: "Calculates 1/X immediately. Division by zero displays 'Error 0'. Does not affect stack (no stack drop).",
       
-      simulatorBehavior: "Currently not implemented.",
+      simulatorBehavior: "Fully implemented. Calculates 1/X with proper error handling. Blue function (g 1/x) calculates eˣ.",
       
       relatedTopics: [
         "Reciprocals",
@@ -2219,7 +2219,7 @@
             label: "INTG",
             title: "Integer Part",
             description: "Returns the integer (whole number) part of X, discarding the fractional part.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'3.75 g %' → displays 3",
               "'-2.9 g %' → displays -2"
@@ -2233,8 +2233,8 @@
       longDescription: "The % key calculates percentages using Y as the base and X as the amount. It answers: 'X is what percentage of Y?' This is essential for retail calculations, financial analysis, and everyday percentage problems.",
       
       implementation: {
-        status: "planned",
-        note: "Requires percentage calculation logic. Formula: (X / Y) × 100",
+        status: "implemented",
+        note: "Percentage calculation fully implemented. Formula: (X / Y) × 100",
         version: "1.0"
       },
       
@@ -2288,7 +2288,7 @@
             label: "LN",
             title: "Natural Logarithm",
             description: "Calculates the natural logarithm (base e) of X.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'  2.7183 g %T' → displays 1 (ln(e) = 1)",
               "'10 g %T' → displays 2.3026"
@@ -2302,8 +2302,8 @@
       longDescription: "The %T key answers 'what is X% of Y?' by calculating (X/100) × Y. This is the complement to the % key. Use it when you know the percentage and want the actual amount.",
       
       implementation: {
-        status: "planned",
-        note: "Requires percentage calculation. Formula: (X / 100) × Y",
+        status: "implemented",
+        note: "Percent of total calculation fully implemented. Formula: (X / 100) × Y",
         version: "1.0"
       },
       
@@ -2368,7 +2368,7 @@
             label: "FRAC",
             title: "Fractional Part",
             description: "Returns the fractional (decimal) part of X, discarding the integer part.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'3.75 g Δ%' → displays 0.75",
               "'-2.3 g Δ%' → displays -0.3"
@@ -2382,8 +2382,8 @@
       longDescription: "Δ% calculates the percent change: ((X - Y) / Y) × 100. This answers 'by what percent did Y change to become X?' Positive means increase, negative means decrease. Critical for analyzing investment returns, sales growth, inflation rates.",
       
       implementation: {
-        status: "planned",
-        note: "Requires delta percent calculation. Formula: ((X - Y) / Y) × 100",
+        status: "implemented",
+        note: "Delta percent calculation fully implemented. Formula: ((X - Y) / Y) × 100",
         version: "1.0"
       },
       
@@ -2448,7 +2448,7 @@
             label: "√x",
             title: "Square Root",
             description: "Calculates the square root of X.",
-            implementationStatus: "planned",
+            implementationStatus: "implemented",
             examples: [
               "'16 g yˣ' → displays 4",
               "'2 g yˣ' → displays 1.4142"
@@ -2462,8 +2462,8 @@
       longDescription: "The yˣ key performs exponentiation: Y to the power of X. This is fundamental for compound growth, scientific calculations, and many engineering formulas. For square roots, use 0.5 as the exponent, or use the dedicated √x function (g yˣ).",
       
       implementation: {
-        status: "planned",
-        note: "Requires power function implementation with proper handling of negative bases, fractional exponents, and overflow.",
+        status: "implemented",
+        note: "Power function (yˣ) fully implemented with proper handling of negative bases, fractional exponents, and overflow detection.",
         version: "1.0"
       },
       

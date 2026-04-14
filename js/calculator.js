@@ -9,6 +9,7 @@ class Calculator {
         this.display = new DisplayManager();
         this.memory = new MemoryManager();
         this.financial = new FinancialEngine();
+        this.math = new MathEngine();
         
         // Input state
         this.currentInput = '';
@@ -181,6 +182,27 @@ class Calculator {
             case 'on':
                 this.reset();
                 break;
+            
+            // Math functions
+            case 'reciprocal':
+                this.reciprocal();
+                break;
+                
+            case 'percent':
+                this.percent();
+                break;
+                
+            case 'percent-total':
+                this.percentTotal();
+                break;
+                
+            case 'delta-percent':
+                this.deltaPercent();
+                break;
+                
+            case 'power-yx':
+                this.power();
+                break;
                 
             default:
                 console.log('Unimplemented function:', key);
@@ -202,7 +224,47 @@ class Calculator {
      */
     handleBlueFunction(key) {
         console.log('Blue function:', key);
-        // Blue functions will be implemented in later phases
+        
+        switch(key) {
+            case 'power-yx':  // g yˣ = √x (square root)
+                this.squareRoot();
+                break;
+                
+            case 'reciprocal':  // g 1/x = eˣ (exponential)
+                this.exponential();
+                break;
+                
+            case 'percent-total':  // g %T = LN (natural log)
+                this.naturalLog();
+                break;
+                
+            case 'delta-percent':  // g Δ% = FRAC (fractional part)
+                this.fractionalPart();
+                break;
+                
+            case 'percent':  // g % = INTG (integer part)
+                this.integerPart();
+                break;
+                
+            case 'n':  // g n = 12× (multiply by 12)
+                this.multiply12();
+                break;
+                
+            case 'i':  // g i = 12÷ (divide by 12)
+                this.divide12();
+                break;
+                
+            case 'enter':  // g ENTER = LSTx (recall last X)
+                this.recallLastX();
+                break;
+                
+            case 'digit-3':  // g 3 = n! (factorial)
+                this.factorialFunc();
+                break;
+                
+            default:
+                console.log('Unimplemented blue function:', key);
+        }
     }
 
     /**
@@ -367,6 +429,187 @@ class Calculator {
     recallLastX() {
         this.stack.recallLastX();
         this.isNewNumber = true;
+    }
+
+    // ============================================
+    // MATHEMATICAL FUNCTIONS
+    // ============================================
+
+    /**
+     * Percentage: X is what percent of Y
+     * Formula: (X / Y) × 100
+     */
+    percent() {
+        this.finishNumberEntry();
+        try {
+            const result = this.math.percent(this.stack.x, this.stack.y);
+            this.stack.x = result;
+            // Both X and Y remain on stack (no drop)
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Percent Total: X% of Y
+     * Formula: (X / 100) × Y
+     */
+    percentTotal() {
+        this.finishNumberEntry();
+        try {
+            const result = this.math.percentTotal(this.stack.x, this.stack.y);
+            this.stack.x = result;
+            // Both X and Y remain on stack (no drop)
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Delta Percent: Percentage change from Y to X
+     * Formula: ((X - Y) / Y) × 100
+     */
+    deltaPercent() {
+        this.finishNumberEntry();
+        try {
+            const result = this.math.deltaPercent(this.stack.x, this.stack.y);
+            this.stack.x = result;
+            // Both X and Y remain on stack (no drop)
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Reciprocal: 1 / X
+     */
+    reciprocal() {
+        this.finishNumberEntry();
+        try {
+            this.stack.saveLastX();
+            const result = this.math.reciprocal(this.stack.x);
+            this.stack.x = result;
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Power: Y raised to power of X (Y^X)
+     */
+    power() {
+        this.finishNumberEntry();
+        try {
+            const result = this.math.power(this.stack.y, this.stack.x);
+            this.stack.binaryOp((y, x) => this.math.power(y, x));
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Square Root: √X
+     */
+    squareRoot() {
+        this.finishNumberEntry();
+        try {
+            this.stack.saveLastX();
+            const result = this.math.sqrt(this.stack.x);
+            this.stack.x = result;
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Natural Logarithm: ln(X)
+     */
+    naturalLog() {
+        this.finishNumberEntry();
+        try {
+            this.stack.saveLastX();
+            const result = this.math.ln(this.stack.x);
+            this.stack.x = result;
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Exponential: e^X
+     */
+    exponential() {
+        this.finishNumberEntry();
+        try {
+            this.stack.saveLastX();
+            const result = this.math.exp(this.stack.x);
+            this.stack.x = result;
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
+    }
+
+    /**
+     * Integer Part: Return integer portion of X
+     */
+    integerPart() {
+        this.finishNumberEntry();
+        this.stack.saveLastX();
+        this.stack.x = this.math.integerPart(this.stack.x);
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Fractional Part: Return fractional portion of X
+     */
+    fractionalPart() {
+        this.finishNumberEntry();
+        this.stack.saveLastX();
+        this.stack.x = this.math.fractionalPart(this.stack.x);
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Multiply by 12: X × 12 (for period conversions)
+     */
+    multiply12() {
+        this.finishNumberEntry();
+        this.stack.saveLastX();
+        this.stack.x = this.math.multiply12(this.stack.x);
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Divide by 12: X ÷ 12 (for rate conversions)
+     */
+    divide12() {
+        this.finishNumberEntry();
+        this.stack.saveLastX();
+        this.stack.x = this.math.divide12(this.stack.x);
+        this.isNewNumber = true;
+    }
+
+    /**
+     * Factorial: n! (g 3)
+     */
+    factorialFunc() {
+        this.finishNumberEntry();
+        try {
+            this.stack.saveLastX();
+            const result = this.math.factorial(this.stack.x);
+            this.stack.x = result;
+            this.isNewNumber = true;
+        } catch (error) {
+            this.display.showError(error.message);
+        }
     }
 
     /**
