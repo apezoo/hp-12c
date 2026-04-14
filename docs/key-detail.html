@@ -76,6 +76,27 @@
             transform: translateX(-2px);
         }
 
+        .language-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .language-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
         .header-content {
             margin-top: 2rem;
         }
@@ -365,6 +386,12 @@
                 margin-bottom: 1rem;
             }
 
+            .language-toggle {
+                position: static;
+                margin-bottom: 1rem;
+                margin-left: 0.5rem;
+            }
+
             .header-content {
                 margin-top: 1rem;
             }
@@ -425,6 +452,109 @@
 
     <script src="../js/key-metadata.js"></script>
     <script>
+        // ===== MULTI-LANGUAGE SUPPORT =====
+        const translations = {
+            en: {
+                backToCalculator: 'Back to Calculator',
+                loading: 'Loading key details...',
+                keyNotFound: 'Key Not Found',
+                noKeySpecified: 'No key specified in URL.',
+                noInfoAvailable: 'No information available for key',
+                returnToCalculator: 'Return to Calculator',
+                functions: 'Functions',
+                technicalDetails: 'Technical Details',
+                notes: 'Notes',
+                dataKey: 'Data Key',
+                displayLabel: 'Display Label',
+                category: 'Category',
+                status: 'Status',
+                goldLabel: 'Gold Label',
+                blueLabel: 'Blue Label',
+                primaryFunction: 'Primary Function',
+                goldFunction: '🟡 Gold Function (f)',
+                blueFunction: '🔵 Blue Function (g)',
+                // Status badges
+                implemented: 'Implemented',
+                partiallyImplemented: 'Partially Implemented',
+                planned: 'Planned',
+                notImplemented: 'Not Implemented',
+                informationalOnly: 'Informational Only',
+                // Categories
+                'numeric-entry': 'Numeric Entry',
+                'arithmetic': 'Arithmetic',
+                'stack': 'Stack Operations',
+                'prefix': 'Prefix Keys',
+                'control': 'Control',
+                'financial': 'Financial',
+                'memory': 'Memory',
+                'percentage': 'Percentage',
+                'power-log': 'Power & Logarithms',
+                'programming': 'Programming',
+                'statistics': 'Statistics'
+            },
+            de: {
+                backToCalculator: 'Zurück zum Rechner',
+                loading: 'Lade Tastendetails...',
+                keyNotFound: 'Taste nicht gefunden',
+                noKeySpecified: 'Keine Taste in der URL angegeben.',
+                noInfoAvailable: 'Keine Informationen verfügbar für Taste',
+                returnToCalculator: 'Zurück zum Rechner',
+                functions: 'Funktionen',
+                technicalDetails: 'Technische Details',
+                notes: 'Notizen',
+                dataKey: 'Datenschlüssel',
+                displayLabel: 'Anzeigebeschriftung',
+                category: 'Kategorie',
+                status: 'Status',
+                goldLabel: 'Gold-Beschriftung',
+                blueLabel: 'Blaue Beschriftung',
+                primaryFunction: 'Primärfunktion',
+                goldFunction: '🟡 Gold-Funktion (f)',
+                blueFunction: '🔵 Blaue Funktion (g)',
+                // Status badges
+                implemented: 'Implementiert',
+                partiallyImplemented: 'Teilweise implementiert',
+                planned: 'Geplant',
+                notImplemented: 'Nicht implementiert',
+                informationalOnly: 'Nur Informativ',
+                // Categories
+                'numeric-entry': 'Numerische Eingabe',
+                'arithmetic': 'Arithmetik',
+                'stack': 'Stack-Operationen',
+                'prefix': 'Präfix-Tasten',
+                'control': 'Steuerung',
+                'financial': 'Finanziell',
+                'memory': 'Speicher',
+                'percentage': 'Prozent',
+                'power-log': 'Potenz & Logarithmen',
+                'programming': 'Programmierung',
+                'statistics': 'Statistik'
+            }
+        };
+
+        // Language state
+        let currentLang = localStorage.getItem('hp12c-lang') || 'en';
+
+        // Get translation
+        function t(key) {
+            return translations[currentLang][key] || translations.en[key] || key;
+        }
+
+        // Toggle language
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'de' : 'en';
+            localStorage.setItem('hp12c-lang', currentLang);
+            
+            // Reload page with current language
+            const keyId = getKeyFromURL();
+            if (keyId) {
+                const metadata = window.HP12C_KEY_METADATA[keyId];
+                if (metadata) {
+                    renderKeyDetails(keyId, metadata);
+                }
+            }
+        }
+
         // Parse URL parameter
         function getKeyFromURL() {
             const params = new URLSearchParams(window.location.search);
@@ -434,38 +564,38 @@
         // Get status badge HTML
         function getStatusBadgeHTML(status) {
             const badges = {
-                'implemented': { icon: '✅', text: 'Implemented', class: 'implemented' },
-                'partially-implemented': { icon: '⚙️', text: 'Partially Implemented', class: 'partially-implemented' },
-                'planned': { icon: '📋', text: 'Planned', class: 'planned' },
-                'not-implemented': { icon: '❌', text: 'Not Implemented', class: 'not-implemented' },
-                'informational-only': { icon: 'ℹ️', text: 'Informational Only', class: 'informational-only' }
+                'implemented': { icon: '✅', textKey: 'implemented', class: 'implemented' },
+                'partially-implemented': { icon: '⚙️', textKey: 'partiallyImplemented', class: 'partially-implemented' },
+                'planned': { icon: '📋', textKey: 'planned', class: 'planned' },
+                'not-implemented': { icon: '❌', textKey: 'notImplemented', class: 'not-implemented' },
+                'informational-only': { icon: 'ℹ️', textKey: 'informationalOnly', class: 'informational-only' }
             };
 
             const badge = badges[status] || badges['not-implemented'];
             return `<div class="status-badge ${badge.class}">
                 <span>${badge.icon}</span>
-                <span>${badge.text}</span>
+                <span>${t(badge.textKey)}</span>
             </div>`;
         }
 
         // Get category display name
         function getCategoryDisplay(category) {
-            const categories = {
-                'numeric-entry': { icon: '🔢', text: 'Numeric Entry' },
-                'arithmetic': { icon: '➕', text: 'Arithmetic' },
-                'stack': { icon: '📚', text: 'Stack Operations' },
-                'prefix': { icon: '🔤', text: 'Prefix Keys' },
-                'control': { icon: '⚙️', text: 'Control' },
-                'financial': { icon: '💰', text: 'Financial' },
-                'memory': { icon: '💾', text: 'Memory' },
-                'percentage': { icon: '％', text: 'Percentage' },
-                'power-log': { icon: '📐', text: 'Power & Logarithms' },
-                'programming': { icon: '⌨️', text: 'Programming' },
-                'statistics': { icon: '📊', text: 'Statistics' }
+            const icons = {
+                'numeric-entry': '🔢',
+                'arithmetic': '➕',
+                'stack': '📚',
+                'prefix': '🔤',
+                'control': '⚙️',
+                'financial': '💰',
+                'memory': '💾',
+                'percentage': '％',
+                'power-log': '📐',
+                'programming': '⌨️',
+                'statistics': '📊'
             };
 
-            const cat = categories[category] || { icon: '❓', text: category };
-            return `<span>${cat.icon}</span><span>${cat.text}</span>`;
+            const icon = icons[category] || '❓';
+            return `<span>${icon}</span><span>${t(category)}</span>`;
         }
 
         // Render key details
@@ -479,7 +609,7 @@
                 functionsHTML += `
                     <div class="function-card">
                         <div class="function-header">
-                            <span class="function-type primary">Primary Function</span>
+                            <span class="function-type primary">${t('primaryFunction')}</span>
                         </div>
                         <div class="function-name">${metadata.functions.primary.name}</div>
                         <div class="function-description">${metadata.functions.primary.description}</div>
@@ -492,7 +622,7 @@
                 functionsHTML += `
                     <div class="function-card">
                         <div class="function-header">
-                            <span class="function-type gold">🟡 Gold Function (f)</span>
+                            <span class="function-type gold">${t('goldFunction')}</span>
                         </div>
                         <div class="function-name">${metadata.functions.gold.name}</div>
                         <div class="function-description">${metadata.functions.gold.description}</div>
@@ -505,7 +635,7 @@
                 functionsHTML += `
                     <div class="function-card">
                         <div class="function-header">
-                            <span class="function-type blue">🔵 Blue Function (g)</span>
+                            <span class="function-type blue">${t('blueFunction')}</span>
                         </div>
                         <div class="function-name">${metadata.functions.blue.name}</div>
                         <div class="function-description">${metadata.functions.blue.description}</div>
@@ -517,8 +647,11 @@
                 <div class="header">
                     <a href="../index.html" class="back-button">
                         <span>←</span>
-                        <span>Back to Calculator</span>
+                        <span>${t('backToCalculator')}</span>
                     </a>
+                    <button class="language-toggle" onclick="toggleLanguage()">
+                        🌐 ${currentLang.toUpperCase()}
+                    </button>
                     <div class="header-content">
                         <div class="key-id">data-key="${keyId}"</div>
                         <h1 class="key-title">${metadata.displayName}</h1>
@@ -552,7 +685,7 @@
                     <div class="section">
                         <h2 class="section-title">
                             <span>📖</span>
-                            <span>Functions</span>
+                            <span>${t('functions')}</span>
                         </h2>
                         <div class="function-grid">
                             ${functionsHTML}
@@ -562,35 +695,35 @@
                     <div class="section">
                         <h2 class="section-title">
                             <span>ℹ️</span>
-                            <span>Technical Details</span>
+                            <span>${t('technicalDetails')}</span>
                         </h2>
                         <div class="section-content">
                             <ul class="details-list">
                                 <li>
-                                    <span class="details-label">Data Key:</span>
+                                    <span class="details-label">${t('dataKey')}:</span>
                                     <span class="details-value">${keyId}</span>
                                 </li>
                                 <li>
-                                    <span class="details-label">Display Label:</span>
+                                    <span class="details-label">${t('displayLabel')}:</span>
                                     <span class="details-value">${metadata.label}</span>
                                 </li>
                                 <li>
-                                    <span class="details-label">Category:</span>
+                                    <span class="details-label">${t('category')}:</span>
                                     <span class="details-value">${metadata.category}</span>
                                 </li>
                                 <li>
-                                    <span class="details-label">Status:</span>
+                                    <span class="details-label">${t('status')}:</span>
                                     <span class="details-value">${metadata.status}</span>
                                 </li>
                                 ${metadata.goldLabel ? `
                                 <li>
-                                    <span class="details-label">Gold Label:</span>
+                                    <span class="details-label">${t('goldLabel')}:</span>
                                     <span class="details-value">${metadata.goldLabel}</span>
                                 </li>
                                 ` : ''}
                                 ${metadata.blueLabel ? `
                                 <li>
-                                    <span class="details-label">Blue Label:</span>
+                                    <span class="details-label">${t('blueLabel')}:</span>
                                     <span class="details-value">${metadata.blueLabel}</span>
                                 </li>
                                 ` : ''}
@@ -602,7 +735,7 @@
                     <div class="section">
                         <h2 class="section-title">
                             <span>📝</span>
-                            <span>Notes</span>
+                            <span>${t('notes')}</span>
                         </h2>
                         <div class="section-content">
                             <p style="color: var(--gray-medium); line-height: 1.6;">${metadata.notes}</p>
@@ -620,23 +753,26 @@
                 <div class="header">
                     <a href="../index.html" class="back-button">
                         <span>←</span>
-                        <span>Back to Calculator</span>
+                        <span>${t('backToCalculator')}</span>
                     </a>
+                    <button class="language-toggle" onclick="toggleLanguage()">
+                        🌐 ${currentLang.toUpperCase()}
+                    </button>
                 </div>
                 <div class="error-container">
                     <div class="error-icon">❌</div>
-                    <h1 class="error-title">Key Not Found</h1>
+                    <h1 class="error-title">${t('keyNotFound')}</h1>
                     <p class="error-message">
-                        ${keyId ? `No information available for key "${keyId}".` : 'No key specified in URL.'}
+                        ${keyId ? `${t('noInfoAvailable')} "${keyId}".` : t('noKeySpecified')}
                     </p>
-                    <a href="../index.html" class="error-button">Return to Calculator</a>
+                    <a href="../index.html" class="error-button">${t('returnToCalculator')}</a>
                 </div>
             `;
         }
 
         // Initialize page
         function init() {
-            console.log('HP-12C Key Detail Page initialized');
+            console.log('HP-12C Key Detail Page initialized (Lang:', currentLang, ')');
 
             // Check if metadata is loaded
             if (typeof window.HP12C_KEY_METADATA === 'undefined') {
