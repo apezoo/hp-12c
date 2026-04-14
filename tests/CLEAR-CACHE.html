@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear HP-12C Cache</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 40px;
+            background: #1a1a1a;
+            color: #00ff00;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .button {
+            background: #00ff00;
+            color: #1a1a1a;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-family: monospace;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-weight: bold;
+        }
+        .button:hover {
+            background: #00cc00;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #00ff00;
+            min-height: 100px;
+        }
+        .warning {
+            background: #ff0000;
+            color: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .instructions {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        h1 { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <h1>⚠️ HP-12C CACHE CLEARING TOOL</h1>
+    
+    <div class="warning">
+        USE THIS IF: Calculator loads but shows errors like "RPNStack already declared" 
+        or "Calculator is not defined"
+    </div>
+
+    <div class="instructions">
+        <h2>What This Does:</h2>
+        <ol>
+            <li>Unregisters ALL service workers</li>
+            <li>Deletes ALL cached content</li>
+            <li>Forces browser to fetch fresh code</li>
+        </ol>
+        
+        <h3>After clicking "CLEAR EVERYTHING":</h3>
+        <ol>
+            <li>Wait for "SUCCESS" message</li>
+            <li>Do a HARD REFRESH: Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac)</li>
+            <li>Navigate to the calculator page</li>
+            <li>Check browser console - errors should be gone</li>
+        </ol>
+    </div>
+
+    <button class="button" onclick="clearEverything()">CLEAR EVERYTHING</button>
+    <button class="button" onclick="checkStatus()">CHECK STATUS</button>
+    
+    <div class="status" id="status">
+        Click "CHECK STATUS" to see current state...
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        
+        function log(message, isError = false) {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = isError ? '#ff0000' : '#00ff00';
+            status.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+        }
+        
+        async function clearEverything() {
+            status.innerHTML = '<div style="color: #ffff00; font-size: 20px;">⚠️ CLEARING ALL CACHES...</div>';
+            
+            try {
+                // Step 1: Unregister all service workers
+                log('Step 1: Unregistering service workers...');
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                
+                if (registrations.length === 0) {
+                    log('No service workers found');
+                } else {
+                    for (const reg of registrations) {
+                        await reg.unregister();
+                        log(`Unregistered SW: ${reg.scope}`);
+                    }
+                }
+                
+                // Step 2: Delete all caches
+                log('Step 2: Deleting all caches...');
+                const cacheKeys = await caches.keys();
+                
+                if (cacheKeys.length === 0) {
+                    log('No caches found');
+                } else {
+                    for (const key of cacheKeys) {
+                        await caches.delete(key);
+                        log(`Deleted cache: ${key}`);
+                    }
+                }
+                
+                // Step 3: Success
+                log('');
+                log('✓✓✓ SUCCESS! ✓✓✓', false);
+                log('');
+                log('NOW: Press Ctrl+Shift+R (or Cmd+Shift+R on Mac) to hard refresh!', false);
+                log('');
+                log('Then navigate to: ../app/index.html or ../app/calculator-mobile.html', false);
+                
+            } catch (error) {
+                log(`ERROR: ${error.message}`, true);
+                log('Try manually clearing cache in browser settings', true);
+            }
+        }
+        
+        async function checkStatus() {
+            status.innerHTML = '<div style="color: #ffff00;">Checking status...</div>';
+            
+            try {
+                // Check service workers
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                log(`Service Workers: ${registrations.length} active`);
+                
+                registrations.forEach((reg, i) => {
+                    log(`  [${i + 1}] ${reg.scope}`);
+                    if (reg.active) log(`      Active: ${reg.active.scriptURL}`);
+                    if (reg.waiting) log(`      Waiting: ${reg.waiting.scriptURL}`);
+                });
+                
+                // Check caches
+                const cacheKeys = await caches.keys();
+                log(`Caches: ${cacheKeys.length} found`);
+                
+                cacheKeys.forEach((key, i) => {
+                    log(`  [${i + 1}] ${key}`);
+                });
+                
+                if (registrations.length === 0 && cacheKeys.length === 0) {
+                    log('');
+                    log('✓ Clean slate! No SW or caches.', false);
+                } else {
+                    log('');
+                    log('⚠️ Found active SW/caches. Click CLEAR EVERYTHING to remove.', false);
+                }
+                
+            } catch (error) {
+                log(`ERROR: ${error.message}`, true);
+            }
+        }
+        
+        // Auto-check on load
+        window.addEventListener('load', checkStatus);
+    </script>
+</body>
+</html>

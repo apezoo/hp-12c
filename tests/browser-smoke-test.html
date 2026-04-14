@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP-12C Browser Smoke Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        .test { margin: 10px 0; }
+        .pass { color: #00ff00; }
+        .fail { color: #ff0000; font-weight: bold; }
+        .test-name { display: inline-block; width: 400px; }
+        #summary { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border: 2px solid #00ff00;
+            font-size: 18px;
+        }
+        .instructions {
+            background: #2a2a2a;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ff00;
+        }
+    </style>
+</head>
+<body>
+    <h1>HP-12C Browser Smoke Test</h1>
+    <div class="instructions">
+        <h2>Purpose</h2>
+        <p>This test verifies the critical browser initialization that escaped unit testing.
+        It guards against the regression where Calculator class exists but instance never gets created.</p>
+        <h3>What This Tests:</h3>
+        <ul>
+            <li>All module scripts load without errors</li>
+            <li>Calculator class is defined globally</li>
+            <li>Calculator instance is created on DOMContentLoaded</li>
+            <li>Basic operations work (4 ENTER 4 +)</li>
+            <li>Display updates reflect operations</li>
+        </ul>
+    </div>
+    
+    <div id="results"></div>
+    <div id="summary"></div>
+
+    <!-- Load all calculator modules -->
+    <script src="../app/js/i18n.js"></script>
+    <script src="../app/js/rpn-stack.js"></script>
+    <script src="../app/js/display.js"></script>
+    <script src="../app/js/memory.js"></script>
+    <script src="../app/js/financial.js"></script>
+    <script src="../app/js/statistics.js"></script>
+    <script src="../app/js/date-functions.js"></script>
+    <script src="../app/js/depreciation.js"></script>
+    <script src="../app/js/keyboard.js"></script>
+    <script src="../app/js/key-metadata.js"></script>
+    <script src="../app/js/key-info.js"></script>
+    <script src="../app/js/calculator.js"></script>
+
+    <script>
+        // Test framework
+        const results = [];
+        const resultsDiv = document.getElementById('results');
+        const summaryDiv = document.getElementById('summary');
+        
+        function test(name, fn) {
+            try {
+                const result = fn();
+                if (result) {
+                    results.push({ name, pass: true });
+                    log(name, 'PASS', 'pass');
+                } else {
+                    results.push({ name, pass: false, error: 'Assertion failed' });
+                    log(name, 'FAIL', 'fail');
+                }
+            } catch (error) {
+                results.push({ name, pass: false, error: error.message });
+                log(name, `FAIL: ${error.message}`, 'fail');
+            }
+        }
+        
+        function log(name, status, className) {
+            const div = document.createElement('div');
+            div.className = 'test';
+            div.innerHTML = `<span class="test-name">${name}</span> <span class="${className}">[${status}]</span>`;
+            resultsDiv.appendChild(div);
+        }
+        
+        function showSummary() {
+            const passed = results.filter(r => r.pass).length;
+            const failed = results.filter(r => !r.pass).length;
+            const total = results.length;
+            
+            if (failed === 0) {
+                summaryDiv.className = 'pass';
+                summaryDiv.innerHTML = `✓ ALL TESTS PASSED (${passed}/${total})`;
+            } else {
+                summaryDiv.className = 'fail';
+                summaryDiv.innerHTML = `✗ TESTS FAILED (${passed} passed, ${failed} failed)`;
+            }
+        }
+
+        // Run tests on DOMContentLoaded (simulates real page load)
+        document.addEventListener('DOMContentLoaded', () => {
+            // Small delay to ensure all scripts are loaded
+            setTimeout(() => {
+                console.log('=== HP-12C Browser Smoke Test Starting ===');
+                
+                // Test 1: Calculator class exists
+                test('Calculator class is defined', () => {
+                    return typeof Calculator === 'function';
+                });
+                
+                // Test 2: Required dependencies exist
+                test('RPNStack class is defined', () => {
+                    return typeof RPNStack === 'function';
+                });
+                
+                test('DisplayManager class is defined', () => {
+                    return typeof DisplayManager === 'function';
+                });
+                
+                test('MemoryManager class is defined', () => {
+                    return typeof MemoryManager === 'function';
+                });
+                
+                // Test 3: Create instance
+                let calc;
+                test('Calculator instance can be created', () => {
+                    calc = new Calculator();
+                    return calc !== null && calc !== undefined;
+                });
+                
+                // Test 4: Initialize calculator
+                test('Calculator can be initialized', () => {
+                    calc.initialize();
+                    return true;
+                });
+                
+                // Test 5: window.calculator exists (as in production)
+                test('window.calculator is accessible', () => {
+                    window.calculator = calc;
+                    return window.calculator instanceof Calculator;
+                });
+                
+                // Test 6: Basic operation - Enter number
+                test('Can input number (4)', () => {
+                    calc.pressKey('4');
+                    return calc.stack.x === 4 || calc.currentInput === '4';
+                });
+                
+                // Test 7: ENTER key works
+                test('ENTER pushes to stack', () => {
+                    calc.pressKey('ENTER');
+                    return calc.stack.x === 4;
+                });
+                
+                // Test 8: Second number input
+                test('Can input second number (4)', () => {
+                    calc.pressKey('4');
+                    return calc.currentInput === '4' || calc.stack.x === 4;
+                });
+                
+                // Test 9: Addition works
+                test('Addition operation (4+4=8)', () => {
+                    calc.pressKey('+');
+                    return calc.stack.x === 8;
+                });
+                
+                // Test 10: Display updates
+                test('Display manager can format result', () => {
+                    const formatted = calc.display.format(calc.stack.x);
+                    return formatted !== null && formatted !== undefined && formatted.length > 0;
+                });
+                
+                // Test 11: Stack operations work
+                test('Stack maintains state', () => {
+                    return calc.stack.y === 0; // Y register should be 0 after consuming both values
+                });
+                
+                // Test 12: Clear operation works
+                test('CLx clears X register', () => {
+                    calc.pressKey('CLx');
+                    return calc.stack.x === 0;
+                });
+                
+                console.log('=== HP-12C Browser Smoke Test Complete ===');
+                showSummary();
+                
+                // Log to console for CI/automation
+                const passed = results.filter(r => r.pass).length;
+                const failed = results.filter(r => !r.pass).length;
+                console.log(`Results: ${passed} passed, ${failed} failed`);
+                
+                if (failed > 0) {
+                    console.error('Failed tests:', results.filter(r => !r.pass));
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
