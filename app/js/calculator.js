@@ -4,15 +4,18 @@
  */
 
 // Node.js/testing environment requires
-if (typeof require !== 'undefined') {
+// Only execute in Node.js environment (Jest tests)
+if (typeof window === 'undefined') {
+    // Running in Node.js
     var RPNStack = require('./rpn-stack.js');
     var DisplayManager = require('./display.js');
-    var MemoryManager = require('./memory.js');
+   var MemoryManager = require('./memory.js');
     var FinancialEngine = require('./financial.js');
     var StatisticsEngine = require('./statistics.js');
     var DateFunctions = require('./date-functions.js');
     var DepreciationEngine = require('./depreciation.js');
 }
+// In browser, all classes are loaded via <script> tags in HTML
 
 class Calculator {
     constructor() {
@@ -1219,7 +1222,21 @@ class Calculator {
      * Update display with current value
      */
     updateDisplay() {
-        this.display.show(this.stack.x);
+        // Show current input if actively typing, otherwise show stack.x
+        if (!this.isNewNumber && this.currentInput) {
+            // Display the raw input string while typing
+            // HP-12C always shows decimal point
+            let displayText = this.currentInput;
+            if (!displayText.includes('.')) {
+                displayText += '.';
+            }
+            if (this.displayElement) {
+                this.displayElement.textContent = displayText;
+            }
+        } else {
+            // Display formatted number from stack
+            this.display.show(this.stack.x);
+        }
         
         // Update stack display if visible (only in browser environment)
         if (typeof document !== 'undefined') {

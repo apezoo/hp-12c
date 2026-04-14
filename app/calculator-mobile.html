@@ -372,23 +372,27 @@
     </div>
 
     <!-- JavaScript Modules -->
-    <script src="js/i18n.js"></script>
-    <script src="js/rpn-stack.js"></script>
-    <script src="js/display.js"></script>
-    <script src="js/memory.js"></script>
-    <script src="js/financial.js"></script>
-    <script src="js/statistics.js"></script>
-    <script src="js/date-functions.js"></script>
-    <script src="js/depreciation.js"></script>
-    <script src="js/keyboard.js"></script>
-    <script src="js/key-metadata.js"></script>
-    <script src="js/key-info.js"></script>
-    <script src="js/calculator.js"></script>
+    <script src="js/i18n.js?v=2"></script>
+    <script src="js/rpn-stack.js?v=2"></script>
+    <script src="js/display.js?v=2"></script>
+    <script src="js/memory.js?v=2"></script>
+    <script src="js/financial.js?v=2"></script>
+    <script src="js/statistics.js?v=2"></script>
+    <script src="js/date-functions.js?v=2"></script>
+    <script src="js/depreciation.js?v=2"></script>
+    <script src="js/keyboard.js?v=2"></script>
+    <script src="js/key-metadata.js?v=2"></script>
+    <script src="js/key-info.js?v=2"></script>
+    <script src="js/calculator.js?v=2"></script>
     
     <!-- Mobile-specific scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             console.log('HP-12C Mobile Calculator loaded');
+            
+            // Create and initialize calculator instance
+            window.calculator = new Calculator();
+            window.calculator.initialize();
             
             // Back to Main functionality
             const backToMainBtn = document.getElementById('backToMainBtn');
