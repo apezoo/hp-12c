@@ -756,29 +756,200 @@
 
     <div id="tvm-de" class="example-section">
       <div class="section-header">
-        <h2 class="section-title">💰 Zeitwert des Geldes</h2>
+        <h2 class="section-title">💰 Zeitwert des Geldes & Tilgung</h2>
         <button class="back-btn" onclick="showSection('home')">← Zurück</button>
       </div>
+      
+      <!-- Test Suite Link -->
+      <div class="example-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;">
+        <div class="example-header">
+          <div class="example-number">🧪</div>
+          <h3 class="example-title" style="color: white;">Technische Tests</h3>
+        </div>
+        <div style="padding: 1rem 0; font-size: 1.05rem;">
+          <p style="margin-bottom: 0.5rem;">Für detaillierte technische Tests und Validierung:</p>
+          <a href="../tests/test-financial-tvm.html" target="_blank" style="color: #ffd700; text-decoration: underline; font-weight: bold;">→ TVM Test Suite öffnen</a><br>
+          <a href="../tests/test-financial-amort.html" target="_blank" style="color: #ffd700; text-decoration: underline; font-weight: bold;">→ AMORT Test Suite öffnen</a>
+        </div>
+      </div>
+
       <div class="example-card">
         <div class="example-header">
           <div class="example-number">1</div>
-          <h3 class="example-title">Kreditrate berechnen</h3>
+          <h3 class="example-title">🏠 Traumhaus-Hypothek berechnen</h3>
         </div>
         <div class="problem">
           <div class="problem-label">📝 Aufgabe:</div>
-          <div>200.000€ Kredit, 30 Jahre, 6% Zinsen</div>
+          <div>Sie kaufen ein Haus für 350.000€! Bank bietet 3,5% Zinsen über 25 Jahre. Wie hoch ist Ihre monatliche Rate?</div>
         </div>
         <div class="keystrokes">
           <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
-          <div class="keystroke-line">360 n</div>
-          <div class="keystroke-line">6 ENTER 12 ÷ i</div>
-          <div class="keystroke-line">200000 PV</div>
-          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">25 ENTER 12 × n     → 300 Monate</div>
+          <div class="keystroke-line">3.5 ENTER 12 ÷ i    → 0,2917% monatlich</div>
+          <div class="keystroke-line">350000 CHS PV        → -350.000 (Darlehen)</div>
+          <div class="keystroke-line">0 FV                 → keine Restschuld</div>
           <div class="keystroke-line">PMT</div>
         </div>
         <div class="answer">
           <div class="answer-label">✅ Antwort:</div>
-          <div>Monatliche Rate: <strong>1.199,10€</strong></div>
+          <div>Monatliche Rate: <strong>1.752€</strong> 🎉</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Erklärung:</div>
+          <div>CHS macht den Wert negativ (Geld fließt an uns). Bei TVM ist PV negativ = Kredit bekommen, PMT positiv = Zahlung leisten.</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">2</div>
+          <h3 class="example-title">🚗 Neues Auto - Wie lange zahlen?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Auto kostet 35.000€, Sie können 500€/Monat zahlen bei 5,9% Zinsen. Wie lange dauert die Abzahlung?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">5.9 ENTER 12 ÷ i     → monatlicher Zins</div>
+          <div class="keystroke-line">35000 CHS PV         → Kreditbetrag</div>
+          <div class="keystroke-line">500 PMT              → monatliche Zahlung</div>
+          <div class="keystroke-line">0 FV                 → vollständig abbezahlt</div>
+          <div class="keystroke-line">n</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Laufzeit: <strong>78,8 Monate</strong> ≈ 6,6 Jahre 🚗</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">3</div>
+          <h3 class="example-title">💰 Sparplan fürs Kind</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Sie sparen 18 Jahre lang 200€/Monat für Ihr Kind. Bei 4% Zinsen - wie viel ist am Ende da?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">18 ENTER 12 × n      → 216 Monate</div>
+          <div class="keystroke-line">4 ENTER 12 ÷ i       → monatlicher Zins</div>
+          <div class="keystroke-line">0 PV                 → kein Startkapital</div>
+          <div class="keystroke-line">200 CHS PMT          → 200€ Einzahlung</div>
+          <div class="keystroke-line">FV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Endkapital: <strong>55.530€</strong> 🎓 Studium gesichert!</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">4</div>
+          <h3 class="example-title">📊 Tilgungsplan - Erstes Jahr analysieren</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Sie haben einen 200.000€ Kredit zu 4,5% über 20 Jahre. Wie viel Zinsen und Tilgung zahlen Sie im ersten Jahr?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe (Kredit einrichten):</div>
+          <div class="keystroke-line">240 n                → 20 Jahre</div>
+          <div class="keystroke-line">4.5 ENTER 12 ÷ i     → 0,375% monatlich</div>
+          <div class="keystroke-line">200000 CHS PV        → Kredit</div>
+          <div class="keystroke-line">PMT                  → -1.265,30€</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Amortisation (Perioden 1-12):</div>
+          <div class="keystroke-line">1 ENTER 12           → Periode 1 bis 12</div>
+          <div class="keystroke-line">f AMORT              → Berechnen!</div>
+          <div class="keystroke-line">                     → Anzeige: -8.854 (Zinsen)</div>
+          <div class="keystroke-line">x⇄y                 → -6.330 (Tilgung)</div>
+          <div class="keystroke-line">RCL PV               → -193.670 (Restschuld)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            <strong>Jahr 1:</strong><br>
+            Zinsen: 8.854€ 📊<br>
+            Tilgung: 6.330€ 🏗️<br>
+            Restschuld: 193.670€ 💳
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 AMORT-Workflow:</div>
+          <div>
+            1️⃣ Start-Periode eingeben → ENTER<br>
+            2️⃣ End-Periode eingeben<br>
+            3️⃣ [f] [AMORT] drücken → zeigt Zinsen<br>
+            4️⃣ [x⇄y] drücken → zeigt Tilgung<br>
+            5️⃣ [RCL] [PV] → zeigt Restschuld
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">5</div>
+          <h3 class="example-title">🎯 Einzelne Zahlung untersuchen</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Beim Auto-Kredit von Beispiel 2: Was passiert bei der allerersten Zahlung?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">
+            (TVM bereits gesetzt von Beispiel 2)</div>
+          <div class="keystroke-line">1 ENTER 1            → nur Periode 1</div>
+          <div class="keystroke-line">f AMORT</div>
+          <div class="keystroke-line">                     → Anzeige: -171,88 (Zinsen)</div>
+          <div class="keystroke-line">x⇄y                 → -328,12 (Tilgung)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            Von den 500€:<br>
+            • 171,88€ sind Zinsen 💸<br>
+            • 328,12€ reduzieren Schuld 💪<br>
+            <br>
+            <strong>Tipp:</strong> Am Anfang sind Zinsen hoch, am Ende fast nur Tilgung!
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">6</div>
+          <h3 class="example-title">🏁 Letzte Zahlung - Fast geschafft!</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Auto-Kredit: Was zahlt man bei der allerletzten Rate (Monat 79)?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">79 ENTER 79          → letzte Periode</div>
+          <div class="keystroke-line">f AMORT</div>
+          <div class="keystroke-line">                     → Anzeige: -2,42 (Zinsen)</div>
+          <div class="keystroke-line">x⇄y                 → -497,58 (Tilgung)</div>
+          <div class="keystroke-line">RCL PV               → ≈0 (bezahlt! 🎉)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            Letzte Zahlung:<br>
+            • Nur 2,42€ Zinsen! 🎊<br>
+            • 497,58€ Tilgung<br>
+            • Schuld = 0€ → <strong>Schuldenfrei!</strong> 🥳
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Beobachtung:</div>
+          <div>Erste Rate: 171€ Zinsen | Letzte Rate: 2€ Zinsen<br>Der Zinsanteil sinkt, weil die Restschuld kleiner wird!</div>
         </div>
       </div>
     </div>
@@ -943,29 +1114,199 @@
 
     <div id="tvm-en" class="example-section">
       <div class="section-header">
-        <h2 class="section-title">💰 Time Value of Money</h2>
+        <h2 class="section-title">💰 Time Value of Money & Amortization</h2>
         <button class="back-btn" onclick="showSection('home')">← Back</button>
       </div>
+      
+      <!-- Test Suite Link -->
+      <div class="example-card" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none;">
+        <div class="example-header">
+          <div class="example-number">🧪</div>
+          <h3 class="example-title" style="color: white;">Technical Tests</h3>
+        </div>
+        <div style="padding: 1rem 0; font-size: 1.05rem;">
+          <p style="margin-bottom: 0.5rem;">For detailed technical tests and validation:</p>
+          <a href="../tests/test-financial-tvm.html" target="_blank" style="color: #ffd700; text-decoration: underline; font-weight: bold;">→ Open TVM Test Suite</a><br>
+          <a href="../tests/test-financial-amort.html" target="_blank" style="color: #ffd700; text-decoration: underline; font-weight: bold;">→ Open AMORT Test Suite</a>
+        </div>
+      </div>
+
       <div class="example-card">
         <div class="example-header">
           <div class="example-number">1</div>
-          <h3 class="example-title">Loan Payment</h3>
+          <h3 class="example-title">🏠 Dream House Mortgage</h3>
         </div>
         <div class="problem">
           <div class="problem-label">📝 Problem:</div>
-          <div>$200,000 loan, 30 years, 6% interest</div>
+          <div>You're buying a house for $350,000! Bank offers 3.5% interest over 25 years. What's your monthly payment?</div>
         </div>
         <div class="keystrokes">
           <div class="keystrokes-label">⌨️ Keystrokes:</div>
-          <div class="keystroke-line">360 n</div>
-          <div class="keystroke-line">6 ENTER 12 ÷ i</div>
-          <div class="keystroke-line">200000 PV</div>
-          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">25 ENTER 12 × n      → 300 months</div>
+          <div class="keystroke-line">3.5 ENTER 12 ÷ i     → 0.2917% monthly</div>
+          <div class="keystroke-line">350000 CHS PV        → -350,000 (loan)</div>
+          <div class="keystroke-line">0 FV                 → no balloon</div>
           <div class="keystroke-line">PMT</div>
         </div>
         <div class="answer">
           <div class="answer-label">✅ Answer:</div>
-          <div>Monthly payment: <strong>$1,199.10</strong></div>
+          <div>Monthly payment: <strong>$1,752</strong> 🎉</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Explanation:</div>
+          <div>CHS makes the value negative (money flowing to you). In TVM: negative PV = receiving loan, positive PMT = making payments.</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">2</div>
+          <h3 class="example-title">🚗 New Car - How Long?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>Car costs $35,000, you can pay $500/month at 5.9% interest. How long to pay off?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">5.9 ENTER 12 ÷ i     → monthly rate</div>
+          <div class="keystroke-line">35000 CHS PV         → loan amount</div>
+          <div class="keystroke-line">500 PMT              → monthly payment</div>
+          <div class="keystroke-line">0 FV                 → fully paid</div>
+          <div class="keystroke-line">n</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Term: <strong>78.8 months</strong> ≈ 6.6 years 🚗</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">3</div>
+          <h3 class="example-title">💰 College Savings Plan</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>You save $200/month for 18 years for your child. At 4% interest - how much at the end?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">18 ENTER 12 × n      → 216 months</div>
+          <div class="keystroke-line">4 ENTER 12 ÷ i       → monthly rate</div>
+          <div class="keystroke-line">0 PV                 → no initial capital</div>
+          <div class="keystroke-line">200 CHS PMT          → $200 deposits</div>
+          <div class="keystroke-line">FV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Final amount: <strong>$55,530</strong> 🎓 College secured!</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">4</div>
+          <h3 class="example-title">📊 Amortization - First Year Analysis</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>You have a $200,000 loan at 4.5% for 20 years. How much interest and principal do you pay in year 1?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes (Setup loan):</div>
+          <div class="keystroke-line">240 n                → 20 years</div>
+          <div class="keystroke-line">4.5 ENTER 12 ÷ i     → 0.375% monthly</div>
+          <div class="keystroke-line">200000 CHS PV        → loan</div>
+          <div class="keystroke-line">PMT                  → -$1,265.30</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Amortization (periods 1-12):</div>
+          <div class="keystroke-line">1 ENTER 12           → period 1 to 12</div>
+          <div class="keystroke-line">f AMORT              → Calculate!</div>
+          <div class="keystroke-line">                     → Display: -8,854 (interest)</div>
+          <div class="keystroke-line">x⇄y                 → -6,330 (principal)</div>
+          <div class="keystroke-line">RCL PV               → -193,670 (balance)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            <strong>Year 1:</strong><br>
+            Interest: $8,854 📊<br>
+            Principal: $6,330 🏗️<br>
+            Balance: $193,670 💳
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 AMORT Workflow:</div>
+          <div>
+            1️⃣ Enter start period → ENTER<br>
+            2️⃣ Enter end period<br>
+            3️⃣ Press [f] [AMORT] → shows interest<br>
+            4️⃣ Press [x⇄y] → shows principal<br>
+            5️⃣ [RCL] [PV] → shows remaining balance
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">5</div>
+          <h3 class="example-title">🎯 Single Payment Analysis</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>From the car loan in Example 2: What happens in the very first payment?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">(TVM already set from Example 2)</div>
+          <div class="keystroke-line">1 ENTER 1            → only period 1</div>
+          <div class="keystroke-line">f AMORT</div>
+          <div class="keystroke-line">                     → Display: -171.88 (interest)</div>
+          <div class="keystroke-line">x⇄y                 → -328.12 (principal)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            Of the $500 payment:<br>
+            • $171.88 is interest 💸<br>
+            • $328.12 reduces debt 💪<br>
+            <br>
+            <strong>Tip:</strong> Early on = high interest, near end = mostly principal!
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">6</div>
+          <h3 class="example-title">🏁 Last Payment - Almost Free!</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>Car loan: What do you pay in the very last payment (month 79)?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">79 ENTER 79          → last period</div>
+          <div class="keystroke-line">f AMORT</div>
+          <div class="keystroke-line">                     → Display: -2.42 (interest)</div>
+          <div class="keystroke-line">x⇄y                 → -497.58 (principal)</div>
+          <div class="keystroke-line">RCL PV               → ≈0 (paid off! 🎉)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            Last payment:<br>
+            • Only $2.42 interest! 🎊<br>
+            • $497.58 principal<br>
+            • Debt = $0 → <strong>Debt Free!</strong> 🥳
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Observation:</div>
+          <div>First payment: $171 interest | Last payment: $2 interest<br>Interest portion decreases as the balance gets smaller!</div>
         </div>
       </div>
     </div>
