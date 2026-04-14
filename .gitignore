@@ -36,6 +36,13 @@ build/
 *.tmp
 *.temp
 .cache/
+.nojekyll
+
+# Temporary documentation
+*-FIXES-SUMMARY.md
+*-STATUS-FOR-AI.md
+*-RECOVERY-SUMMARY.md
+*-CLEANUP-SUMMARY.md
 
 # Debug
 npm-debug.log*
