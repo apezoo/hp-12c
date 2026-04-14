@@ -236,7 +236,15 @@ class Calculator {
      */
     handleGoldFunction(key) {
         console.log('Gold function:', key);
-        // Gold functions will be implemented in later phases
+        
+        switch(key) {
+            case 'n':  // f n = AMORT (amortization)
+                this.handleAmortization();
+                break;
+                
+            default:
+                console.log('Unimplemented gold function:', key);
+        }
     }
 
     /**
@@ -765,6 +773,59 @@ class Calculator {
         this.financial.setPaymentMode('END');
         this.display.setIndicator('begin', false);
         console.log('Payment mode: END (ordinary annuity)');
+    }
+    
+    /**
+     * Handle amortization calculation
+     * HP-12C workflow:
+     *   1 [ENTER] 12 [f] [AMORT]  → Interest for periods 1-12
+     *   [x⇄y]                      → Principal paid
+     *   [RCL] [PV]                 → Remaining balance
+     *
+     * Expects: Y register = start period, X register = end period
+     */
+    handleAmortization() {
+        this.finishNumberEntry();
+        
+        try {
+            // Get periods from stack
+            const endPeriod = Math.floor(this.stack.x);    // X = end period
+            const startPeriod = Math.floor(this.stack.y);  // Y = start period
+            
+            // Calculate amortization
+            const result = this.financial.calculateAmortization(
+                this.memory,
+                startPeriod,
+                endPeriod
+            );
+            
+            // HP-12C display behavior:
+            // - Display shows interest paid (primary result)
+            // - Principal is in Y register (accessible via x⇄y)
+            // - Balance updates PV register
+            
+            // Store principal in Y register for x⇄y access
+            this.stack.y = result.principalPaid;
+            
+            // Display interest in X register
+            this.stack.x = result.interestPaid;
+            
+            // Update PV register with new balance
+            this.memory.setFinancialRegister('pv', result.balance);
+            
+            this.isNewNumber = true;
+            this.currentInput = '';
+            
+            console.log(`AMORT periods ${startPeriod}-${endPeriod}:`);
+            console.log(`  Interest: ${result.interestPaid.toFixed(2)}`);
+            console.log(`  Principal: ${result.principalPaid.toFixed(2)}`);
+            console.log(`  Balance: ${result.balance.toFixed(2)}`);
+            
+            this.updateDisplay();
+        } catch (error) {
+            console.error('Amortization error:', error.message);
+            this.display.showError(error.message);
+        }
     }
 
     // ============================================

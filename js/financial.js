@@ -28,6 +28,16 @@ class FinancialEngine {
         // Calculation state tracking
         this.lastSolvedVariable = null;
         this.lastIterationCount = 0;
+        
+        // Amortization state
+        this.amortization = {
+            startPeriod: null,
+            endPeriod: null,
+            interestPaid: null,
+            principalPaid: null,
+            balance: null,
+            schedule: []  // Full period-by-period schedule
+        };
     }
 
     // ============================================
@@ -567,21 +577,273 @@ class FinancialEngine {
         this.paymentMode = 'END';
         this.lastSolvedVariable = null;
         this.lastIterationCount = 0;
+        this.amortization = {
+            startPeriod: null,
+            endPeriod: null,
+            interestPaid: null,
+            principalPaid: null,
+            balance: null,
+            schedule: []
+        };
     }
 
     // ============================================
-    // FUTURE FEATURES (Placeholders)
+    // AMORTIZATION ENGINE
     // ============================================
     
     /**
-     * Calculate amortization schedule (future implementation)
+     * Calculate amortization for a range of periods
+     * HP-12C workflow:
+     *   1 [ENTER] 12 [f] [AMORT]  → Shows interest for periods 1-12
+     *   [x⇄y]                      → Shows principal
+     *   [RCL] [PV]                 → Shows remaining balance
+     *
      * @param {MemoryManager} memory - Memory manager instance
-     * @param {number} startPeriod - Starting period
-     * @param {number} endPeriod - Ending period
-     * @returns {object} Amortization details
+     * @param {number} startPeriod - Starting period (1-based)
+     * @param {number} endPeriod - Ending period (1-based)
+     * @returns {object} {interestPaid, principalPaid, balance}
+     * @throws {Error} If invalid inputs or TVM not set up
      */
     calculateAmortization(memory, startPeriod, endPeriod) {
-        throw new Error('AMORT not yet implemented');
+        // Get TVM registers
+        const n = memory.getFinancialRegister('n');
+        const i = memory.getFinancialRegister('i') / 100;  // Convert to decimal
+        const pv = memory.getFinancialRegister('pv');
+        const pmt = memory.getFinancialRegister('pmt');
+        
+        // Validate inputs
+        this.validateAmortizationInputs(n, i, pv, pmt, startPeriod, endPeriod);
+        
+        // Calculate amortization
+        const result = this.amortizeRange(n, i, pv, pmt, startPeriod, endPeriod);
+        
+        // Store in state
+        this.amortization.startPeriod = startPeriod;
+        this.amortization.endPeriod = endPeriod;
+        this.amortization.interestPaid = result.interestPaid;
+        this.amortization.principalPaid = result.principalPaid;
+        this.amortization.balance = result.balance;
+        
+        return result;
+    }
+    
+    /**
+     * Validate amortization inputs
+     * @param {number} n - Total periods
+     * @param {number} i - Interest rate (decimal)
+     * @param {number} pv - Present value
+     * @param {number} pmt - Payment amount
+     * @param {number} startPeriod - Start period
+     * @param {number} endPeriod - End period
+     * @throws {Error} If validation fails
+     */
+    validateAmortizationInputs(n, i, pv, pmt, startPeriod, endPeriod) {
+        // Check TVM registers are set
+        if (n === null || n === 0) {
+            throw new Error('Error 3');  // n not set
+        }
+        if (i === null) {
+            throw new Error('Error 3');  // i not set
+        }
+        if (pv === null || pv === 0) {
+            throw new Error('Error 3');  // PV not set
+        }
+        if (pmt === null || pmt === 0) {
+            throw new Error('Error 3');  // PMT not set
+        }
+        
+        // Validate periods
+        if (!Number.isInteger(startPeriod) || startPeriod < 1) {
+            throw new Error('Error 3');  // Invalid start period
+        }
+        if (!Number.isInteger(endPeriod) || endPeriod < startPeriod) {
+            throw new Error('Error 3');  // Invalid end period
+        }
+        if (endPeriod > n) {
+            throw new Error('Error 3');  // End period exceeds total periods
+        }
+        
+        // Check payment is sufficient (rough check)
+        // If payment doesn't cover even the first period's interest, it's negative amortization
+        const firstPeriodInterest = Math.abs(pv) * Math.abs(i);
+        if (Math.abs(pmt) < firstPeriodInterest * 0.01) {  // Allow very small payments for testing
+            throw new Error('Error 5');  // Payment insufficient
+        }
+    }
+    
+    /**
+     * Calculate amortization for a range of periods
+     * Handles both END and BEGIN payment modes
+     *
+     * @param {number} n - Total periods
+     * @param {number} i - Interest rate (decimal)
+     * @param {number} pv - Present value (negative for loan)
+     * @param {number} pmt - Payment amount (positive for loan repayment)
+     * @param {number} startPeriod - Start period (1-based)
+     * @param {number} endPeriod - End period (1-based)
+     * @returns {object} {interestPaid, principalPaid, balance}
+     */
+    amortizeRange(n, i, pv, pmt, startPeriod, endPeriod) {
+        let balance = pv;
+        let totalInterest = 0;
+        let totalPrincipal = 0;
+        
+        const isBeginMode = this.paymentMode === 'BEGIN';
+        
+        // Calculate period by period from 1 to endPeriod
+        // We need to go from period 1 even if startPeriod > 1, to get correct balance
+        for (let period = 1; period <= endPeriod; period++) {
+            const periodResult = this.calculateAmortizationPeriod(balance, i, pmt, isBeginMode);
+            
+            // Accumulate only for periods in range
+            if (period >= startPeriod && period <= endPeriod) {
+                totalInterest += periodResult.interest;
+                totalPrincipal += periodResult.principal;
+            }
+            
+            // Update balance for next period
+            balance = periodResult.newBalance;
+        }
+        
+        return {
+            interestPaid: totalInterest,
+            principalPaid: totalPrincipal,
+            balance: balance
+        };
+    }
+    
+    /**
+     * Calculate amortization for a single period
+     *
+     * END Mode (payment at end of period):
+     *   1. Interest accrues on full balance
+     *   2. Payment is made
+     *   3. Principal = Payment - Interest
+     *   4. Balance = Balance - Principal
+     *
+     * BEGIN Mode (payment at beginning of period):
+     *   1. Payment is made first
+     *   2. Principal portion applied
+     *   3. Interest accrues on reduced balance
+     *   4. Balance = Balance - Principal
+     *
+     * @param {number} balance - Current balance
+     * @param {number} i - Interest rate (decimal)
+     * @param {number} pmt - Payment amount
+     * @param {boolean} isBeginMode - True for BEGIN mode
+     * @returns {object} {interest, principal, newBalance}
+     */
+    calculateAmortizationPeriod(balance, i, pmt, isBeginMode) {
+        let interest, principal, newBalance;
+        
+        if (isBeginMode) {
+            // BEGIN mode: Payment first, then interest on reduced balance
+            // Calculate what principal portion of payment is
+            // This is more complex - need to solve for interest and principal simultaneously
+            
+            // In BEGIN mode, the payment equation is:
+            // payment = principal + (balance - principal) × i
+            // Solving for principal:
+            // principal = (payment - balance × i) / (1 - i)
+            
+            if (Math.abs(i) < this.TOLERANCE) {
+                // Special case: zero interest
+                principal = pmt;
+                interest = 0;
+            } else {
+                // Standard BEGIN mode calculation
+                principal = (pmt - balance * i) / (1 - i);
+                interest = (balance - principal) * i;
+            }
+            
+            newBalance = balance - principal;
+        } else {
+            // END mode: Interest first, then payment
+            interest = balance * i;
+            principal = pmt - interest;
+            newBalance = balance - principal;
+        }
+        
+        return {
+            interest: interest,
+            principal: principal,
+            newBalance: newBalance
+        };
+    }
+    
+    /**
+     * Get full amortization schedule (all periods)
+     * Useful for detailed analysis or debugging
+     *
+     * @param {MemoryManager} memory - Memory manager instance
+     * @returns {Array} Array of {period, payment, interest, principal, balance}
+     */
+    getFullAmortizationSchedule(memory) {
+        const n = memory.getFinancialRegister('n');
+        const i = memory.getFinancialRegister('i') / 100;
+        const pv = memory.getFinancialRegister('pv');
+        const pmt = memory.getFinancialRegister('pmt');
+        
+        // Validate
+        this.validateAmortizationInputs(n, i, pv, pmt, 1, n);
+        
+        const schedule = [];
+        let balance = pv;
+        const isBeginMode = this.paymentMode === 'BEGIN';
+        
+        for (let period = 1; period <= n; period++) {
+            const result = this.calculateAmortizationPeriod(balance, i, pmt, isBeginMode);
+            
+            schedule.push({
+                period: period,
+                payment: pmt,
+                interest: result.interest,
+                principal: result.principal,
+                balance: result.newBalance
+            });
+            
+            balance = result.newBalance;
+        }
+        
+        return schedule;
+    }
+    
+    /**
+     * Get last amortization results
+     * @returns {object} Last amortization calculation results
+     */
+    getAmortizationResults() {
+        return {
+            startPeriod: this.amortization.startPeriod,
+            endPeriod: this.amortization.endPeriod,
+            interestPaid: this.amortization.interestPaid,
+            principalPaid: this.amortization.principalPaid,
+            balance: this.amortization.balance
+        };
+    }
+    
+    /**
+     * Get interest paid from last amortization
+     * @returns {number} Interest paid
+     */
+    getAmortInterest() {
+        return this.amortization.interestPaid;
+    }
+    
+    /**
+     * Get principal paid from last amortization
+     * @returns {number} Principal paid
+     */
+    getAmortPrincipal() {
+        return this.amortization.principalPaid;
+    }
+    
+    /**
+     * Get remaining balance from last amortization
+     * @returns {number} Remaining balance
+     */
+    getAmortBalance() {
+        return this.amortization.balance;
     }
 
     /**

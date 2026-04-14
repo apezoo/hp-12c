@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP-12C Amortization Test Suite</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 15px 0;
+            padding: 10px;
+            border-left: 4px solid #ddd;
+        }
+        .test-case.pass {
+            border-left-color: #4CAF50;
+            background-color: #f1f8f4;
+        }
+        .test-case.fail {
+            border-left-color: #f44336;
+            background-color: #fef1f0;
+        }
+        .test-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .test-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .expected, .actual {
+            margin: 5px 0;
+        }
+        .error {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        #summary {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        #summary.all-pass {
+            background-color: #4CAF50;
+            color: white;
+        }
+        #summary.some-fail {
+            background-color: #f44336;
+            color: white;
+        }
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 0.85em;
+        }
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: right;
+        }
+        .schedule-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .schedule-table tr:hover {
+            background-color: #f9f9f9;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>HP-12C Amortization (AMORT) Test Suite</h1>
+    <div id="summary"></div>
+    <div id="test-results"></div>
+
+    <!-- Import calculator modules -->
+    <script src="../js/rpn-stack.js"></script>
+    <script src="../js/memory.js"></script>
+    <script src="../js/financial.js"></script>
+
+    <script>
+        // Test framework
+        class AmortTestRunner {
+            constructor() {
+                this.tests = [];
+                this.passed = 0;
+                this.failed = 0;
+            }
+
+            /**
+             * Assert values are approximately equal (within tolerance)
+             */
+            assertClose(actual, expected, tolerance = 0.01, label = '') {
+                const diff = Math.abs(actual - expected);
+                const pass = diff <= tolerance;
+                
+                return {
+                    pass,
+                    actual,
+                    expected,
+                    diff,
+                    label
+                };
+            }
+
+            /**
+             * Format number for display
+             */
+            formatNumber(num) {
+                if (num === null || num === undefined) return 'null';
+                return num.toFixed(2);
+            }
+
+            /**
+             * Run a single test
+             */
+            runTest(testName, testFunction) {
+                try {
+                    const result = testFunction();
+                    
+                    if (result.pass) {
+                        this.passed++;
+                        return {
+                            name: testName,
+                            pass: true,
+                            details: result.details || 'Test passed'
+                        };
+                    } else {
+                        this.failed++;
+                        return {
+                            name: testName,
+                            pass: false,
+                            error: result.error || 'Test failed',
+                            expected: result.expected,
+                            actual: result.actual
+                        };
+                    }
+                } catch (error) {
+                    this.failed++;
+                    return {
+                        name: testName,
+                        pass: false,
+                        error: error.message
+                    };
+                }
+            }
+
+            /**
+             * Display test results
+             */
+            displayResults() {
+                const summaryDiv = document.getElementById('summary');
+                const resultsDiv = document.getElementById('test-results');
+
+                // Summary
+                const total = this.passed + this.failed;
+                summaryDiv.textContent = `Tests: ${total} | Passed: ${this.passed} | Failed: ${this.failed}`;
+                summaryDiv.className = this.failed === 0 ? 'all-pass' : 'some-fail';
+
+                // Individual test results
+                this.tests.forEach(test => {
+                    const testDiv = document.createElement('div');
+                    testDiv.className = `test-case ${test.pass ? 'pass' : 'fail'}`;
+
+                    let html = `<div class="test-name">${test.pass ? '✓' : '✗'} ${test.name}</div>`;
+
+                    if (test.pass) {
+                        html += `<div class="test-details">${test.details}</div>`;
+                    } else {
+                        html += `<div class="error">Error: ${test.error}</div>`;
+                        if (test.expected !== undefined) {
+                            html += `<div class="expected">Expected: ${this.formatNumber(test.expected)}</div>`;
+                            html += `<div class="actual">Actual: ${this.formatNumber(test.actual)}</div>`;
+                        }
+                    }
+
+                    testDiv.innerHTML = html;
+                    resultsDiv.appendChild(testDiv);
+                });
+            }
+        }
+
+        // Initialize test runner
+        const runner = new AmortTestRunner();
+
+        // ============================================
+        // TEST HELPERS
+        // ============================================
+
+        function setupMemory(n, i, pv, pmt, fv = 0) {
+            const memory = new MemoryManager();
+            memory.setFinancialRegister('n', n);
+            memory.setFinancialRegister('i', i);
+            memory.setFinancialRegister('pv', pv);
+            memory.setFinancialRegister('pmt', pmt);
+            memory.setFinancialRegister('fv', fv);
+            return memory;
+        }
+
+        // ============================================
+        // BASIC AMORTIZATION TESTS
+        // ============================================
+
+        runner.tests.push(runner.runTest(
+            'Basic Loan - First Period',
+            () => {
+                // $10,000 loan at 12% annual (1% monthly) for 360 months
+                // Payment = $102.86
+                const financial = new FinancialEngine();
+                const memory = setupMemory(360, 12, -10000, 102.86);
+                
+                const result = financial.calculateAmortization(memory, 1, 1);
+                
+                // Period 1: Interest = $100, Principal = $2.86
+                const interestCheck = runner.assertClose(result.interestPaid, -100.00, 0.01, 'Interest');
+                const principalCheck = runner.assertClose(result.principalPaid, -2.86, 0.01, 'Principal');
+                const balanceCheck = runner.assertClose(result.balance, -9997.14, 0.20, 'Balance');
+                
+                if (!interestCheck.pass) {
+                    return { pass: false, error: 'Interest mismatch', expected: -100, actual: result.interestPaid };
+                }
+                if (!principalCheck.pass) {
+                    return { pass: false, error: 'Principal mismatch', expected: -2.86, actual: result.principalPaid };
+                }
+                if (!balanceCheck.pass) {
+                    return { pass: false, error: 'Balance mismatch', expected: -9997.14, actual: result.balance };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Interest: ${runner.formatNumber(result.interestPaid)}, Principal: ${runner.formatNumber(result.principalPaid)}, Balance: ${runner.formatNumber(result.balance)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Basic Loan - First Year (Periods 1-12)',
+            () => {
+                // HP-12C Example: $10,000 loan at 12% for 30 years
+                const financial = new FinancialEngine();
+                const memory = setupMemory(360, 12, -10000, 102.86);
+                
+                const result = financial.calculateAmortization(memory, 1, 12);
+                
+                // Expected from HP-12C manual: Interest ≈ -$1,161, Principal ≈ -$73
+                const interestCheck = runner.assertClose(result.interestPaid, -1161.08, 0.50, 'Interest');
+                const principalCheck = runner.assertClose(result.principalPaid, -73.24, 0.50, 'Principal');
+                const balanceCheck = runner.assertClose(result.balance, -9926.76, 1.00, 'Balance');
+                
+                if (!interestCheck.pass) {
+                    return { pass: false, error: 'Interest mismatch', expected: -1161.08, actual: result.interestPaid };
+                }
+                if (!principalCheck.pass) {
+                    return { pass: false, error: 'Principal mismatch', expected: -73.24, actual: result.principalPaid };
+                }
+                if (!balanceCheck.pass) {
+                    return { pass: false, error: 'Balance mismatch', expected: -9926.76, actual: result.balance };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Year 1: Interest: ${runner.formatNumber(result.interestPaid)}, Principal: ${runner.formatNumber(result.principalPaid)}, Balance: ${runner.formatNumber(result.balance)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Car Loan - 5 Years at 6%',
+            () => {
+                // $20,000 car loan at 6% annual for 5 years (60 months)
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                // First year amortization
+                const result = financial.calculateAmortization(memory, 1, 12);
+                
+                // Expected: Higher principal payment ratio than 30-year mortgage
+                const totalPaid = result.interestPaid + result.principalPaid;
+                const expectedTotal = -386.66 * 12;
+                
+                const check = runner.assertClose(totalPaid, expectedTotal, 0.20);
+                if (!check.pass) {
+                    return { pass: false, error: 'Total payment mismatch', expected: expectedTotal, actual: totalPaid };
+                }
+                
+                // Interest should be less than half of total payments
+                if (Math.abs(result.interestPaid) > Math.abs(totalPaid) * 0.6) {
+                    return { pass: false, error: 'Interest ratio too high' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Year 1: Interest: ${runner.formatNumber(result.interestPaid)}, Principal: ${runner.formatNumber(result.principalPaid)}` 
+                };
+            }
+        ));
+
+        // ============================================
+        // RANGE TESTS
+        // ============================================
+
+        runner.tests.push(runner.runTest(
+            'Mid-Loan Periods (13-24)',
+            () => {
+                // Test periods in middle of loan
+                const financial = new FinancialEngine();
+                const memory = setupMemory(360, 12, -10000, 102.86);
+                
+                const result = financial.calculateAmortization(memory, 13, 24);
+                
+                // Second year should have slightly more principal, less interest than first
+                // But still mostly interest
+                if (result.interestPaid >= 0) {
+                    return { pass: false, error: 'Interest should be negative' };
+                }
+                if (result.principalPaid >= 0) {
+                    return { pass: false, error: 'Principal should be negative' };
+                }
+                
+                // Balance should be less than original
+                if (result.balance <= -10000) {
+                    return { pass: false, error: 'Balance should decrease' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Periods 13-24: Interest: ${runner.formatNumber(result.interestPaid)}, Balance: ${runner.formatNumber(result.balance)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Last Period Only',
+            () => {
+                // Test final payment - should be mostly principal, little interest
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                const result = financial.calculateAmortization(memory, 60, 60);
+                
+                // Final payment should pay off loan
+                const balanceCheck = runner.assertClose(result.balance, 0, 0.10, 'Final balance');
+                if (!balanceCheck.pass) {
+                    return { pass: false, error: 'Loan not paid off', expected: 0, actual: result.balance };
+                }
+                
+                // Interest should be very small compared to principal
+                if (Math.abs(result.interestPaid) > Math.abs(result.principalPaid) * 0.05) {
+                    return { pass: false, error: 'Final period should be mostly principal' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Final period: Interest: ${runner.formatNumber(result.interestPaid)}, Principal: ${runner.formatNumber(result.principalPaid)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Full Loan Amortization (1 to n)',
+            () => {
+                // Amortize entire loan - balance should be 0
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                const result = financial.calculateAmortization(memory, 1, 60);
+                
+                // Total paid should equal loan amount + interest
+                const totalPaid = result.interestPaid + result.principalPaid;
+                const totalExpected = -386.66 * 60;
+                
+                const check = runner.assertClose(totalPaid, totalExpected, 0.50);
+                if (!check.pass) {
+                    return { pass: false, error: 'Total payment mismatch', expected: totalExpected, actual: totalPaid };
+                }
+                
+                // Final balance should be 0
+                const balanceCheck = runner.assertClose(result.balance, 0, 0.10);
+                if (!balanceCheck.pass) {
+                    return { pass: false, error: 'Loan not fully paid', expected: 0, actual: result.balance };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Full loan: Total paid: ${runner.formatNumber(totalPaid)}, Interest: ${runner.formatNumber(result.interestPaid)}` 
+                };
+            }
+        ));
+
+        // ============================================
+        // BEGIN MODE TESTS
+        // ============================================
+
+        runner.tests.push(runner.runTest(
+            'BEGIN Mode - First Period',
+            () => {
+                // Same loan in BEGIN mode
+                const financial = new FinancialEngine();
+                financial.setPaymentMode('BEGIN');
+                const memory = setupMemory(360, 12, -10000, 102.86);
+                
+                const result = financial.calculateAmortization(memory, 1, 1);
+                
+                // In BEGIN mode, payment is made first, so less interest accrues
+                // Interest should be less than END mode ($100)
+                if (Math.abs(result.interestPaid) >= 100) {
+                    return { pass: false, error: 'BEGIN mode should have less interest than END mode' };
+                }
+                
+                // Principal should be higher than END mode ($2.86)
+                if (Math.abs(result.principalPaid) <= 2.86) {
+                    return { pass: false, error: 'BEGIN mode should have more principal than END mode' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `BEGIN Mode Period 1: Interest: ${runner.formatNumber(result.interestPaid)}, Principal: ${runner.formatNumber(result.principalPaid)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'BEGIN vs END Mode Comparison',
+            () => {
+                // Compare BEGIN and END mode for same loan
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                // END mode
+                const financialEnd = new FinancialEngine();
+                const resultEnd = financialEnd.calculateAmortization(memory, 1, 12);
+                
+                // BEGIN mode
+                const financialBegin = new FinancialEngine();
+                financialBegin.setPaymentMode('BEGIN');
+                const resultBegin = financialBegin.calculateAmortization(memory, 1, 12);
+                
+                // BEGIN mode should have less interest and more principal
+                if (Math.abs(resultBegin.interestPaid) >= Math.abs(resultEnd.interestPaid)) {
+                    return { pass: false, error: 'BEGIN mode should have less interest' };
+                }
+                if (Math.abs(resultBegin.principalPaid) <= Math.abs(resultEnd.principalPaid)) {
+                    return { pass: false, error: 'BEGIN mode should have more principal' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `END Interest: ${runner.formatNumber(resultEnd.interestPaid)}, BEGIN Interest: ${runner.formatNumber(resultBegin.interestPaid)}` 
+                };
+            }
+        ));
+
+        // ============================================
+        // VALIDATION TESTS
+        // ============================================
+
+        runner.tests.push(runner.runTest(
+            'Error: TVM Not Set Up',
+            () => {
+                const financial = new FinancialEngine();
+                const memory = new MemoryManager();  // Empty memory
+                
+                try {
+                    financial.calculateAmortization(memory, 1, 12);
+                    return { pass: false, error: 'Should have thrown error for missing TVM data' };
+                } catch (error) {
+                    return { pass: true, details: `Correctly caught error: ${error.message}` };
+                }
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Error: Invalid Period Range',
+            () => {
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                try {
+                    // End period before start period
+                    financial.calculateAmortization(memory, 12, 1);
+                    return { pass: false, error: 'Should have thrown error for invalid range' };
+                } catch (error) {
+                    return { pass: true, details: `Correctly caught error: ${error.message}` };
+                }
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Error: Period Exceeds n',
+            () => {
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                try {
+                    // Try to amortize beyond loan term
+                    financial.calculateAmortization(memory, 1, 100);
+                    return { pass: false, error: 'Should have thrown error for period > n' };
+                } catch (error) {
+                    return { pass: true, details: `Correctly caught error: ${error.message}` };
+                }
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Error: Period Zero or Negative',
+            () => {
+                const financial = new FinancialEngine();
+                const memory = setupMemory(60, 6, -20000, 386.66);
+                
+                try {
+                    financial.calculateAmortization(memory, 0, 12);
+                    return { pass: false, error: 'Should have thrown error for period 0' };
+                } catch (error) {
+                    return { pass: true, details: `Correctly caught error: ${error.message}` };
+                }
+            }
+        ));
+
+        // ============================================
+        // REAL-WORLD SCENARIOS
+        // ============================================
+
+        runner.tests.push(runner.runTest(
+            'Mortgage: 15-Year Fixed at 4.5%',
+            () => {
+                // $250,000 mortgage at 4.5% for 15 years
+                const financial = new FinancialEngine();
+                const memory = setupMemory(180, 4.5, -250000, 1912.48);
+                
+                // First year
+                const result = financial.calculateAmortization(memory, 1, 12);
+                
+                // Verify reasonable values
+                if (Math.abs(result.interestPaid) < 5000 || Math.abs(result.interestPaid) > 15000) {
+                    return { pass: false, error: 'Interest out of reasonable range' };
+                }
+                
+                const totalPaid = Math.abs(result.interestPaid + result.principalPaid);
+                const expected = 1912.48 * 12;
+                const check = runner.assertClose(totalPaid, expected, 1.00);
+                
+                if (!check.pass) {
+                    return { pass: false, error: 'Payment total mismatch', expected, actual: totalPaid };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `15-year mortgage Year 1: Interest: ${runner.formatNumber(result.interestPaid)}, Balance: ${runner.formatNumber(result.balance)}` 
+                };
+            }
+        ));
+
+        runner.tests.push(runner.runTest(
+            'Business Loan: 7 Years at 8.5%',
+            () => {
+                // $50,000 business loan at 8.5% for 7 years
+                const financial = new FinancialEngine();
+                const memory = setupMemory(84, 8.5, -50000, 775.50);
+                
+                // Test months 25-36 (end of year 2, start of year 3)
+                const result = financial.calculateAmortization(memory, 25, 36);
+                
+                // Verify balance is decreasing
+                if (result.balance <= -50000) {
+                    return { pass: false, error: 'Balance should be decreasing' };
+                }
+                if (result.balance >= 0) {
+                    return { pass: false, error: 'Balance should still be negative' };
+                }
+                
+                return { 
+                    pass: true, 
+                    details: `Business loan months 25-36: Balance: ${runner.formatNumber(result.balance)}` 
+                };
+            }
+        ));
+
+        // ============================================
+        // DISPLAY AND RUN
+        // ============================================
+
+        // Display all results
+        runner.displayResults();
+
+        // Console summary
+        console.log('='.repeat(60));
+        console.log('HP-12C AMORTIZATION TEST SUITE');
+        console.log('='.repeat(60));
+        console.log(`Total Tests: ${runner.tests.length}`);
+        console.log(`Passed: ${runner.passed}`);
+        console.log(`Failed: ${runner.failed}`);
+        console.log('='.repeat(60));
+
+        if (runner.failed === 0) {
+            console.log('✓ ALL TESTS PASSED!');
+        } else {
+            console.warn(`✗ ${runner.failed} test(s) failed`);
+        }
+    </script>
+</body>
+</html>
