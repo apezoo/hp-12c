@@ -952,6 +952,184 @@
           <div>Erste Rate: 171€ Zinsen | Letzte Rate: 2€ Zinsen<br>Der Zinsanteil sinkt, weil die Restschuld kleiner wird!</div>
         </div>
       </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">7</div>
+          <h3 class="example-title">🚀 Million-Rente - Der große Plan!</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Sie sind 30 und wollen mit 65 eine Million auf dem Konto! Bei 7% Rendite - wie viel monatlich sparen?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">35 ENTER 12 × n      → 420 Monate (35 Jahre)</div>
+          <div class="keystroke-line">7 ENTER 12 ÷ i       → 0,583% monatlich</div>
+          <div class="keystroke-line">0 PV                 → von Null starten</div>
+          <div class="keystroke-line">1000000 CHS FV       → Ziel: 1 Million!</div>
+          <div class="keystroke-line">PMT</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Monatlich: <strong>503€</strong> 🚀 Nur 503€/Monat = Millionär!</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Magic of Compound Interest:</div>
+          <div>
+            Total eingezahlt: 503€ × 420 = 211.260€<br>
+            Zinsen verdient: 788.740€ 🤯<br>
+            <strong>Fast 4x Ihr Geld durch Zinseszins!</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">8</div>
+          <h3 class="example-title">⚡ Kredit schneller abbezahlen?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Ihr aktueller Kredit: 100.000€, 4% Zinsen, 1.000€/Monat zahlen. Sie bekommen Gehaltserhöhung und können 200€ extra zahlen. Wie viel früher fertig?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Normal (1.000€/Monat):</div>
+          <div class="keystroke-line">4 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">100000 CHS PV</div>
+          <div class="keystroke-line">1000 PMT</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">n   → 110,5 Monate (9,2 Jahre)</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Extra-Zahlung (1.200€/Monat):</div>
+          <div class="keystroke-line">1200 PMT</div>
+          <div class="keystroke-line">n   → 90,2 Monate (7,5 Jahre)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            <strong>20 Monate früher fertig!</strong> (fast 2 Jahre gespart) ⚡<br>
+            <br>
+            Bonus: Sie sparen auch ~3.500€ Zinsen! 💰
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Power-Tipp:</div>
+          <div>Extra-Zahlungen am Anfang wirken am stärksten! Je früher Sie mehr zahlen, desto mehr Zinsen sparen Sie.</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">9</div>
+          <h3 class="example-title">🔄 Auto: Leasen oder Kaufen? (BEGIN Mode!)</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>BMW für 45.000€. Option A: Kredit zu 5%. Option B: Leasing 36 Monate, Restwert 25.000€, Rate? ACHTUNG: Leasing = BEGIN Mode!</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Kredit (END Mode):</div>
+          <div class="keystroke-line">g 8                  → END Mode aktivieren</div>
+          <div class="keystroke-line">36 n</div>
+          <div class="keystroke-line">5 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">45000 CHS PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT   → -1.349€</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Leasing (BEGIN Mode):</div>
+          <div class="keystroke-line">g 7                  → BEGIN Mode! (Zahlung vorschüssig)</div>
+          <div class="keystroke-line">45000 CHS PV</div>
+          <div class="keystroke-line">25000 FV             → Restwert (Auto zurückgeben)</div>
+          <div class="keystroke-line">PMT   → -555€</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            <strong>Kredit:</strong> 1.349€/Monat → Auto gehört Ihnen! 🚗👑<br>
+            <strong>Leasing:</strong> 555€/Monat → Auto nach 3 Jahren zurück 🔄<br>
+            <br>
+            Leasing = niedrigere Raten, aber kein Eigentum!
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 BEGIN vs END Mode:</div>
+          <div>
+            <strong>END Mode:</strong> Zahlung am Ende des Monats (normal bei Krediten)<br>
+            <strong>BEGIN Mode:</strong> Zahlung am Anfang des Monats (typisch bei Leasing)<br>
+            <br>
+            Drücken Sie [g] [7] für BEGIN oder [g] [8] für END!
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">10</div>
+          <h3 class="example-title">🎂 Wie reich bin ich mit 60?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Sie sind 25, haben 10.000€ gespart, sparen ab jetzt 300€/Monat. Bei 6,5% Rendite - wie viel ist da mit 60?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Tasteneingabe:</div>
+          <div class="keystroke-line">35 ENTER 12 × n      → 420 Monate (bis 60)</div>
+          <div class="keystroke-line">6.5 ENTER 12 ÷ i     → monatliche Rendite</div>
+          <div class="keystroke-line">10000 CHS PV         → Startkapital</div>
+          <div class="keystroke-line">300 CHS PMT          → monatlich sparen</div>
+          <div class="keystroke-line">FV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>Mit 60: <strong>529.000€</strong> 🎂 Fast eine halbe Million!</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Die Rechnung:</div>
+          <div>
+            Eingezahlt: 10.000€ + (300€ × 420) = 136.000€<br>
+            Wert mit 60: 529.000€<br>
+            <strong>Gewinn: 393.000€ durch Zinseszins!</strong> 🚀
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">11</div>
+          <h3 class="example-title">🏦 Umschuldung lohnt sich?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Aufgabe:</div>
+          <div>Alter Kredit: 50.000€ Restschuld, noch 84 Monate, 8% Zinsen. Neue Bank bietet 4,5%. Lohnt sich Umschuldung?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Alte Rate berechnen:</div>
+          <div class="keystroke-line">84 n</div>
+          <div class="keystroke-line">8 ENTER 12 ÷ i       → alter Zins</div>
+          <div class="keystroke-line">50000 CHS PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT   → -749€</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Neue Rate mit 4,5%:</div>
+          <div class="keystroke-line">4.5 ENTER 12 ÷ i     → neuer Zins</div>
+          <div class="keystroke-line">PMT   → -671€</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Antwort:</div>
+          <div>
+            <strong>Ersparnis: 78€/Monat!</strong> 💚<br>
+            Über 84 Monate: <strong>6.552€ Gesamtersparnis!</strong> 🎉
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Tipp:</div>
+          <div>Bei Umschuldung auch Vorfälligkeitsentschädigung und Bearbeitungsgebühren beachten!</div>
+        </div>
+      </div>
     </div>
 
     <div id="cashflow-de" class="example-section">
@@ -1307,6 +1485,184 @@
         <div class="explanation">
           <div class="explanation-label">💡 Observation:</div>
           <div>First payment: $171 interest | Last payment: $2 interest<br>Interest portion decreases as the balance gets smaller!</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">7</div>
+          <h3 class="example-title">🚀 Million Dollar Retirement!</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>You're 30 and want $1 million by 65! At 7% returns - how much to save monthly?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">35 ENTER 12 × n      → 420 months (35 years)</div>
+          <div class="keystroke-line">7 ENTER 12 ÷ i       → 0.583% monthly</div>
+          <div class="keystroke-line">0 PV                 → starting from zero</div>
+          <div class="keystroke-line">1000000 CHS FV       → goal: $1 million!</div>
+          <div class="keystroke-line">PMT</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>Monthly: <strong>$503</strong> 🚀 Just $503/month = Millionaire!</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Magic of Compound Interest:</div>
+          <div>
+            Total deposited: $503 × 420 = $211,260<br>
+            Interest earned: $788,740 🤯<br>
+            <strong>Almost 4x your money from compounding!</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">8</div>
+          <h3 class="example-title">⚡ Pay Off Loan Faster?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>Current loan: $100,000 at 4%, paying $1,000/month. You get a raise and can pay $200 extra. How much sooner will you finish?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Normal ($1,000/month):</div>
+          <div class="keystroke-line">4 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">100000 CHS PV</div>
+          <div class="keystroke-line">1000 PMT</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">n   → 110.5 months (9.2 years)</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Extra Payment ($1,200/month):</div>
+          <div class="keystroke-line">1200 PMT</div>
+          <div class="keystroke-line">n   → 90.2 months (7.5 years)</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            <strong>20 months sooner!</strong> (almost 2 years saved) ⚡<br>
+            <br>
+            Bonus: You also save ~$3,500 in interest! 💰
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Power Tip:</div>
+          <div>Extra payments at the beginning have the biggest impact! The earlier you pay more, the more interest you save.</div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">9</div>
+          <h3 class="example-title">🔄 Car: Lease or Buy? (BEGIN Mode!)</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>BMW for $45,000. Option A: Loan at 5%. Option B: 36-month lease, residual $25,000, payment? NOTE: Leasing = BEGIN Mode!</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Loan (END Mode):</div>
+          <div class="keystroke-line">g 8                  → Activate END Mode</div>
+          <div class="keystroke-line">36 n</div>
+          <div class="keystroke-line">5 ENTER 12 ÷ i</div>
+          <div class="keystroke-line">45000 CHS PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT   → -$1,349</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Lease (BEGIN Mode):</div>
+          <div class="keystroke-line">g 7                  → BEGIN Mode! (Payment in advance)</div>
+          <div class="keystroke-line">45000 CHS PV</div>
+          <div class="keystroke-line">25000 FV             → Residual (return car)</div>
+          <div class="keystroke-line">PMT   → -$555</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            <strong>Loan:</strong> $1,349/month → you own it! 🚗👑<br>
+            <strong>Lease:</strong> $555/month → return after 3 years 🔄<br>
+            <br>
+            Lease = lower payments, but no ownership!
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 BEGIN vs END Mode:</div>
+          <div>
+            <strong>END Mode:</strong> Payment at end of month (normal for loans)<br>
+            <strong>BEGIN Mode:</strong> Payment at start of month (typical for leases)<br>
+            <br>
+            Press [g] [7] for BEGIN or [g] [8] for END!
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">10</div>
+          <h3 class="example-title">🎂 How Rich at 60?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>You're 25, have $10,000 saved, saving $300/month. At 6.5% returns - how much at 60?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Keystrokes:</div>
+          <div class="keystroke-line">35 ENTER 12 × n      → 420 months (to 60)</div>
+          <div class="keystroke-line">6.5 ENTER 12 ÷ i     → monthly return</div>
+          <div class="keystroke-line">10000 CHS PV         → starting capital</div>
+          <div class="keystroke-line">300 CHS PMT          → monthly savings</div>
+          <div class="keystroke-line">FV</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>At 60: <strong>$529,000</strong> 🎂 Almost half a million!</div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 The Math:</div>
+          <div>
+            Deposited: $10,000 + ($300 × 420) = $136,000<br>
+            Value at 60: $529,000<br>
+            <strong>Profit: $393,000 from compounding!</strong> 🚀
+          </div>
+        </div>
+      </div>
+
+      <div class="example-card">
+        <div class="example-header">
+          <div class="example-number">11</div>
+          <h3 class="example-title">🏦 Should I Refinance?</h3>
+        </div>
+        <div class="problem">
+          <div class="problem-label">📝 Problem:</div>
+          <div>Old loan: $50,000 balance, 84 months left, 8% interest. New bank offers 4.5%. Worth refinancing?</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ Calculate old payment:</div>
+          <div class="keystroke-line">84 n</div>
+          <div class="keystroke-line">8 ENTER 12 ÷ i       → old rate</div>
+          <div class="keystroke-line">50000 CHS PV</div>
+          <div class="keystroke-line">0 FV</div>
+          <div class="keystroke-line">PMT   → -$749</div>
+        </div>
+        <div class="keystrokes">
+          <div class="keystrokes-label">⌨️ New payment at 4.5%:</div>
+          <div class="keystroke-line">4.5 ENTER 12 ÷ i     → new rate</div>
+          <div class="keystroke-line">PMT   → -$671</div>
+        </div>
+        <div class="answer">
+          <div class="answer-label">✅ Answer:</div>
+          <div>
+            <strong>Savings: $78/month!</strong> 💚<br>
+            Over 84 months: <strong>$6,552 total savings!</strong> 🎉
+          </div>
+        </div>
+        <div class="explanation">
+          <div class="explanation-label">💡 Tip:</div>
+          <div>When refinancing, also consider prepayment penalties and origination fees!</div>
         </div>
       </div>
     </div>
