@@ -203,6 +203,27 @@ class Calculator {
             case 'power-yx':
                 this.power();
                 break;
+            
+            // Financial TVM keys
+            case 'n':
+                this.handleTVMKey('n');
+                break;
+                
+            case 'i':
+                this.handleTVMKey('i');
+                break;
+                
+            case 'pv':
+                this.handleTVMKey('pv');
+                break;
+                
+            case 'pmt':
+                this.handleTVMKey('pmt');
+                break;
+                
+            case 'fv':
+                this.handleTVMKey('fv');
+                break;
                 
             default:
                 console.log('Unimplemented function:', key);
@@ -260,6 +281,14 @@ class Calculator {
                 
             case 'digit-3':  // g 3 = n! (factorial)
                 this.factorialFunc();
+                break;
+            
+            case 'digit-7':  // g 7 = BEGIN mode
+                this.setBeginMode();
+                break;
+                
+            case 'digit-8':  // g 8 = END mode
+                this.setEndMode();
                 break;
                 
             default:
@@ -633,6 +662,115 @@ class Calculator {
         console.log(`Recalled ${value} from R${registerNum}`);
     }
 
+    // ============================================
+    // FINANCIAL TVM METHODS
+    // ============================================
+    
+    /**
+     * Handle TVM key press (n, i, PV, PMT, FV)
+     * Behavior: If new number entered, store it. Otherwise, solve for the variable.
+     *
+     * @param {string} register - TVM register name ('n', 'i', 'pv', 'pmt', 'fv')
+     */
+    handleTVMKey(register) {
+        const registerName = register.toUpperCase();
+        
+        // Check if there's a new number to store
+        if (!this.isNewNumber || this.currentInput !== '') {
+            // Store mode: store current X register value
+            const value = this.stack.x;
+            this.memory.setFinancialRegister(register, value);
+            this.isNewNumber = true;
+            this.currentInput = '';
+            console.log(`Stored ${value} in ${registerName} register (R${this.getFinancialRegisterNumber(register)})`);
+            
+            // Flash display to indicate storage
+            this.updateDisplay();
+        } else {
+            // Solve mode: calculate the register value
+            try {
+                let result;
+                let methodName;
+                
+                switch(register) {
+                    case 'n':
+                        result = this.financial.solveN(this.memory);
+                        methodName = 'n';
+                        break;
+                    case 'i':
+                        result = this.financial.solveI(this.memory);
+                        methodName = 'i';
+                        break;
+                    case 'pv':
+                        result = this.financial.solvePV(this.memory);
+                        methodName = 'PV';
+                        break;
+                    case 'pmt':
+                        result = this.financial.solvePMT(this.memory);
+                        methodName = 'PMT';
+                        break;
+                    case 'fv':
+                        result = this.financial.solveFV(this.memory);
+                        methodName = 'FV';
+                        break;
+                }
+                
+                // Store result in register
+                this.memory.setFinancialRegister(register, result);
+                
+                // Push to stack and display
+                this.stack.x = result;
+                this.isNewNumber = true;
+                this.currentInput = '';
+                
+                // Show iteration count for iterative solvers
+                if (register === 'n' || register === 'i') {
+                    const iterations = this.financial.getLastIterationCount();
+                    console.log(`Solved ${registerName} = ${result} (${iterations} iterations)`);
+                } else {
+                    console.log(`Solved ${registerName} = ${result}`);
+                }
+                
+                this.updateDisplay();
+            } catch (error) {
+                console.error(`Error solving ${registerName}:`, error.message);
+                this.display.showError(error.message);
+            }
+        }
+    }
+    
+    /**
+     * Get financial register number for a given register name
+     * @param {string} register - Register name
+     * @returns {number} Register number (0-4)
+     */
+    getFinancialRegisterNumber(register) {
+        const mapping = { 'n': 0, 'i': 1, 'pv': 2, 'pmt': 3, 'fv': 4 };
+        return mapping[register.toLowerCase()] || 0;
+    }
+    
+    /**
+     * Set BEGIN mode (payments at start of period)
+     */
+    setBeginMode() {
+        this.financial.setPaymentMode('BEGIN');
+        this.display.setIndicator('begin', true);
+        console.log('Payment mode: BEGIN (annuity due)');
+    }
+    
+    /**
+     * Set END mode (payments at end of period)
+     */
+    setEndMode() {
+        this.financial.setPaymentMode('END');
+        this.display.setIndicator('begin', false);
+        console.log('Payment mode: END (ordinary annuity)');
+    }
+
+    // ============================================
+    // SYSTEM METHODS
+    // ============================================
+    
     /**
      * Reset calculator
      */

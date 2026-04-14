@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HP-12C Financial TVM Tests</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #666;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            border-bottom: 2px solid #999;
+            padding-bottom: 5px;
+        }
+        .test-section {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #ddd;
+            background: #fafafa;
+        }
+        .test-case.pass {
+            border-left-color: #4caf50;
+            background: #f1f8f1;
+        }
+        .test-case.fail {
+            border-left-color: #f44336;
+            background: #fff3f3;
+        }
+        .test-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .test-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        .test-result {
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .test-result.pass { color: #4caf50; }
+        .test-result.fail { color: #f44336; }
+        .summary {
+            background: #333;
+            color: white;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 1.1em;
+        }
+        .summary .pass { color: #4caf50; }
+        .summary .fail { color: #f44336; }
+        button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 3px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #555;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧮 HP-12C Financial TVM Test Suite</h1>
+    
+    <div class="info">
+        <strong>Phase 1: Foundation Testing</strong><br>
+        This test suite validates the complete TVM (Time Value of Money) implementation including:
+        <ul>
+            <li>Closed-form solvers: PV, PMT, FV</li>
+            <li>Newton-Raphson iterative solvers: n, i</li>
+            <li>BEGIN/END payment mode</li>
+            <li>Edge cases: i=0, PMT=0, boundary conditions</li>
+        </ul>
+    </div>
+
+    <button onclick="runAllTests()">▶ Run All Tests</button>
+    <button onclick="location.reload()">🔄 Reset</button>
+
+    <div id="summary" class="summary" style="display:none;">
+        <div id="summaryText"></div>
+    </div>
+
+    <div id="testResults"></div>
+
+    <!-- Load all required modules -->
+    <script src="../js/rpn-stack.js"></script>
+    <script src="../js/memory.js"></script>
+    <script src="../js/financial.js"></script>
+
+    <script>
+        // Test framework
+        class TvmTestRunner {
+            constructor() {
+                this.tests = [];
+                this.results = [];
+            }
+
+            addTest(category, name, testFn) {
+                this.tests.push({ category, name, testFn });
+            }
+
+            async runAll() {
+                this.results = [];
+                const resultsDiv = document.getElementById('testResults');
+                resultsDiv.innerHTML = '';
+
+                // Group tests by category
+                const categories = {};
+                this.tests.forEach(test => {
+                    if (!categories[test.category]) {
+                        categories[test.category] = [];
+                    }
+                    categories[test.category].push(test);
+                });
+
+                // Run tests by category
+                for (const [category, tests] of Object.entries(categories)) {
+                    const section = document.createElement('div');
+                    section.className = 'test-section';
+                    section.innerHTML = `<h2>${category}</h2>`;
+                    resultsDiv.appendChild(section);
+
+                    for (const test of tests) {
+                        const result = await this.runTest(test);
+                        this.results.push(result);
+                        section.appendChild(this.renderTestResult(result));
+                    }
+                }
+
+                this.showSummary();
+            }
+
+            async runTest(test) {
+                const startTime = performance.now();
+                try {
+                    const result = await test.testFn();
+                    const endTime = performance.now();
+                    return {
+                        category: test.category,
+                        name: test.name,
+                        passed: result.passed,
+                        message: result.message,
+                        details: result.details,
+                        time: endTime - startTime
+                    };
+                } catch (error) {
+                    const endTime = performance.now();
+                    return {
+                        category: test.category,
+                        name: test.name,
+                        passed: false,
+                        message: `Exception: ${error.message}`,
+                        details: error.stack,
+                        time: endTime - startTime
+                    };
+                }
+            }
+
+            renderTestResult(result) {
+                const div = document.createElement('div');
+                div.className = `test-case ${result.passed ? 'pass' : 'fail'}`;
+                
+                div.innerHTML = `
+                    <div class="test-name">${result.passed ? '✓' : '✗'} ${result.name}</div>
+                    <div class="test-details">${result.message}</div>
+                    ${result.details ? `<div class="test-details">${result.details}</div>` : ''}
+                    <div class="test-details">Execution time: ${result.time.toFixed(2)}ms</div>
+                `;
+                
+                return div;
+            }
+
+            showSummary() {
+                const summary = document.getElementById('summary');
+                const summaryText = document.getElementById('summaryText');
+                
+                const total = this.results.length;
+                const passed = this.results.filter(r => r.passed).length;
+                const failed = total - passed;
+                const passRate = ((passed / total) * 100).toFixed(1);
+                
+                summaryText.innerHTML = `
+                    <strong>Test Results:</strong> 
+                    <span class="pass">${passed} passed</span> / 
+                    <span class="fail">${failed} failed</span> / 
+                    ${total} total 
+                    (${passRate}% pass rate)
+                `;
+                
+                summary.style.display = 'block';
+            }
+        }
+
+        // Helper function to compare floating point numbers
+        function assertClose(actual, expected, tolerance = 0.01, label = '') {
+            const diff = Math.abs(actual - expected);
+            const relativeError = expected !== 0 ? (diff / Math.abs(expected)) * 100 : 0;
+            
+            if (diff <= tolerance) {
+                return {
+                    passed: true,
+                    message: `${label} ✓ Expected: ${expected.toFixed(4)}, Got: ${actual.toFixed(4)} (error: ${diff.toFixed(6)})`,
+                    details: null
+                };
+            } else {
+                return {
+                    passed: false,
+                    message: `${label} Expected: ${expected.toFixed(4)}, Got: ${actual.toFixed(4)}`,
+                    details: `Absolute error: ${diff.toFixed(6)} (${relativeError.toFixed(4)}% relative error)`
+                };
+            }
+        }
+
+        // Create test runner
+        const runner = new TvmTestRunner();
+
+        // ============================================
+        // TEST SUITE: BASIC STRUCTURE
+        // ============================================
+
+        runner.addTest('1. Basic Structure', 'FinancialEngine instantiation', async () => {
+            const financial = new FinancialEngine();
+            if (!financial) {
+                return { passed: false, message: 'Failed to create FinancialEngine instance' };
+            }
+            return { passed: true, message: 'FinancialEngine created successfully' };
+        });
+
+        runner.addTest('1. Basic Structure', 'Payment mode defaults to END', async () => {
+            const financial = new FinancialEngine();
+            const mode = financial.getPaymentMode();
+            if (mode !== 'END') {
+                return { passed: false, message: `Expected END mode, got ${mode}` };
+            }
+            return { passed: true, message: 'Default payment mode is END' };
+        });
+
+        runner.addTest('1. Basic Structure', 'Payment mode toggles correctly', async () => {
+            const financial = new FinancialEngine();
+            financial.setPaymentMode('BEGIN');
+            if (financial.getPaymentMode() !== 'BEGIN') {
+                return { passed: false, message: 'Failed to set BEGIN mode' };
+            }
+            financial.setPaymentMode('END');
+            if (financial.getPaymentMode() !== 'END') {
+                return { passed: false, message: 'Failed to set END mode' };
+            }
+            return { passed: true, message: 'Payment mode toggles correctly' };
+        });
+
+        // ============================================
+        // TEST SUITE: CLOSED-FORM SOLVERS
+        // ============================================
+
+        runner.addTest('2. Solve for PV', '30-year mortgage: $200,000 at 6% APR (n=360, i=0.5%, PMT=-1199.10, FV=0)', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 360);
+            memory.setFinancialRegister('i', 0.5);  // 6% APR / 12 months
+            memory.setFinancialRegister('pmt', -1199.10);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pv = financial.solvePV(memory);
+            return assertClose(pv, 200000, 1.0, 'PV');
+        });
+
+        runner.addTest('2. Solve for PV', 'Simple annuity: n=10, i=5%, PMT=-100, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 10);
+            memory.setFinancialRegister('i', 5);
+            memory.setFinancialRegister('pmt', -100);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pv = financial.solvePV(memory);
+            return assertClose(pv, 772.17, 0.1, 'PV');
+        });
+
+        runner.addTest('2. Solve for PV', 'Zero interest: n=12, i=0%, PMT=-100, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 12);
+            memory.setFinancialRegister('i', 0);
+            memory.setFinancialRegister('pmt', -100);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pv = financial.solvePV(memory);
+            return assertClose(pv, 1200, 0.01, 'PV');
+        });
+
+        runner.addTest('3. Solve for PMT', '30-year mortgage payment: n=360, i=0.5%, PV=200000, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 360);
+            memory.setFinancialRegister('i', 0.5);
+            memory.setFinancialRegister('pv', 200000);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pmt = financial.solvePMT(memory);
+            return assertClose(pmt, -1199.10, 0.5, 'PMT');
+        });
+
+        runner.addTest('3. Solve for PMT', 'Car loan: n=60, i=0.375% (4.5% APR), PV=25000, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 60);
+            memory.setFinancialRegister('i', 0.375);  // 4.5% APR / 12
+            memory.setFinancialRegister('pv', 25000);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pmt = financial.solvePMT(memory);
+            return assertClose(pmt, -466.08, 0.5, 'PMT');
+        });
+
+        runner.addTest('3. Solve for PMT', 'Zero interest: n=24, i=0%, PV=10000, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 24);
+            memory.setFinancialRegister('i', 0);
+            memory.setFinancialRegister('pv', 10000);
+            memory.setFinancialRegister('fv', 0);
+            
+            const pmt = financial.solvePMT(memory);
+            return assertClose(pmt, -416.67, 0.1, 'PMT');
+        });
+
+        runner.addTest('4. Solve for FV', 'Retirement savings: n=300, i=0.5833% (7% APR), PV=0, PMT=-500', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 300);
+            memory.setFinancialRegister('i', 0.5833);  // 7% APR / 12
+            memory.setFinancialRegister('pv', 0);
+            memory.setFinancialRegister('pmt', -500);
+            
+            const fv = financial.solveFV(memory);
+            return assertClose(fv, 404174.70, 100, 'FV');
+        });
+
+        runner.addTest('4. Solve for FV', 'Investment growth: n=120, i=0.5%, PV=-10000, PMT=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 120);
+            memory.setFinancialRegister('i', 0.5);
+            memory.setFinancialRegister('pv', -10000);
+            memory.setFinancialRegister('pmt', 0);
+            
+            const fv = financial.solveFV(memory);
+            return assertClose(fv, 18193.97, 1.0, 'FV');
+        });
+
+        runner.addTest('4. Solve for FV', 'Zero interest savings: n=60, i=0%, PV=0, PMT=-100', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 60);
+            memory.setFinancialRegister('i', 0);
+            memory.setFinancialRegister('pv', 0);
+            memory.setFinancialRegister('pmt', -100);
+            
+            const fv = financial.solveFV(memory);
+            return assertClose(fv, 6000, 0.01, 'FV');
+        });
+
+        // ============================================
+        // TEST SUITE: ITERATIVE SOLVERS
+        // ============================================
+
+        runner.addTest('5. Solve for n', 'Single cash flow: PV=-1000, FV=2000, i=5%', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('pv', -1000);
+            memory.setFinancialRegister('fv', 2000);
+            memory.setFinancialRegister('i', 5);
+            memory.setFinancialRegister('pmt', 0);
+            
+            const n = financial.solveN(memory);
+            return assertClose(n, 14.21, 0.1, 'n');
+        });
+
+        runner.addTest('5. Solve for n', 'Loan payoff time: PV=10000, PMT=-500, FV=0, i=1%', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('pv', 10000);
+            memory.setFinancialRegister('pmt', -500);
+            memory.setFinancialRegister('fv', 0);
+            memory.setFinancialRegister('i', 1);
+            
+            const n = financial.solveN(memory);
+            return assertClose(n, 21.89, 0.1, 'n');
+        });
+
+        runner.addTest('6. Solve for i', 'Simple loan: n=60, PV=20000, PMT=-450, FV=0', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 60);
+            memory.setFinancialRegister('pv', 20000);
+            memory.setFinancialRegister('pmt', -450);
+            memory.setFinancialRegister('fv', 0);
+            
+            const i = financial.solveI(memory);
+            return assertClose(i, 1.0, 0.05, 'i (periodic rate %)');
+        });
+
+        runner.addTest('6. Solve for i', 'Investment return: n=36, PV=-5000, PMT=0, FV=7000', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            
+            memory.setFinancialRegister('n', 36);
+            memory.setFinancialRegister('pv', -5000);
+            memory.setFinancialRegister('pmt', 0);
+            memory.setFinancialRegister('fv', 7000);
+            
+            const i = financial.solveI(memory);
+            return assertClose(i, 0.97, 0.05, 'i (periodic rate %)');
+        });
+
+        // ============================================
+        // TEST SUITE: BEGIN/END MODE
+        // ============================================
+
+        runner.addTest('7. BEGIN/END Mode', 'END mode: n=10, i=5%, PV=0, PMT=-1000', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            financial.setPaymentMode('END');
+            
+            memory.setFinancialRegister('n', 10);
+            memory.setFinancialRegister('i', 5);
+            memory.setFinancialRegister('pv', 0);
+            memory.setFinancialRegister('pmt', -1000);
+            
+            const fv = financial.solveFV(memory);
+            return assertClose(fv, 12577.89, 1, 'FV (END mode)');
+        });
+
+        runner.addTest('7. BEGIN/END Mode', 'BEGIN mode: n=10, i=5%, PV=0, PMT=-1000', async () => {
+            const memory = new MemoryManager();
+            const financial = new FinancialEngine();
+            financial.setPaymentMode('BEGIN');
+            
+            memory.setFinancialRegister('n', 10);
+            memory.setFinancialRegister('i', 5);
+            memory.setFinancialRegister('pv', 0);
+            memory.setFinancialRegister('pmt', -1000);
+            
+            const fv = financial.solveFV(memory);
+            return assertClose(fv, 13206.79, 1, 'FV (BEGIN mode)');
+        });
+
+        // ============================================
+        // RUN TESTS
+        // ============================================
+
+        function runAllTests() {
+            runner.runAll();
+        }
+
+        // Auto-run on load (optional)
+        // window.addEventListener('load', runAllTests);
+    </script>
+</body>
+</html>
