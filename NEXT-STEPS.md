@@ -1,5 +1,11 @@
 # HP-12C Next Steps & Roadmap
 
+**Last Updated:** April 14, 2026
+**Current Status:** 🎉 **Phase 1 & 2 Complete - Strategic Decision Point**
+**Read:** [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) for detailed analysis
+
+---
+
 ## 🎉 Recently Completed (April 2026)
 
 ### ✅ Phase 4: Educational Layer & Key Details
@@ -27,7 +33,7 @@
 - Display formatting
 - Prefix keys (f, g)
 - Educational layer with key metadata
-- **Mathematical functions (NEW - April 14, 2026)**:
+- **Mathematical functions (✅ Complete - April 14, 2026)**:
   - Reciprocal (1/x)
   - Percentage (%, %T, Δ%)
   - Power (yˣ) and Square Root (√x)
@@ -35,13 +41,24 @@
   - Integer/Fractional parts (INTG, FRAC)
   - Helper functions (12×, 12÷)
 
+- **Financial TVM (✅ Complete - April 14, 2026)**:
+  - Time Value of Money engine with Newton-Raphson solver
+  - All 5 TVM solvers (n, i, PV, PMT, FV)
+  - BEGIN/END payment modes
+  - 20+ comprehensive test cases
+  
+- **Financial AMORT (✅ Complete - April 14, 2026)**:
+  - Period-by-period amortization
+  - Interest/Principal breakdown
+  - Balance tracking
+  - 16 comprehensive test cases
+
 ### Partially Implemented ⚙️
-- Memory arithmetic (STO+, STO-, RCL+, RCL- not yet working)
+- Memory arithmetic (STO+, STO-, STO×, STO÷ not yet working)
 - Extended registers (R.0 - R.9 not yet accessible)
 
 ### Not Implemented ❌
-- Financial functions (TVM: n, i, PV, PMT, FV)
-- Advanced financial (AMORT, NPV, IRR)
+- Advanced financial (NPV, IRR, Depreciation, Bonds)
 - Statistics (Σ+, Σ-, x̄, ŷ,r, etc.)
 - Programming features
 - Date arithmetic
@@ -49,62 +66,123 @@
 
 ---
 
-## 🎯 Phase 5: Financial Functions (Next Major Phase)
+---
 
-### Priority 1: Time Value of Money (TVM)
-**Estimated Effort:** 2-3 weeks
+## ⚠️ STRATEGIC DECISION POINT
 
-#### Implementation Tasks:
-1. **TVM Data Model** (2 days)
-   - Create financial registers (.1-.5 for n, i, PV, PMT, FV)
-   - Implement register storage/recall
-   - Add BEGIN/END mode indicator
+You've successfully completed **significant features** in rapid succession:
+- ✅ Math Functions (13 functions, 50+ tests)
+- ✅ TVM Engine (5 solvers, 20+ tests)
+- ✅ AMORT Engine (complete workflow, 16+ tests)
 
-2. **Closed-Form Solutions** (3 days)
-   - Implement PV solver (straightforward formula)
-   - Implement PMT solver (straightforward formula)
-   - Implement FV solver (most cases closed-form)
+**Before proceeding with NPV/IRR or other complex features:**
 
-3. **Newton-Raphson Solver** (5 days)
-   - Implement iterative solver for n
-   - Implement iterative solver for i (most complex)
-   - Add convergence detection and error handling
-   - Handle edge cases (no solution, infinite solutions)
+### 🧪 Recommended: Testing & Quality Phase (1-2 weeks)
 
-4. **Helper Functions** (2 days)
-   - 12× (g n) - multiply by 12
-   - 12÷ (g i) - divide by 12
-   - RND (f PMT) - round to display format
+#### Why Testing First?
+- **700+ lines** of new TVM code
+- **280+ lines** of new AMORT code
+- **Complex algorithms** (Newton-Raphson, iterative solvers)
+- **Financial precision** is critical
+- **User confidence** requires validated accuracy
 
-5. **Testing & Validation** (3 days)
-   - Create comprehensive TVM test cases
-   - Validate against real HP-12C calculator
-   - Test edge cases and error conditions
+#### Testing Priorities
+1. **Comprehensive TVM/AMORT validation**
+   - Manual testing with real-world scenarios
+   - Cross-browser compatibility
+   - Accuracy validation vs physical HP-12C
+   - Edge case verification
 
-**Files to Modify:**
-- `js/financial.js` - Main implementation
-- `js/memory.js` - Add financial register support
-- `js/calculator.js` - Wire TVM keys
-- `js/key-metadata.js` - Update implementation status
+2. **Integration testing**
+   - TVM → AMORT workflows
+   - Memory registers with financial functions
+   - Complex calculation sequences
+
+3. **Documentation enhancement**
+   - Real-world examples and tutorials
+   - Troubleshooting guide
+   - FAQ section
+
+4. **User feedback collection**
+   - Add feedback mechanism
+   - Track feature usage
+   - Identify pain points
+
+📖 **See:** [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) for detailed testing checklist
 
 ---
 
-### Priority 2: Amortization
+## 🎯 Next Phase Options (After Testing)
+
+### Option A: Date Functions 📅 ⭐ RECOMMENDED
 **Estimated Effort:** 1 week
+**Complexity:** Low
+**Value:** High
+
+**Why dates first?**
+- ✅ Simpler implementation (straightforward algorithms)
+- ✅ High utility (needed for financial calculations)
+- ✅ Builds confidence in codebase
+- ✅ Quick win after testing phase
 
 #### Implementation Tasks:
-1. AMORT function (f n)
-2. Display: principal payment (X), interest payment (x↔y), balance (RCL PV)
-3. Handle multiple period amortization
+1. **DYS** (g FV) - Days between dates
+2. **DATE** (g CHS) - Display/set date
+3. **D.MY** (g 4) / **M.DY** (g 5) - Date format switching
+4. Calendar calculations
+5. Actual/360, Actual/365 day count conventions
 
-**Files to Modify:**
-- `js/financial.js`
-- Add amortization state tracking
+**Files to Create/Modify:**
+- `js/date-functions.js` (new file)
+- `js/calculator.js` - Wire date keys
+- Create test suite
 
 ---
 
-### Priority 3: NPV & IRR
+### Option B: UI/UX Enhancements 🎨 GOOD ALTERNATIVE
 **Estimated Effort:** 1-2 weeks
+**Complexity:** Low
+**Value:** High (usability)
+
+#### Implementation Tasks:
+1. **Mobile responsive design**
+   - Touch-friendly button sizing
+   - Landscape mode optimization
+   - Gesture support (swipe, long-press)
+
+2. **Enhanced keyboard support**
+   - Complete key mapping
+   - Help overlay showing shortcuts
+   - Number pad support
+
+3. **Accessibility**
+   - ARIA labels
+   - Screen reader support
+   - Keyboard navigation
+
+4. **Performance optimization**
+   - Lazy loading
+   - Animation smoothness
+   - Memory optimization
+
+**Files to Modify:**
+- `css/styles.css` - Responsive design
+- `js/keyboard.js` - Enhanced mappings
+- `index.html` - Accessibility
+- Add help overlay
+
+---
+
+### Option C: NPV & IRR ⚠️ COMPLEX (NOT Recommended Yet)
+**Estimated Effort:** 2-3 weeks
+**Complexity:** High
+**Value:** High (but risky without thorough testing first)
+
+**⚠️ Caution:** Only proceed after:
+- Thorough TVM/AMORT testing complete
+- No critical bugs in financial engine
+- User feedback incorporated
+- Code confidence established
 
 #### Implementation Tasks:
 1. **Cash Flow Storage**
@@ -126,29 +204,52 @@
 - `js/financial.js`
 - `js/memory.js` - Cash flow storage
 
+**Files to Create/Modify:**
+- `js/financial.js` - Add NPV/IRR solvers
+- `js/memory.js` - Cash flow storage
+- Create comprehensive test suite
+
 ---
 
-## 🔢 Phase 6: Mathematical Functions
+### Option D: Statistics 📊 MODERATE
+**Estimated Effort:** 2 weeks
+**Complexity:** Medium
+**Value:** Medium
 
-### Priority 1: Basic Math
-**Estimated Effort:** 1 week
+#### Implementation Tasks:
+1. **Data accumulation**
+   - Σ+ (add data point)
+   - Σ- (remove data point)
+   - Clear statistics
 
-- **Percentage (%)**: Convert to percentage
-- **Reciprocal (1/x)**: Calculate 1 divided by X
-- **Square Root (√x)**: g key on R↓ (or similar)
-- **Power (yx)**: Raise Y to power of X
+2. **Single-variable stats**
+   - x̄ (mean)
+   - s (standard deviation)
+   - n (count)
 
-### Priority 2: Logarithms & Exponentials
-**Estimated Effort:** 3-4 days
+3. **Two-variable stats & regression**
+   - ŷ,r (estimate Y, correlation)
+   - x̂,r (estimate X, correlation)
+   - Linear regression
 
-- **Natural Log (LN)**: g key
-- **Exponential (ex)**: g key  
-- **Common Log (LOG)**: if needed
-- **Power of 10 (10x)**: if needed
+**Files to Create:**
+- `js/statistics.js` (new file)
+- `js/calculator.js` - Wire stat keys
 
-**Files to Create/Modify:**
-- `js/math-functions.js` (new file)
-- `js/calculator.js` - Wire math keys
+---
+
+## 🔢 Phase 6: Mathematical Functions ✅ COMPLETE
+
+**Status:** ✅ Completed April 14, 2026
+
+All basic and intermediate math functions implemented:
+- Reciprocal (1/x), Percentage (%, %T, Δ%)
+- Power (yˣ), Square Root (√x)
+- Logarithms (LN), Exponentials (eˣ)
+- Integer/Fractional (INTG, FRAC)
+- Factorial (n!), Helpers (12×, 12÷)
+
+**Missing:** Only EEX (scientific notation entry)
 
 ---
 
@@ -321,13 +422,15 @@
 
 ## 🎯 Recommended Next Actions
 
-### This Week
+### ✅ Recently Completed (April 14, 2026)
 1. ✅ **Organize project structure** - DONE
 2. ✅ **Fix CHS, STO, RCL** - DONE
-3. ✅ **Math Functions Implementation** - DONE (April 14, 2026)
+3. ✅ **Math Functions Implementation** - DONE
 4. ✅ **Create comprehensive test suite** - DONE
+5. ✅ **TVM Phase 1 Complete** - DONE
+6. ✅ **AMORT Phase 2 Complete** - DONE
 
-### ✅ Phase 6 Complete: Mathematical Functions (April 14, 2026)
+### ✅ Phase 6 Complete: Mathematical Functions
 **Status:** Successfully implemented all basic and intermediate math functions!
 
 **Completed Features:**
@@ -357,7 +460,79 @@
 - `index.html` - Added math-functions.js script
 - `tests/test-math-functions.html` - Comprehensive test suite
 
-**Next Recommended Action:** Start Phase 5 (Financial Functions - TVM)
+### ✅ Phase 1 Complete: Financial TVM
+**Status:** Successfully implemented April 14, 2026
+
+**Completed Features:**
+1. ✅ Complete FinancialEngine class (~700 lines)
+2. ✅ All 5 TVM solvers (n, i, PV, PMT, FV)
+3. ✅ Newton-Raphson algorithms for n and i
+4. ✅ Closed-form solutions for PV, PMT, FV
+5. ✅ BEGIN/END payment mode support
+6. ✅ 20+ comprehensive test cases (all passing)
+7. ✅ Full JSDoc documentation
+
+**Files Modified:**
+- [`js/financial.js`](js/financial.js) - Complete TVM engine
+- [`js/calculator.js`](js/calculator.js) - TVM integration
+- [`tests/test-financial-tvm.html`](tests/test-financial-tvm.html) - Test suite
+
+### ✅ Phase 2 Complete: Financial AMORT
+**Status:** Successfully implemented April 14, 2026
+
+**Completed Features:**
+1. ✅ Period-by-period amortization calculation
+2. ✅ Interest and principal breakdown
+3. ✅ Balance tracking throughout loan life
+4. ✅ BEGIN/END mode support
+5. ✅ 16 comprehensive test cases (all passing)
+
+**Files Modified:**
+- [`js/financial.js`](js/financial.js) - Added amortization engine (+280 lines)
+- [`js/calculator.js`](js/calculator.js) - AMORT integration
+- [`tests/test-financial-amort.html`](tests/test-financial-amort.html) - Test suite
+
+---
+
+## 🎯 Next Recommended Actions
+
+### Immediate Priority: Testing & Quality (1-2 weeks) ⭐
+
+**Before adding more features**, validate what you've built:
+
+1. **Comprehensive Testing**
+   ```bash
+   # Open test suites in browser
+   http://localhost:8080/tests/test-financial-tvm.html
+   http://localhost:8080/tests/test-financial-amort.html
+   http://localhost:8080/tests/test-math-functions.html
+   
+   # Manual testing with real calculations
+   http://localhost:8080/index.html
+   ```
+
+2. **Real-World Validation**
+   - Test mortgage calculations
+   - Test investment scenarios
+   - Compare with physical HP-12C
+   - Cross-browser testing
+
+3. **Documentation Update**
+   - Add tutorial examples
+   - Create troubleshooting guide
+   - Update README.md
+   - Add FAQ section
+
+### After Testing: Choose Next Phase
+
+**Recommended order:**
+1. 🧪 **Testing & Quality** (1-2 weeks) ← START HERE
+2. 📅 **Date Functions** (1 week) ← Best next feature
+3. 🎨 **UI/UX Enhancements** (1-2 weeks) ← Or this
+4. 📊 **Statistics** (2 weeks) ← After dates/UI
+5. ⚠️ **NPV/IRR** (2-3 weeks) ← Only after thorough testing
+
+**See [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) for detailed analysis**
 
 ---
 
@@ -372,9 +547,11 @@
 - **Full Implementation:** ~10,000 lines
 
 ### Completion Status
-- **Overall:** ~55% complete
-- **Core Engine:** 90% complete
-- **Financial:** 5% complete
+- **Overall:** ~68% complete (up from ~55%)
+- **Core Engine:** 95% complete
+- **Financial TVM:** ✅ 100% complete
+- **Financial AMORT:** ✅ 100% complete
+- **Financial Advanced:** 0% complete (NPV, IRR, depreciation)
 - **Math:** ✅ 95% complete (missing only EEX)
 - **Statistics:** 0% complete
 - **Programming:** 0% complete
@@ -418,7 +595,8 @@ See `plans/ARCHITECTURE.md` for code structure details.
 
 ## 📞 Questions & Decisions Needed
 
-1. **Math vs Financial first?** Recommend math (easier, faster value)
+1. ~~**Math vs Financial first?**~~ ✅ Both complete!
+2. **Testing vs New Features?** ⚠️ TESTING RECOMMENDED FIRST
 2. **Mobile app?** Could wrap in Capacitor/Electron later
 3. **Advanced features?** Amortization schedules, bond calculations, depreciation
 4. **Programming priority?** Many users won't use programming features
@@ -426,5 +604,6 @@ See `plans/ARCHITECTURE.md` for code structure details.
 
 ---
 
-**Last Updated:** April 14, 2026  
-**Next Review:** After Math Functions implementation
+**Last Updated:** April 14, 2026 (Evening - After TVM/AMORT completion)
+**Next Review:** After Testing & Quality phase
+**Critical:** Read [`docs/STRATEGIC-ASSESSMENT.md`](docs/STRATEGIC-ASSESSMENT.md) before proceeding
